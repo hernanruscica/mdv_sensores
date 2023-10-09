@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS `grupo97ispc`.`usuarios` (
   `nombre_2` VARCHAR(45) NULL,
   `apellido_1` VARCHAR(45) NOT NULL,
   `apellido_2` VARCHAR(45) NULL,
+  `dni`INT UNSIGNED NOT NULL,
   `foto` VARCHAR(45) NULL,
   `email` VARCHAR(45) NOT NULL,
   `password` VARCHAR(60) NOT NULL,
@@ -41,8 +42,8 @@ CREATE TABLE IF NOT EXISTS `grupo97ispc`.`usuarios` (
   CONSTRAINT `fk_usuarios_direcciones1`
     FOREIGN KEY (`direcciones_id`)
     REFERENCES `grupo97ispc`.`direcciones` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE)
 ENGINE = InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- -----------------------------------------------------
@@ -62,15 +63,15 @@ CREATE TABLE IF NOT EXISTS `grupo97ispc`.`ubicaciones` (
   CONSTRAINT `fk_ubicaciones_direcciones1`
     FOREIGN KEY (`direcciones_id`)
     REFERENCES `grupo97ispc`.`direcciones` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE)
 ENGINE = InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- -----------------------------------------------------
--- Table `grupo97ispc`.`accion`
+-- Table `grupo97ispc`.`acciones`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `grupo97ispc`.`acciones` (
-  `id` INT UNSIGNED NOT NULL,
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(45) NOT NULL,
   `descripcion` VARCHAR(100) NULL,
   PRIMARY KEY (`id`),
@@ -91,15 +92,15 @@ CREATE TABLE IF NOT EXISTS `grupo97ispc`.`roles` (
   CONSTRAINT `fk_roles_accion1`
     FOREIGN KEY (`accion_id`)
     REFERENCES `grupo97ispc`.`acciones` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE)
 ENGINE = InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- -----------------------------------------------------
 -- Table `grupo97ispc`.`usuarios_x_ubicaciones_x_roles`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `grupo97ispc`.`usuarios_x_ubicaciones_x_roles` (
-  `id` INT UNSIGNED NOT NULL,
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `usuarios_id` INT UNSIGNED NOT NULL,
   `ubicaciones_id` INT UNSIGNED NOT NULL,
   `roles_id` INT UNSIGNED NOT NULL,
@@ -112,25 +113,25 @@ CREATE TABLE IF NOT EXISTS `grupo97ispc`.`usuarios_x_ubicaciones_x_roles` (
   CONSTRAINT `fk_usuarios_x_ubicaciones_usuarios1`
     FOREIGN KEY (`usuarios_id`)
     REFERENCES `grupo97ispc`.`usuarios` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_usuarios_x_ubicaciones_ubicaciones1`
     FOREIGN KEY (`ubicaciones_id`)
     REFERENCES `grupo97ispc`.`ubicaciones` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_usuarios_x_ubicaciones_roles1`
     FOREIGN KEY (`roles_id`)
     REFERENCES `grupo97ispc`.`roles` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE)
 ENGINE = InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- -----------------------------------------------------
 -- Table `grupo97ispc`.`dataloggers`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `grupo97ispc`.`dataloggers` (
-  `id` INT UNSIGNED NOT NULL,
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `direccion_mac` VARCHAR(45) NOT NULL,
   `nombre` VARCHAR(45) NOT NULL,
   `descripcion` VARCHAR(100) NULL,
@@ -162,7 +163,7 @@ ENGINE = InnoDB DEFAULT CHARSET=utf8mb4;
 -- Table `grupo97ispc`.`dataloggers_x_ubicacion`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `grupo97ispc`.`dataloggers_x_ubicacion` (
-  `id` INT UNSIGNED NOT NULL,
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `ubicaciones_id` INT UNSIGNED NOT NULL,
   `datalogger_id` INT UNSIGNED NOT NULL,
   `fecha_creacion` DATETIME NULL,
@@ -173,14 +174,15 @@ CREATE TABLE IF NOT EXISTS `grupo97ispc`.`dataloggers_x_ubicacion` (
   CONSTRAINT `fk_dataloggers_x_ubicacion_ubicaciones1`
     FOREIGN KEY (`ubicaciones_id`)
     REFERENCES `grupo97ispc`.`ubicaciones` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_dataloggers_x_ubicacion_datalogger1`
     FOREIGN KEY (`datalogger_id`)
     REFERENCES `grupo97ispc`.`dataloggers` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE)
 ENGINE = InnoDB DEFAULT CHARSET=utf8mb4;
+
 
 
 
