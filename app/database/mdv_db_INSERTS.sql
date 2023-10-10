@@ -33,7 +33,12 @@ VALUES
 ('Mía', 'Emma', 'García', 'Vargas', 39787661, 'mia.jpg', 'mia@hotmail.com', '$2y$10$py.YW9qFVm86WMI/iudKm.aeGrgEj8u2CKxTikgatX2aBqBqNGrJy', '901234567', 1, NOW(), 9),
 ('Nicolás', 'Facundo', 'Pérez', 'Silva', 24489125, 'nicolas.jpg', 'nicolas@gmail.com', '$2y$10$MCyNw4z9yMKYR9E6RB2ps.rSYC4InKh1lOqtm3vLecpXInH5MRBJm', '012345678', 1, NOW(), 10);
 
-SELECT * FROM `grupo97ispc`.`usuarios`;
+INSERT INTO `grupo97ispc`.`usuarios` (`nombre_1`, `nombre_2`, `apellido_1`, `dni`, `foto`, `email`, `password`, `telefono`, `estado`, `fecha_creacion`, `direcciones_id`)
+VALUES
+('Cesar', 'Hernan', 'Ruscica',  28470361, 'chr.jpg', 'cesarhernanruscica@gmail.com', aes_encrypt('v3l4d0r', 'm1_fr4s3_s3cr3t4'), '123456789', 1, NOW(), 1);
+
+
+SELECT password FROM `grupo97ispc`.`usuarios` where `dni` = 28470361;
 -- -----------------------------------------------------
 -- Table `grupo97ispc`.`ubicaciones`
 -- -----------------------------------------------------
