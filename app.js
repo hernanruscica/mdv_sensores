@@ -20,11 +20,13 @@ app.use(cookieSession({
   }));
 
 
-const  IndexRouter = require('./app/routes/indexRoutes');
+const  IndexRouter = require('./app/routes/IndexRoutes');
+const UsersRouter = require('./app/routes/UserRoutes');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use('/', IndexRouter);
+app.use('/users', UsersRouter)
 app.use(express.static(path.join(__dirname, 'views')));
 app.use(express.static('./public'));
 

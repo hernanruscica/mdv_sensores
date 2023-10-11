@@ -15,6 +15,24 @@ const pool = mysql2.createPool({
 
 
 module.exports = {
+
+    insert: async (data) => {        
+        const connection = await pool.getConnection();
+        console.log("abierta la conexion con el pool de datos - insert");
+
+        
+         try {
+             const [rows, fields] = await connection.execute(`INSERT INTO usuarios (nombre_1, nombre_2, apellido_1, apellido_2, dni, foto, email, password, telefono, estado, fecha_creacion, direcciones_id)         
+             VALUES ('${data.nombre_1}', '${data.nombre_1}', '${data.apellido_1}', '${data.apellido_2}', '${data.dni}', '${data.foto}', '${data.email}', '${data.password}', '${data.telefono}', '${data.estado}', '${data.fecha_creacion})', '${data.direcciones_id}')`);
+             console.log(`Rows affeted: ${rows.affectedRows}`);
+             return rows;
+         } catch (error){                       
+             throw error;
+         } finally {
+             connection.release(); 
+             console.log("cerrada la conexion con el pool de datos");
+         }
+    },
     
     getAll: async () => {
         //conn.query(`SELECT * FROM users`, myFunction);
@@ -37,7 +55,7 @@ module.exports = {
         const connection = await pool.getConnection();
         console.log("abierta la conexion con el pool de datos - getById");
         try {
-            const [rows, fields] = await connection.execute(`SELECT nombre_1, apellido_1, dni, foto, email, estado FROM usuarios WHERE dni = '${dni}'`);
+            const [rows, fields] = await connection.execute(`SELECT nombre_1, apellido_1, dni, foto, password, email, estado FROM usuarios WHERE dni = '${dni}'`);
             return rows;
         } catch (error){
             //console.error(error);

@@ -6,6 +6,6 @@ var router = express.Router();
 
 
 router.get('/', IndexController.home);
-router.get('/loginform', () => console.log("loginForm"));
+router.get('/loginform', IndexController.loginForm);
 
 module.exports =  router;
