@@ -56,10 +56,10 @@ module.exports = {
     },
     authenticate: async (req, res) => {
         const userData = {
-            dni: req.body.dni,
+            dni: parseInt(req.body.dni),
             password: req.body.password
         }
-        //console.log(userData);
+        console.log(typeof userData.dni, typeof userData.password);
         const  results = await UserModel.getByDni(userData.dni);
         const userDataBD = results[0];
         let userExists =  (results.length > 0) ? true : false;
@@ -67,8 +67,35 @@ module.exports = {
                 console.log("usuario encontrado!", userDataBD.nombre_1, userDataBD.dni, userDataBD.password);
                 const passwordMatch = await bcrypt.compare(userData.password, userDataBD.password);
                 console.log(passwordMatch ? 'Password correcta - Iniciar sesion' : 'Password Incorrecta');
+                
+                if (passwordMatch){
+                    req.session.user = {
+                        dni: userDataBD.dni,
+                        nombre_1: userDataBD.nombre_1,
+                        apellido_1: userDataBD.apellido_1,
+                        email: userDataBD.email,
+                        estado: userDataBD.estado
+                    };
+                    res.redirect('/users/dashboard');
+                }else{
+                    console.log("Contrasenia incorrecta!");
+                    res.redirect('/loginForm')
+                }                                
             }
-        else
+        else{
             console.log("usuario NO encontrado!");
+            res.redirect('/loginForm');
+        }
+    },
+    dashboard: (req, res) => {
+        console.log("cargando el dashboard");
+        res.render('dashboard', { user: req.session.user });
+        
+
+    },
+    logout: (req, res) => {        
+        req.session.user = undefined
+        res.redirect('/');
+        console.log("sesion cerrada");
     }
 }

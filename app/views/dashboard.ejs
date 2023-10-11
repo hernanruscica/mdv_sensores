@@ -1,0 +1,13 @@
+<%- include('partials/cabecera', {titulo: "MDV Sensores - Ingrese con cuenta"}) %>   
+
+<div class="container my-5 py-3 " >
+<% if (typeof user !== 'undefined' && user !== null && user.nombre_1 && user.apellido_1) { %>
+    <h1>Bienvenido <%= user.nombre_1 %> <%= user.apellido_1 %></h1>
+  <% } else { %>
+    <h1>Error: Usuario no encontrado</h1>
+  <% } %>
+</div>
+ 
+    
+<%- include('partials/piedepagina') %>        
+    
