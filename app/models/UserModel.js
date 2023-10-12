@@ -23,7 +23,7 @@ module.exports = {
         
          try {
              const [rows, fields] = await connection.execute(`INSERT INTO usuarios (nombre_1, nombre_2, apellido_1, apellido_2, dni, foto, email, password, telefono, estado, fecha_creacion, direcciones_id)         
-             VALUES ('${data.nombre_1}', '${data.nombre_1}', '${data.apellido_1}', '${data.apellido_2}', '${data.dni}', '${data.foto}', '${data.email}', '${data.password}', '${data.telefono}', '${data.estado}', '${data.fecha_creacion})', '${data.direcciones_id}')`);
+             VALUES ('${data.nombre_1}', '${data.nombre_1}', '${data.apellido_1}', '${data.apellido_2}', '${data.dni}', '${data.foto}', '${data.email}', '${data.password}', '${data.telefono}', '${data.estado}', CURDATE(), '${data.direcciones_id}')`);
              console.log(`Rows affeted: ${rows.affectedRows}`);
              return rows;
          } catch (error){                       

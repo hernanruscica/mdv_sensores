@@ -3,6 +3,7 @@ const UserController = require('../controllers/UserController.js');
 
 var router = express.Router();
 
+router.get('/registerform',  UserController.registerForm );
 router.post('/add', UserController.add);
 router.post('/authenticate', UserController.authenticate);
 router.get('/dashboard', UserController.dashboard)

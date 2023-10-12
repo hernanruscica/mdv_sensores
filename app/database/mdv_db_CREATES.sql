@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS `grupo97ispc`.`direcciones` (
   `numero` INT NOT NULL,
   `localidad` VARCHAR(45) NOT NULL,
   `partido` VARCHAR(45) NOT NULL,
+  `provincia` VARCHAR(45) NOT NULL,
   `codigo_postal` VARCHAR(45) NULL,
   `latitud` VARCHAR(45) NULL,
   `longitud` VARCHAR(45) NULL,  

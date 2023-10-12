@@ -8,22 +8,22 @@ module.exports = {
         console.log('add User', req.body.nombre_1);
 
         // Hashear el password antes de guardarlo en la base de datos
-        const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+        //const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
 
         // Preparar el objeto de datos con el password hasheado
         const userData = {
             nombre_1: req.body.nombre_1,
-            nombre_2: req.body.nombre_2,
+            nombre_2: req.body.nombre_2 || null,
             apellido_1: req.body.apellido_1,
-            apellido_2: req.body.apellido_2,
+            apellido_2: req.body.apellido_2 || null,  
             dni: req.body.dni,
-            foto: req.body.foto,
+            foto: req.body.foto || null,
             email: req.body.email,
-            password: hashedPassword, // Guarda el password hasheado en la base de datos
+            password:  null, // Guarda el password hasheado en la base de datos
             telefono: req.body.telefono,
-            estado: req.body.estado,
-            fecha_creacion: req.body.fecha_creacion,
-            direcciones_id: req.body.direcciones_id
+            estado: req.body.estado || 1,
+            //fecha_creacion: req.body.fecha_creacion || '2023-10-12',
+            direcciones_id: req.body.direcciones_id || 1
         };
         //console.log(userData);
 
@@ -53,6 +53,10 @@ module.exports = {
             }                    
         });
 
+    },    
+    registerForm: (req, res) => {
+      console.log("registerUserForm");      
+      res.render('registerUserForm', {user: req.session.user});      
     },
     authenticate: async (req, res) => {
         const userData = {

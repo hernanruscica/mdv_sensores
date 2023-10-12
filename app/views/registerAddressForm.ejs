@@ -1,0 +1,59 @@
+<%- include('partials/cabecera', {titulo: "MDV Sensores - Registro de su direccion"}) %>   
+
+<div class="container-md my-5 py-3 " >
+  <h1>Registro de nueva cuenta </h1>   
+  <p>
+    En esta página puede <b>registrar</b>cual es su <b>direccion </b> para el usuario <b> </b>.
+  </p>
+  <form action="/users/add" method="post">
+
+    <!--DIRECCIONES - CALLE-->
+    <div class="mb-3">      
+      <label for="calle" class="form-label">Nombre de la calle</label>
+      <input type="text" class="form-control" id="calle" name="calle" aria-describedby="calleHelp" 
+            pattern="[A-Za-z\s]{1,45}" title="Debe contener solo letras y tener como máximo 45 caracteres" maxlength="45" >         
+      <div id="calleHelp" class="form-text">[CAMPO OBLIGATORIO]</div>    
+    </div> 
+
+    <!-- DIRECCIONES - NUMERO. -->
+    <div class="mb-3">
+      <label for="numero" class="form-label">Número</label>
+      <input type="text" class="form-control" id="numero" name="numero" aria-describedby="numeroHelp" 
+        inputmode="numeric" pattern="[0-9]{1,5}" title="Debe contener entre 1 y 5 dígitos numéricos" maxlength="5" required>
+      <div id="numeroHelp" class="form-text">[CAMPO OBLIGATORIO]</div>      
+    </div>
+
+    <!--DIRECCIONES - LOCALIDAD-->
+    <div class="mb-3">      
+      <label for="localidad" class="form-label">Nombre de la localidad</label>
+      <input type="text" class="form-control" id="localidad" name="localidad" aria-describedby="localidadHelp" 
+            pattern="[A-Za-z\s]{1,45}" title="Debe contener solo letras y tener como máximo 45 caracteres" maxlength="45" >         
+      <div id="localidadHelp" class="form-text">[CAMPO OBLIGATORIO]</div>    
+    </div> 
+
+    <!--DIRECCIONES - PARTIDO-->
+    <div class="mb-3">      
+      <label for="partido" class="form-label">Nombre del partido</label>
+      <input type="text" class="form-control" id="partido" name="partido" aria-describedby="partidoHelp" 
+            pattern="[A-Za-z\s]{1,45}" title="Debe contener solo letras y tener como máximo 45 caracteres" maxlength="45" >         
+      <div id="partidoHelp" class="form-text">[CAMPO OBLIGATORIO]</div>    
+    </div> 
+
+    <!--DIRECCIONES - PROVINCIA-->
+    <div class="mb-3">      
+      <label for="provincia" class="form-label">Nombre de la provincia</label>
+      <input type="text" class="form-control" id="provincia" name="provincia" aria-describedby="provinciaHelp" 
+            pattern="[A-Za-z\s]{1,45}" title="Debe contener solo letras y tener como máximo 45 caracteres" maxlength="45" >         
+      <div id="provinciaHelp" class="form-text">[CAMPO OBLIGATORIO]</div>    
+    </div> 
+    
+
+    <!--ENVIAR DATOS. -->
+    <button type="submit" class="btn btn-primary">Registrar direccion</button>
+  </form>
+</div>
+    
+<%- include('partials/piedepagina') %>        
+
+
+

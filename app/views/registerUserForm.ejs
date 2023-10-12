@@ -1,0 +1,81 @@
+<%- include('partials/cabecera', {titulo: "MDV Sensores - Registro de nueva cuenta"}) %>   
+
+<div class="container-md my-5 py-3 " >
+  <h1>Registro de nueva cuenta </h1>   
+  <p>
+    En esta página puede <b>crear</b> una nueva cuenta de <b>usuario</b> para los distintos roles <b>dentro de la aplicación</b>.
+  </p>
+  <form action="/users/add" method="post">
+
+    <!--PRIMER NOMBRE-->
+    <div class="mb-3">      
+      <label for="nombre_1" class="form-label">Primer nombre</label>
+      <input type="text" class="form-control" id="nombre_1" name="nombre_1" aria-describedby="nombre_1lHelp" 
+            pattern="[A-Za-z\s]{1,45}" title="Debe contener solo letras y tener como máximo 45 caracteres" maxlength="45" required>   
+      <div id="nombre_1Help" class="form-text">[CAMPO OBLIGATORIO]</div>        
+    </div>  
+
+    <!--SEGUNDO NOMBRE-->
+    <div class="mb-3">      
+      <label for="nombre_2" class="form-label">Segundo nombre</label>
+      <input type="text" class="form-control" id="nombre_2" name="nombre_2" aria-describedby="nombre_2lHelp" 
+            pattern="[A-Za-z\s]{1,45}" title="Debe contener solo letras y tener como máximo 45 caracteres" maxlength="45" >         
+    </div> 
+    
+    <!--PRIMER APELLIDO-->
+    <div class="mb-3">      
+      <label for="apellido_1" class="form-label">Primer apellido</label>
+      <input type="text" class="form-control" id="apellido_1" name="apellido_1" aria-describedby="apellido_1Help" 
+            pattern="[A-Za-z\s]{1,45}" title="Debe contener solo letras y tener como máximo 45 caracteres" maxlength="45" >         
+      <div id="apellido_1Help" class="form-text">[CAMPO OBLIGATORIO]</div>    
+    </div> 
+
+     <!--SEGUNDO APELLIDO-->
+     <div class="mb-3">      
+      <label for="apellido_2" class="form-label">Segundo apellido</label>
+      <input type="text" class="form-control" id="apellido_2" name="apellido_2" aria-describedby="apellido_2Help" 
+            pattern="[A-Za-z\s]{1,45}" title="Debe contener solo letras y tener como máximo 45 caracteres" maxlength="45" >               
+    </div> 
+
+    <!-- D.N.I. -->
+    <div class="mb-3">
+      <label for="dni" class="form-label">D.N.I.</label>
+      <input type="text" class="form-control" id="dni" name="dni" aria-describedby="dniHelp" 
+        inputmode="numeric" pattern="[0-9]{7,8}" title="Debe contener 7 u 8 dígitos numéricos" maxlength="8" required>
+      <div id="dniHelp" class="form-text">[CAMPO OBLIGATORIO]</div>      
+    </div>
+
+    <!-- CORREO ELECTRONICO -->
+    <div class="mb-3">
+      <label for="email" class="form-label">Correo electrónico</label>
+      <input type="email" class="form-control" id="email" name="email"  aria-describedby="emailHelp" 
+        pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" 
+        maxlength="45" 
+        title="Debe tener formato de correo electrónico válido y no sobrepasar los 45 caracteres" 
+        required>
+      <div id="emailHelp" class="form-text">[CAMPO OBLIGATORIO]</div>
+    </div>    
+
+    <!-- TELEFONO -->
+    <div class="mb-3">
+      <label for="telefono" class="form-label">Teléfono</label>
+      <input type="tel" class="form-control" id="telefono" name="telefono"
+       pattern="^(?:(?:[1-9]\d{1}[1-9]\d{7})|(?:[1-9]\d{2}[1-9]\d{6}))$"
+       maxlength="10"
+       title="Debe tener formato de teléfono válido en Argentina y no sobrepasar los 10 dígitos"
+       required>
+      <div id="telefonoHelp" class="form-text">[CAMPO OBLIGATORIO] <b>Formato:</b> Caracteristica <b>sin el 0</b> delante. <br>
+        Por ejemplo: <b>11 para AMBA</b>, 220 para Merlo. El resto es el número de teléfono, <b>sin guión, sin espacios</b>.</div>
+    </div>   
+    
+    
+
+    <!--ENVIAR DATOS. -->
+    <button type="submit" class="btn btn-primary">Registrar usuario</button>
+  </form>
+</div>
+    
+<%- include('partials/piedepagina') %>        
+
+
+
