@@ -13,8 +13,39 @@
   <% } else { %>
     <h1>Error: Usuario no encontrado</h1>
   <% } %>
-</div>
- 
+</div> 
+
     
-<%- include('partials/piedepagina') %>        
-    
+<%- include('partials/piedepagina') %>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<%    
+    if (typeof results !== 'undefined' && results === 'registrocorrecto'){ %>
+      <script>
+          Swal.fire({
+                  title: 'Registro exitoso !',
+                  text: '<%= message %>',
+                  icon: 'success',
+                  confirmButtonText: 'Entendido'})
+      </script>
+    <%
+    } 
+   
+%>
+
+<%    
+    if (typeof results !== 'undefined' && results === 'registrofallido'){ %>
+      <script>
+          Swal.fire({
+                  title: 'Registro Fallido !',
+                  text: '<%= message %>',
+                  icon: 'error',
+                  confirmButtonText: 'Entendido'})
+      </script>
+    <%
+    } 
+   
+%>
+</body>
+</html>
+

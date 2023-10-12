@@ -35,7 +35,9 @@ module.exports = {
                 console.log("Inserción exitosa:", userData);
                 //mail.sendWelcome(data, token);
                 //return res.status(200).json({message: 'Ok', results: data});
-                //res.status(200).render('home', {message: `Se registró correctamente, se envió su token al correo ${data.email}`});
+                res.render('dashboard', {results: 'registrocorrecto', 
+                                        message: `Se registró correctamente, se envió un correo de activacion a la direccion: ${userData.email}`,
+                                        user: req.session.user});
             }
         })
         .catch((error) => {
@@ -44,7 +46,10 @@ module.exports = {
             if (error.code == 'ER_DUP_ENTRY'){                    
                 console.log('No se inserto correctamente, atributos unicos, ya insertados en la tabla.', userData);
                 //res.status(409).json({message: 'Conflict', results: 'No se inserto correctamente, atributos unicos, ya insertados en la tabla.'});
-                //res.status(409).render('home', {message: `Ya existe un usuario con ese nombre de usuario o correo registrado en el sitio` });                    
+                //res.status(409).render('home', {message: `Ya existe un usuario con ese nombre de usuario o correo registrado en el sitio` });     
+                res.render('dashboard', {results: 'registrofallido', 
+                                        message: `No se registró correctamente, dni: ${userData.dni} o correo: ${userData.email} ya existen en la Base de datos`,
+                                        user: req.session.user});               
 
             }else {
                 console.log('Error al insertar el registro en la tabla de la Base de datos', userData);
