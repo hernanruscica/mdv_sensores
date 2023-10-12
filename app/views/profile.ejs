@@ -4,12 +4,7 @@
 
 <div class="container my-5 py-3 " >
 <% if (typeof user !== 'undefined' && user !== null && user.nombre_1 && user.apellido_1) { %>
-    <h1>Panel de control de <%= user.nombre_1 %> <%= user.apellido_1 %></h1>
-    <div class="card p-3">
-      <h2 class="display-5">Acciones</h2>
-      <a href="/registerForm" class="btn btn-success w-50">Registrar nuevo usuario</a>
-    </div>
-    
+    <h1>Perfil de <%= user.nombre_1 %> <%= user.apellido_1 %></h1>
   <% } else { %>
     <h1>Error: Usuario no encontrado</h1>
   <% } %>

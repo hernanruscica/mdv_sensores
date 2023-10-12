@@ -1,8 +1,8 @@
-<%- include('partials/cabecera_visitantes', {titulo: "MDV Sensores - Ingrese con cuenta"}) %>   
+<%- include('partials/cabecera', {titulo: "MDV Sensores - Registro de nueva cuenta"}) %>   
 
 <div class="container-md my-5 py-3 " >
-<h1>Inicio de sesion </h1>   
-<form action="/users/authenticate" method="post">
+<h1>Registro de nueva cuenta </h1>   
+<form action="/users/register" method="post">
     <div class="mb-3">
       <label for="dni" class="form-label">D.N.I.</label>
       <input type="text" class="form-control" id="dni" name="dni" aria-describedby="emailHelp" 
@@ -14,7 +14,7 @@
       <input type="password" class="form-control" id="password" name = "password" 
         maxlength="60" title="No debe sobrepasar los 60 digitos" required>
     </div>    
-    <button type="submit" class="btn btn-primary">Ingresar</button>
+    <button type="submit" class="btn btn-primary">Registrar usuario</button>
   </form>
 </div>
     

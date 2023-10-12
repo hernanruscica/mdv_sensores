@@ -1,8 +1,13 @@
-<%- include('partials/cabecera', {titulo: "MDV Sensores - Ingrese con cuenta"}) %>   
+<% if (user) { %>
+    <%- include('partials/cabecera', {titulo: "MDV Sensores - Home", nombre: user.nombre_1, apellido: user.apellido_1}) %>
+  <% } else { %>
+    <%- include('partials/cabecera_visitantes', {titulo: "MDV Sensores - Gracias por visitar nuestro proyecto"}) %>
+  <% } %>
+  
 
 <div class="container my-5 py-3 " >
     <h1>¡Bienvenidos a MDV Sensores !</h1>   
-    <a href="/loginForm">Iniciar sesion</a>
+    
 </div>
  
     

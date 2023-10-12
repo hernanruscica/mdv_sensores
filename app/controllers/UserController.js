@@ -88,10 +88,21 @@ module.exports = {
         }
     },
     dashboard: (req, res) => {
-        console.log("cargando el dashboard");
-        res.render('dashboard', { user: req.session.user });
-        
+        console.log("dashboard");
+        if (req.session.user !== undefined){
+            res.render('dashboard', { user: req.session.user });
+        }else{
+            res.redirect('/loginForm');
+        }
 
+    },
+    profile: (req, res) => {
+        console.log("profile");
+        if (req.session.user !== undefined){
+            res.render('profile', { user: req.session.user });
+        }else{
+            res.redirect('/loginForm');
+        }
     },
     logout: (req, res) => {        
         req.session.user = undefined
