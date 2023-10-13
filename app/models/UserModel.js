@@ -65,4 +65,19 @@ module.exports = {
             console.log("cerrada la conexion con el pool de datos");
         }
     },
+    updateState: async (dni, state) => {
+        const connection = await pool.getConnection();
+        console.log("abierta la conexion con el pool de datos - updateState");
+        try {
+            const [rows, fields] = await connection.execute(`UPDATE usuarios SET estado = '${state}' WHERE dni = '${dni}'`);
+            return rows;
+        } catch (error){
+            //console.error(error);
+            throw error;
+        } finally {
+            connection.release(); // Liberar la conexión de vuelta al pool cuando hayas terminado
+            console.log("cerrada la conexion con el pool de datos");
+        }
+        
+    }
 }

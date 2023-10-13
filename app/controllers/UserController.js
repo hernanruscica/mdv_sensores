@@ -1,6 +1,8 @@
 const UserModel = require('../models/UserModel');
+const mail = require('../utils/mail');
 const bcrypt  = require('bcryptjs');
-const saltRounds = 10; // Número de rondas de sal para bcrypt
+const jwt = require('jsonwebtoken');
+//const saltRounds = 10; // Número de rondas de sal para bcrypt
 
 
 module.exports = {
@@ -21,10 +23,12 @@ module.exports = {
             email: req.body.email,
             password:  null, // Guarda el password hasheado en la base de datos
             telefono: req.body.telefono,
-            estado: req.body.estado || 1,
+            estado: req.body.estado || 0,
             //fecha_creacion: req.body.fecha_creacion || '2023-10-12',
             direcciones_id: req.body.direcciones_id || 1
         };
+
+        const userToken = jwt.sign({dni: userData.dni}, process.env.SECRET_KEY, {expiresIn: 86400}); //expira en un dia
         //console.log(userData);
 
         await UserModel.insert(userData)
@@ -33,32 +37,80 @@ module.exports = {
             if (results.affectedRows > 0){
                 delete userData.password;
                 console.log("Inserción exitosa:", userData);
-                //mail.sendWelcome(data, token);
-                //return res.status(200).json({message: 'Ok', results: data});
+                //mail.sendWelcome(data, token);                
                 res.render('dashboard', {results: 'registrocorrecto', 
                                         message: `Se registró correctamente, se envió un correo de activacion a la direccion: ${userData.email}`,
                                         user: req.session.user});
+                mail.sendActivation(userData, userToken);
             }
         })
         .catch((error) => {
             // Manejar el error y enviar una respuesta HTTP aquí
             console.error(`Error en la inserción: ${error}`);
             if (error.code == 'ER_DUP_ENTRY'){                    
-                console.log('No se inserto correctamente, atributos unicos, ya insertados en la tabla.', userData);
-                //res.status(409).json({message: 'Conflict', results: 'No se inserto correctamente, atributos unicos, ya insertados en la tabla.'});
-                //res.status(409).render('home', {message: `Ya existe un usuario con ese nombre de usuario o correo registrado en el sitio` });     
+                console.log('No se inserto correctamente, atributos unicos, ya insertados en la tabla.', userData);                  
                 res.render('dashboard', {results: 'registrofallido', 
                                         message: `No se registró correctamente, dni: ${userData.dni} o correo: ${userData.email} ya existen en la Base de datos`,
                                         user: req.session.user});               
 
             }else {
-                console.log('Error al insertar el registro en la tabla de la Base de datos', userData);
-                //res.status(500).json({message: 'Error', results: 'Error al insertar el registro en la tabla de la Base de datos'});
-                //res.status(500).render('home', {message: `Ocurrió un error al insertar el usuario en la base de datos` });                                    
+                console.log('Error al insertar el registro en la tabla de la Base de datos', userData);                       
+                res.render('dashboard', {results: 'registrofallido', 
+                                        message: `Ocurrió un error al registrar el usuario ${userData.nombre_1} ${userData.apellido_1} en la base de datos.`,
+                                        user: req.session.user});                             
             }                    
         });
 
     },    
+    activate: async (req, res) => {
+        const userToken  = req.params.userToken;        
+
+        try {
+            const decodedToken = jwt.verify(userToken, process.env.SECRET_KEY);
+            // Hacer algo con el token decodificado
+
+            const userDni = decodedToken.dni
+            console.log(`Activate acount with dni: ${userDni} and userToken: ${userToken}`);
+
+            //const userDataBD = await getByDni() //falta revisar que si existe ese dni en la BD
+            const results = await UserModel.updateState(userDni, 1);
+            
+            if (results.affectedRows > 0){
+                console.log('usuario encontrado por dni y en estado "activo"');
+                res.render('home', {results: 'activacioncorrecta', 
+                                    message: 'Cuenta de usuario activada correctamente, ahora tiene que definir una contrasenia', 
+                                    user: req.session.user});
+            }else{
+                console.log('usuario NO encontrado por dni');
+                res.render('home', {results: 'activacioncorrecta', 
+                                    message: 'Cuenta de usuario NO activada, se produjo un error', 
+                                    user: req.session.user});
+            }
+
+          } catch (error) {
+            // Manejar el error relacionado con el token
+            if (error instanceof jwt.JsonWebTokenError) {
+              console.error('Token inválido:', error.message);
+              res.render('home', {results: 'activacionfallida', message: 'Token Invalido', user: req.session.user});
+
+            } else if (error instanceof jwt.TokenExpiredError) {
+              console.error('Token expirado:', error.message);
+              res.render('home', {results: 'activacionfallida', message: 'Token vencido', user: req.session.user});             
+              
+            } else {
+              // Manejar otros tipos de errores
+              console.error('Error al verificar el token:', error.message);
+              res.render('home', {results: 'activacionfallida', message: 'Error al verificar el Token', user: req.session.user});              
+              
+            }
+          }
+          
+
+
+
+        
+
+    },
     registerForm: (req, res) => {
       console.log("registerUserForm");      
       res.render('registerUserForm', {user: req.session.user});      
