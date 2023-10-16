@@ -12,16 +12,15 @@
  
     
 <%- include('partials/piedepagina') %>     
-
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <%    
-    if (typeof results !== 'undefined' && results === 'activacioncorrecta'){ %>
+    if (typeof results !== 'undefined' && results === 'activacionfallida'){ %>
       <script>
           Swal.fire({
-                  title: 'Registro exitoso !',
+                  title: 'Registro Fallido !',
                   text: '<%= message %>',
-                  icon: 'success',
+                  icon: 'error',
                   confirmButtonText: 'Entendido'})
       </script>
     <%
@@ -30,10 +29,10 @@
 %>
 
 <%    
-    if (typeof results !== 'undefined' && results === 'activacionfallida'){ %>
+    if (typeof results !== 'undefined' && results === 'registroPasswordIncorrecto'){ %>
       <script>
           Swal.fire({
-                  title: 'Registro Fallido !',
+                  title: 'Registro de password Fallido !',
                   text: '<%= message %>',
                   icon: 'error',
                   confirmButtonText: 'Entendido'})

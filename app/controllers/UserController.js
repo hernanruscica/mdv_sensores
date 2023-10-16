@@ -2,15 +2,12 @@ const UserModel = require('../models/UserModel');
 const mail = require('../utils/mail');
 const bcrypt  = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-//const saltRounds = 10; // Número de rondas de sal para bcrypt
+const saltRounds = 10; // Número de rondas de sal para bcrypt
 
 
 module.exports = {
     add: async (req, res) => {
         console.log('add User', req.body.nombre_1);
-
-        // Hashear el password antes de guardarlo en la base de datos
-        //const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
 
         // Preparar el objeto de datos con el password hasheado
         const userData = {
@@ -63,6 +60,11 @@ module.exports = {
 
     },    
     activate: async (req, res) => {
+
+        if (req.session.user !== undefined){
+            req.session.user = undefined;
+        }
+
         const userToken  = req.params.userToken;        
 
         try {
@@ -77,20 +79,23 @@ module.exports = {
             
             if (results.affectedRows > 0){
                 console.log('usuario encontrado por dni y en estado "activo"');
-                res.render('home', {results: 'activacioncorrecta', 
-                                    message: 'Cuenta de usuario activada correctamente, ahora tiene que definir una contrasenia', 
-                                    user: req.session.user});
+                res.render('setPasswordForm', {results: 'activacioncorrecta', 
+                                    message: 'Cuenta de usuario activada correctamente, ahora tiene que definir una contrasenia',                                    
+                                    userToken: userToken,
+                                    userDni: userDni});
+                console.log(userDni, userToken);
             }else{
-                console.log('usuario NO encontrado por dni');
+                console.log('DNI del usuario NO encontrado');
                 res.render('home', {results: 'activacioncorrecta', 
                                     message: 'Cuenta de usuario NO activada, se produjo un error', 
-                                    user: req.session.user});
+                                    user: req.session.user});                        
             }
 
           } catch (error) {
             // Manejar el error relacionado con el token
             if (error instanceof jwt.JsonWebTokenError) {
               console.error('Token inválido:', error.message);
+              console.log(req.session.user);
               res.render('home', {results: 'activacionfallida', message: 'Token Invalido', user: req.session.user});
 
             } else if (error instanceof jwt.TokenExpiredError) {
@@ -104,12 +109,53 @@ module.exports = {
               
             }
           }
-          
-
-
-
+    },
+    passwordForm: (req, res) => {
+        //no la uso por ahora, porque hago un render al formu de cambio de pass
+        const userToken = req.params.userToken;
+    },
+    setPassword: async (req, res) => {
+        const userToken = req.params.userToken;
+        const password =  req.body.password2;
         
+        //ahora verificar token, buscar por dni y actualizar el password, si todo bien,  enviar a login, sino mostrar errores
+        try {
+            const decodedToken =  jwt.verify(userToken, process.env.SECRET_KEY);
+            const userDni = decodedToken.dni;
+            console.log(`Actualizando la contrasenia del usuario con DNI ${userDni} y Password: ${password}`);
 
+            const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+            const results = await UserModel.updatePassword(userDni, hashedPassword);
+            
+            if (results.affectedRows > 0){
+                console.log('Usuario encontrado y password actualizado');
+                res.render('loginForm', {results: 'passwordUpdated',
+                                        message: 'Contraseña registrada correctamente, ahora tiene que iniciar sesión con su usuario y contraseña.'});
+            }else{
+                console.log('Usuario no encontrado.');
+                res.render('home', {results: 'registroPasswordIncorrecto', 
+                                    message: 'La contraseña NO pudo ser registrada, se produjo un error', 
+                                    user: req.session.user});   
+            }
+
+        }catch(error){
+            // Manejar el error relacionado con el token
+            if (error instanceof jwt.JsonWebTokenError) {
+                console.error('Token inválido:', error.message);                
+                res.render('home', {results: 'activacionfallida', message: 'Token Invalido', user: req.session.user});
+  
+              } else if (error instanceof jwt.TokenExpiredError) {
+                console.error('Token expirado:', error.message);
+                res.render('home', {results: 'activacionfallida', message: 'Token vencido', user: req.session.user});             
+                
+              } else {
+                // Manejar otros tipos de errores
+                console.error('Error al verificar el token:', error.message);
+                res.render('home', {results: 'activacionfallida', message: 'Error al verificar el Token', user: req.session.user});              
+                
+              }
+        }
     },
     registerForm: (req, res) => {
       console.log("registerUserForm");      
@@ -140,7 +186,8 @@ module.exports = {
                     res.redirect('/users/dashboard');
                 }else{
                     console.log("Contrasenia incorrecta!");
-                    res.redirect('/loginForm')
+                    res.render('loginForm', {results: 'loginFails',
+                                            message: 'El DNI y/o la contraseña son incorrectos, comuniquese con el administrador para restablecer la contraseña.'});
                 }                                
             }
         else{
@@ -166,7 +213,7 @@ module.exports = {
         }
     },
     logout: (req, res) => {        
-        req.session.user = undefined
+        req.session.user = undefined;
         res.redirect('/');
         console.log("sesion cerrada");
     }

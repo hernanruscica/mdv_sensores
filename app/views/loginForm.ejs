@@ -19,8 +19,35 @@
 </div>
     
 <%- include('partials/piedepagina') %>        
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+<%    
+    if (typeof results !== 'undefined' && results === 'passwordUpdated'){ %>
+      <script>
+          Swal.fire({
+                  title: 'Registro de password correcto !',
+                  text: '<%= message %>',
+                  icon: 'success',
+                  confirmButtonText: 'Entendido'})
+      </script>
+    <%
+    } 
+   
+%>
 
+<%    
+    if (typeof results !== 'undefined' && results === 'loginFails'){ %>
+      <script>
+          Swal.fire({
+                  title: 'Usuario y/o contraseña incorrectos !',
+                  text: '<%= message %>',
+                  icon: 'error',
+                  confirmButtonText: 'Entendido'})
+      </script>
+    <%
+    } 
+   
+%>
 
 </body>
 </html>
