@@ -8,7 +8,7 @@ const cookieSession = require("cookie-session");
 const app = express();
 
 const hostName = "localhost";
-const port = 3000;
+const port = 3001;
 
 app.set('views', path.join(__dirname, 'app/views'));
 app.set('view engine', 'ejs');
