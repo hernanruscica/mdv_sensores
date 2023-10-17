@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "aplicacion para manejar usuarios, ubicaciones, dataloggers y visualizar los valores de los sensores",
   "main": "app.js",
-  "scripts": {    
+  "scripts": {
     "dev": "nodemon app.js"
   },
   "repository": {

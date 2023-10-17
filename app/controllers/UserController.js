@@ -1,5 +1,5 @@
-const UserModel = require('../models/UserModel');
-const mail = require('../utils/mail');
+const UserModel = require('../models/UserModel.js');
+const mail = require('../utils/mail.js');
 const bcrypt  = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const saltRounds = 10; // Número de rondas de sal para bcrypt

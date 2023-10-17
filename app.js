@@ -20,8 +20,8 @@ app.use(cookieSession({
   }));
 
 
-const  IndexRouter = require('./app/routes/IndexRoutes');
-const UsersRouter = require('./app/routes/UserRoutes');
+const  IndexRouter = require('./app/routes/IndexRoutes.js');
+const UsersRouter = require('./app/routes/UserRoutes.js');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
