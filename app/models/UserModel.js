@@ -39,8 +39,7 @@ module.exports = {
         const connection = await pool.getConnection();
         console.log("abierta la conexion con el pool de datos - getAll");
         try {            
-            const [rows, fields] = await connection.execute(`SELECT * FROM usuarios;
-            `);            
+            const [rows, fields] = await connection.execute(`SELECT * FROM usuarios;`);            
             console.log(rows)
             return rows;
         }catch (error){
@@ -89,6 +88,20 @@ module.exports = {
         }catch(error){
             throw error;
         } finally{
+            connection.release(); // Liberar la conexión de vuelta al pool cuando hayas terminado
+            console.log("cerrada la conexion con el pool de datos");
+        }
+    },
+    deleteByDni: async (dni) => {        
+        const connection = await pool.getConnection();
+        console.log("abierta la conexion con el pool de datos - getById");
+        try {
+            const [rows, fields] = await connection.execute(`DELETE FROM usuarios  WHERE dni = '${dni}'`);
+            return rows;
+        } catch (error){
+            //console.error(error);
+            throw error;
+        } finally {
             connection.release(); // Liberar la conexión de vuelta al pool cuando hayas terminado
             console.log("cerrada la conexion con el pool de datos");
         }

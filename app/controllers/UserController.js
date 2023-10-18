@@ -6,8 +6,14 @@ const saltRounds = 10; // Número de rondas de sal para bcrypt
 
 
 module.exports = {
+    getAll: async (req, res)=>
+    {
+        console.log('get all users controller');
+        const usersList = await UserModel.getAll();
+        res.render('users',{user: req.session.user, userList: usersList})
+    },
     add: async (req, res) => {
-        console.log('add User', req.body.nombre_1);
+        console.log('add User controller', req.body.nombre_1);
 
         // Preparar el objeto de datos con el password hasheado
         const userData = {
@@ -216,5 +222,17 @@ module.exports = {
         req.session.user = undefined;
         res.redirect('/');
         console.log("sesion cerrada");
+    },
+    deleteByDni: async (req, res) => {        
+        const userDni = parseInt(req.params.dni);
+        console.log(`borrando al usuario con dni : ${userDni} desde el controller`);
+        //deleteByDni
+         const results = await UserModel.deleteByDni(userDni);
+         console.log(results);
+         if (results.affectedRows > 0){
+            res.status(200).json({message: 'OK', results: results});
+         }else{
+            res.status(500).json({message: 'ERROR', results: results});
+         }
     }
 }

@@ -1,0 +1,99 @@
+
+<%- include('partials/cabecera', {titulo: "MDV Sensores - Tabla usuarios", nombre: user.nombre_1, apellido: user.apellido_1}) %>
+  
+
+<div class="container my-5 py-3 " >
+<% if (typeof user !== 'undefined' && user !== null && user.nombre_1 && user.apellido_1) { %>
+  <h1>Usuarios de MDV S.R.L.</h1>
+  <p class="fs-5 mt-5">En esta sección usted puede realizar ALTAS, BAJAS, ACTUALIZACIONES y ELIMINACIONES de usuarios, segun su rol definido por el administrador.</p>
+  <a href="/users/registerForm" class="btn btn-success w-25">Registrar nuevo usuario</a>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Nombre</th>
+        <th scope="col">Apellido</th>
+        <th scope="col">Ubicacion</th>
+        <th scope="col">Rol</th>
+        <th scope="col">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!--userList-->
+      <% userList.forEach(function(user, index) { %>
+        <tr>
+          <th scope="row"><%= index + 1 %></th>
+          <td><%= user.nombre_1 %></td>
+          <td><%= user.apellido_1 %></td>
+          <td>Hosp Iriarte</td>
+          <td>Admin</td>
+          <td>
+            <button type="button" class="btn btn-primary btn-sm">Ver</button>
+            <button type="button" class="btn btn-secondary btn-sm">Editar</button>
+            <button type="button" class="btn btn-danger btn-sm" 
+                    id="eliminarUsuario" 
+                    data-dni="<%= user.dni %>" 
+                    data-nombre_1="<%= user.nombre_1 %>"
+                    data-apellido_1="<%= user.apellido_1 %>">Eliminar</button>
+          </td>
+        </tr>
+      <% }); %>
+
+      
+    </tbody>
+  </table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <% } else { %>
+    <h1>Error: Usuario no encontrado</h1>
+  <% } %>
+</div> 
+
+    
+<%- include('partials/piedepagina') %>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<%    
+    if (typeof results !== 'undefined' && results === 'registrocorrecto'){ %>
+      <script>
+          Swal.fire({
+                  title: 'Registro exitoso !',
+                  text: '<%= message %>',
+                  icon: 'success',
+                  confirmButtonText: 'Entendido'})
+      </script>
+    <%
+    } 
+   
+%>
+
+<%    
+    if (typeof results !== 'undefined' && results === 'registrofallido'){ %>
+      <script>
+          Swal.fire({
+                  title: 'Registro Fallido !',
+                  text: '<%= message %>',
+                  icon: 'error',
+                  confirmButtonText: 'Entendido'})
+      </script>
+    <%
+    } 
+   
+%>
+<script src="/scripts/usersFunctionsBtns.js"></script>
+
+</body>
+</html>
+
