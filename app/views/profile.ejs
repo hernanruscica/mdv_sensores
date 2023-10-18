@@ -5,6 +5,7 @@
 <div class="container my-5 py-3 " >
 <% if (typeof user !== 'undefined' && user !== null && user.nombre_1 && user.apellido_1) { %>
     <h1>Perfil de <%= user.nombre_1 %> <%= user.apellido_1 %></h1>
+    <p class="fs-5 mt-5">En esta sección usted puede ver la información de su perfíl y modificar algunos datos.</p>
   <% } else { %>
     <h1>Error: Usuario no encontrado</h1>
   <% } %>
