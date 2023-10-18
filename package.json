@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "aplicacion para manejar usuarios, ubicaciones, dataloggers y visualizar los valores de los sensores",
   "main": "app.js",
+  "engines": {
+    "node": "16.20.2"
+  },  
   "scripts": {
     "dev": "nodemon app.js"
   },

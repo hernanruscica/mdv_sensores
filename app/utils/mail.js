@@ -62,7 +62,7 @@ module.exports = {
                         <p>
                             Tiene que hacer click en este enlace de abajo, que lo llevará a la página de verificación de su correo.
                         </p>
-                        <a href="${process.env.APP_URL}:3001/users/activate/${token}">VERIFICAR CORREO ELECTRÓNICO</a>.
+                        <a href="${process.env.APP_URL}/users/activate/${token}">VERIFICAR CORREO ELECTRÓNICO</a>.
                         <p>
                             Tiene tiempo hasta ${maniana}, pasado ese tiempo deberá comunicarse con MDV sensores.
                         </p>
