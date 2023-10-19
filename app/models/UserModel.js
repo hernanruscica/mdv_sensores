@@ -50,11 +50,28 @@ module.exports = {
             console.log("cerrada la conexion con el pool de datos");
         }
     },
+    authenticate: async (dni) => {
+        const connection = await pool.getConnection();
+        console.log("abierta la conexion con el pool de datos - getById");
+        try {            
+            const [rows, fields] = await connection.execute(`SELECT nombre_1, apellido_1, dni, foto, password, email, estado FROM usuarios WHERE dni = '${dni}'`);
+            return rows;
+        } catch (error){
+            //console.error(error);
+            throw error;
+        } finally {
+            connection.release(); // Liberar la conexión de vuelta al pool cuando hayas terminado
+            console.log("cerrada la conexion con el pool de datos");
+        }
+    },
     getByDni: async (dni) => {        
         const connection = await pool.getConnection();
         console.log("abierta la conexion con el pool de datos - getById");
-        try {
-            const [rows, fields] = await connection.execute(`SELECT nombre_1, apellido_1, dni, foto, password, email, estado FROM usuarios WHERE dni = '${dni}'`);
+        try {            
+            const [rows, fields] = await connection.execute(`SELECT nombre_1, nombre_2, apellido_1, apellido_2, dni, foto, password, email, telefono, estado, direcciones.calle, direcciones.numero, direcciones.localidad 
+             FROM usuarios 
+             INNER JOIN direcciones ON usuarios.direcciones_id = direcciones.id
+             WHERE dni = '${dni}'`);  
             return rows;
         } catch (error){
             //console.error(error);

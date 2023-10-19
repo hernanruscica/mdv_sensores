@@ -5,43 +5,78 @@
 <div class="container my-5 py-3 " >
 <% if (typeof user !== 'undefined' && user !== null && user.nombre_1 && user.apellido_1) { %>
   <h1>Usuarios de MDV S.R.L.</h1>
-  <p class="fs-5 mt-5">En esta sección usted puede realizar ALTAS, BAJAS, ACTUALIZACIONES y ELIMINACIONES de usuarios, segun su rol definido por el administrador.</p>
-  <a href="/users/registerForm" class="btn btn-success w-25">Registrar nuevo usuario</a>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">Nombre</th>
-        <th scope="col">Apellido</th>
-        <th scope="col">Ubicacion</th>
-        <th scope="col">Rol</th>
-        <th scope="col">Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!--userList-->
-      <% userList.forEach(function(user, index) { %>
-        <tr>
-          <th scope="row"><%= index + 1 %></th>
-          <td><%= user.nombre_1 %></td>
-          <td><%= user.apellido_1 %></td>
-          <td>Hosp Iriarte</td>
-          <td>Admin</td>
-          <td>
-            <button type="button" class="btn btn-primary btn-sm">Ver</button>
-            <button type="button" class="btn btn-secondary btn-sm">Editar</button>
-            <button type="button" class="btn btn-danger btn-sm" 
-                    id="eliminarUsuario" 
-                    data-dni="<%= user.dni %>" 
-                    data-nombre_1="<%= user.nombre_1 %>"
-                    data-apellido_1="<%= user.apellido_1 %>">Eliminar</button>
-          </td>
-        </tr>
-      <% }); %>
 
+  <!--Breadcrumb-->
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Inicio</a></li>
+      <li class="breadcrumb-item"><a href="/users/dashboard">Panel de control</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Usuarios</li>
+    </ol>
+  </nav>
+
+  <p class="fs-5 mt-5">En esta sección usted puede realizar ALTAS, BAJAS, ACTUALIZACIONES y ELIMINACIONES de usuarios, segun su rol definido por el administrador.</p>
+  <div class="container row justify-content-start">
+      <a href="/users/registerForm" class="btn btn-success col-5 col-lg-2">Nuevo usuario</a>             
       
-    </tbody>
-  </table>
+  </div>
+  
+  <div class="table-responsive">
+    <table class="table  table-striped">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Apellido</th>
+          <th scope="col">Ubicacion</th>
+          <th scope="col">Rol</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!--userList-->
+        <% userList.forEach(function(user, index) { %>
+          <tr>
+            <th scope="row"><%= index + 1 %></th>
+            <td><%= user.nombre_1 %></td>
+            <td><%= user.apellido_1 %></td>
+            <td>Hosp Iriarte</td>
+            <td>Admin</td>
+            <td>
+              <a href="/users/view/<%= user.dni %>" class="btn btn-primary btn-sm mb-1">Ver</a>
+              <button type="button" class="btn btn-secondary btn-sm mb-1">Editar</button>
+              <button type="button" class="btn btn-danger btn-sm mb-1" 
+                      id="eliminarUsuario" 
+                      data-dni="<%= user.dni %>" 
+                      data-nombre_1="<%= user.nombre_1 %>"
+                      data-apellido_1="<%= user.apellido_1 %>">Eliminar</button>
+            </td>
+          </tr>
+        <% }); %>
+
+        
+      </tbody>
+    </table>
+  </div>
+<!--Paginacion-->
+  <nav aria-label="Tabla de usuarios a mostrar" >
+    <h5 class="text-center display-6 fs-5 my-3">Páginas de resultados</h5>
+    <ul class="pagination justify-content-center">
+      
+      <li class="page-item disabled">
+        <span class="page-link">Anterior</span>
+      </li>
+      
+      <li class="page-item active" aria-current="page">
+        <span class="page-link">1</span>
+      </li>
+      <li class="page-item"><a class="page-link" href="#">2</a></li>
+      <li class="page-item"><a class="page-link" href="#">3</a></li>
+      <li class="page-item">
+        <a class="page-link" href="#">Siguiente</a>
+      </li>
+    </ul>
+  </nav>
 
 
 
@@ -96,4 +131,5 @@
 
 </body>
 </html>
+
 

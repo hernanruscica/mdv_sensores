@@ -4,8 +4,55 @@
 
 <div class="container my-5 py-3 " >
 <% if (typeof user !== 'undefined' && user !== null && user.nombre_1 && user.apellido_1) { %>
-    <h1>Perfil de <%= user.nombre_1 %> <%= user.apellido_1 %></h1>
+    <h1>Perfil de <%= userRequired.nombre_1 %> <%= userRequired.apellido_1 %></h1>
+
+    <!--Breadcrumb-->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Inicio</a></li>        
+        <li class="breadcrumb-item"><a href="/users/all">Usuarios</a></li>   
+        <li class="breadcrumb-item active" aria-current="page">Ver Perfil</li>
+      </ol>
+    </nav>
+
     <p class="fs-5 mt-5">En esta sección usted puede ver la información de su perfíl y modificar algunos datos.</p>
+
+    <div class="card">
+      <div class="card-body">
+          <!-- Nombre y Apellido -->
+          <h5 class="card-title">
+              <%= userRequired.nombre_1 %> <%= userRequired.nombre_2 !== "null" ? userRequired.nombre_2 : '' %> <%= userRequired.apellido_1 %> <%= userRequired.apellido_2 !== "null" ? userRequired.apellido_2  : '' %>
+          </h5>
+
+          <!-- DNI -->
+          <p class="card-text"><strong>DNI:</strong> <%= userRequired.dni %></p>
+
+          <!-- Foto -->
+          <img src="<%= userRequired.foto %>" class="card-img-top" alt="Foto del usuario <%= userRequired.nombre_1 %> <%= userRequired.apellido_1 %>">
+
+          <!-- Contraseña -->
+          <% if (userRequired.password === "null") { %>
+              <div class="alert alert-warning mt-3" role="alert">
+                  Debes establecer una contraseña.
+              </div>
+          <% } %>
+
+          <!-- Email -->
+          <p class="card-text"><strong>Email:</strong> <%= userRequired.email %></p>
+
+          <!-- Teléfono -->
+          <p class="card-text"><strong>Teléfono:</strong> <%= userRequired.telefono %></p>
+
+          <!-- Dirección -->
+          <p class="card-text"><strong>Dirección:</strong> <%= userRequired.calle %>, <%= userRequired.numero %>, <%= userRequired.localidad %></p>
+
+          <!-- Estado -->
+          <p class="card-text"><strong>Estado:</strong> <%= userRequired.estado === 1 ? 'Alta' : 'Baja' %></p>
+      </div>
+  </div>
+  <!-- Fin de la Card -->
+
+
   <% } else { %>
     <h1>Error: Usuario no encontrado</h1>
   <% } %>

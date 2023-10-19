@@ -14,6 +14,6 @@ router.get('/profile', UserController.profile);
 router.get('/logout', UserController.logout);
 router.get('/all', UserController.getAll);
 router.delete('/:dni', UserController.deleteByDni);
-
+router.get('/view/:dni', UserController.viewUser);
 
 module.exports = router;

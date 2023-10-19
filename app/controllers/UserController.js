@@ -80,7 +80,7 @@ module.exports = {
             const userDni = decodedToken.dni
             console.log(`Activate acount with dni: ${userDni} and userToken: ${userToken}`);
 
-            //const userDataBD = await getByDni() //falta revisar que si existe ese dni en la BD
+            
             const results = await UserModel.updateState(userDni, 1);
             
             if (results.affectedRows > 0){
@@ -173,7 +173,7 @@ module.exports = {
             password: req.body.password
         }
         console.log(typeof userData.dni, typeof userData.password);
-        const  results = await UserModel.getByDni(userData.dni);
+        const  results = await UserModel.authenticate(userData.dni);
         const userDataBD = results[0];
         let userExists =  (results.length > 0) ? true : false;
         if (userExists){
@@ -217,6 +217,30 @@ module.exports = {
         }else{
             res.redirect('/loginForm');
         }
+    },
+    viewUser: async (req, res) => {
+        console.clear();
+
+        if (req.session.user == undefined){
+            console.log("Usuario que hace la consulta no esta logueado en la aplicacion.");
+            return res.redirect('/loginform');
+        }
+
+        const userDni = parseInt(req.params.dni);
+        console.clear();
+        console.log(`viewUser controller buscando usuario con dni: ${userDni}`);
+
+        const  results = await UserModel.getByDni(userDni);
+        const userDataBD = results[0];
+        let userExists =  (results.length > 0) ? true : false;
+        if (userExists){
+            console.log("usuario encontrado!", userDataBD.nombre_1, userDataBD.dni, userDataBD.password, userDataBD.calle);                                                                      
+            res.render('profile', { user: req.session.user, userRequired: userDataBD });
+        }else{
+            console.log(`Usuario con dni: ${userDni} No encontrado`);
+            res.redirect('/users/all');
+        }
+        
     },
     logout: (req, res) => {        
         req.session.user = undefined;

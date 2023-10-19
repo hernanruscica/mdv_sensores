@@ -2,10 +2,7 @@
   "name": "mdv_sensores",
   "version": "1.0.0",
   "description": "aplicacion para manejar usuarios, ubicaciones, dataloggers y visualizar los valores de los sensores",
-  "main": "app.js",
-  "engines": {
-    "node": "16.20.2"
-  },  
+  "main": "app.js",    
   "scripts": {
     "dev": "nodemon app.js"
   },
