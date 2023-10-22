@@ -40,7 +40,7 @@ module.exports = {
         console.log("abierta la conexion con el pool de datos - getAll");
         try {            
             const [rows, fields] = await connection.execute(`SELECT * FROM usuarios;`);            
-            console.log(rows)
+            //console.log(rows)
             return rows;
         }catch (error){
             console.error(error);

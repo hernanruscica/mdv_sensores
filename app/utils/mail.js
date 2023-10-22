@@ -42,7 +42,7 @@ module.exports = {
         // Enviar el correo electrónico
         transporter.sendMail(mailOptions);
     },
-    sendActivation: (data, token) => {
+    sendActivation: async (data, token) => {
         console.log("enviando mail")
 
         const maniana = fechas.obtenerFechaYHora24Horas();
@@ -83,8 +83,8 @@ module.exports = {
                 tls : { rejectUnauthorized: false }
             });
         
-            transporter.sendMail(mailOptions);
-            console.log("Correo enviado (despues del try)")
+            const results = await transporter.sendMail(mailOptions);
+            console.log("Correo enviado (despues del try)", results);
         } catch (error) {
             console.error('Error sending email with the token', error);
         }

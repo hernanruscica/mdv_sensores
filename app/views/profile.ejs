@@ -15,7 +15,7 @@
       </ol>
     </nav>
 
-    <p class="fs-5 mt-5">En esta sección usted puede ver la información de su perfíl y modificar algunos datos.</p>
+    <p class="fs-5 mt-5">En esta sección usted puede ver la información de la cuenta de un usuario.</p>
 
     <div class="card">
       <div class="card-body">
@@ -33,7 +33,8 @@
           <!-- Contraseña -->
           <% if (userRequired.password === "null") { %>
               <div class="alert alert-warning mt-3" role="alert">
-                  Debes establecer una contraseña.
+                  El usuario <strong> debe establecer</strong> una <strong>contraseña</strong>. Si es necesario, puede <strong> enviar el correo</strong> de activación <strong>nuevamente</strong>.
+                  <a href="/users/sendactivation/<%= userRequired.dni %>" class="btn btn-success  mb-1">Enviar correo</a>
               </div>
           <% } %>
 
@@ -48,6 +49,12 @@
 
           <!-- Estado -->
           <p class="card-text"><strong>Estado:</strong> <%= userRequired.estado === 1 ? 'Alta' : 'Baja' %></p>
+          <% if (userRequired.estado === 0) { %>
+            <div class="alert alert-warning mt-3" role="alert">
+                El usuario <strong> debe activar la cuenta </strong> , verificando el correo. Si es necesario, puede <strong> enviar el correo</strong> de activación <strong>nuevamente</strong>.
+                <a href="/users/sendactivation/<%= userRequired.dni %>" class="btn btn-success  mb-1">Enviar correo</a>
+            </div>
+        <% } %>
       </div>
   </div>
   <!-- Fin de la Card -->

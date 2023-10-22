@@ -118,7 +118,7 @@ module.exports = {
     },
     passwordForm: (req, res) => {
         //no la uso por ahora, porque hago un render al formu de cambio de pass
-        const userToken = req.params.userToken;
+        const userDni = req.params.dni;
     },
     setPassword: async (req, res) => {
         const userToken = req.params.userToken;
@@ -258,5 +258,16 @@ module.exports = {
          }else{
             res.status(500).json({message: 'ERROR', results: results});
          }
+    },
+    sendActivation: async (req, res) => {
+        const EsUsuarioHabilitado = (typeof (req.session.user) !== 'undefined');
+        if (!EsUsuarioHabilitado){
+            console.log('No esta logueado o no tiene los permisos necesarios');
+            res.redirect('/');
+        }
+        const userDni = req.params.dni;
+        console.log(`send activation to userDni : ${userDni} lo pide ${req.session.user.nombre_1} ${req.session.user.apellido_1} ${EsUsuarioHabilitado}`);
+        //aca falta la logica para obtener datos del usuario de la bd y despues enviar el email.
+        
     }
 }
