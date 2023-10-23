@@ -4,7 +4,7 @@ const fechas = require('../utils/fechas');
 module.exports = {
     // Crear una función para enviar un correo electrónico
     sendWelcome: (data, token) => {
-        console.log("enviando mail")
+        console.log("enviando mail");
         // Configurar el servicio de correo electrónico
         let transporter = nodemailer.createTransport({
             host: process.env.EMAIL_HOST,
@@ -16,6 +16,7 @@ module.exports = {
             },
             tls : { rejectUnauthorized: false }
         });    
+        
         // Definir los detalles del correo electrónico
         let mailOptions = {
             from: 'info@ruscica-code.ar',
@@ -84,7 +85,7 @@ module.exports = {
             });
         
             const results = await transporter.sendMail(mailOptions);
-            console.log("Correo enviado (despues del try)", results);
+            console.log("Correo enviado (despues del try)");
         } catch (error) {
             console.error('Error sending email with the token', error);
         }

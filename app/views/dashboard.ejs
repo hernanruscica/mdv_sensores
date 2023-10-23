@@ -57,6 +57,22 @@
     <%
     } 
    
+   if (typeof results !== 'undefined' && results === 'correoenviado'){ %>
+    <script>
+        Swal.fire({
+                title: 'Correo enviado !',
+                text: '<%= message %>',
+                icon: 'succes',
+                confirmButtonText: 'Entendido'})
+                .then((result) => {
+                  if (result.isConfirmed){
+                    location.href='/users/all';
+                  }
+                })
+                 
+    </script>
+  <%
+  } 
 %>
 </body>
 </html>

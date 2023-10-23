@@ -77,7 +77,7 @@ module.exports = {
             const decodedToken = jwt.verify(userToken, process.env.SECRET_KEY);
             // Hacer algo con el token decodificado
 
-            const userDni = decodedToken.dni
+            const userDni = decodedToken.dni;
             console.log(`Activate acount with dni: ${userDni} and userToken: ${userToken}`);
 
             
@@ -265,9 +265,27 @@ module.exports = {
             console.log('No esta logueado o no tiene los permisos necesarios');
             res.redirect('/');
         }
-        const userDni = req.params.dni;
+        const userDni = parseInt(req.params.dni) || 0;
         console.log(`send activation to userDni : ${userDni} lo pide ${req.session.user.nombre_1} ${req.session.user.apellido_1} ${EsUsuarioHabilitado}`);
         //aca falta la logica para obtener datos del usuario de la bd y despues enviar el email.
+
+        const results = await UserModel.getByDni(userDni);
+
+        let usuarioEncontrado = results.length > 0;
+
+        if (usuarioEncontrado) {
+            console.log('Usuario Encontrado !', results[0]);
+            const userData = results[0];
+            const userToken = jwt.sign({dni: userData.dni}, process.env.SECRET_KEY, {expiresIn: 86400}); //expira en un dia
+            mail.sendActivation(userData, userToken);
+            return res.render('dashboard', {results: 'correoenviado', 
+                                            message: `Se envio un correo de activación a la dirección: ${userData.email} `,
+                                            user: req.session.user});  
+        }
+        
+        
+        
+        
         
     }
 }
