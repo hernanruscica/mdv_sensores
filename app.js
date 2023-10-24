@@ -22,11 +22,13 @@ app.use(cookieSession({
 
 const  IndexRouter = require('./app/routes/IndexRoutes.js');
 const UsersRouter = require('./app/routes/UserRoutes.js');
+const LocationsRouter = require('./app/routes/LocationRoutes.js')
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use('/', IndexRouter);
-app.use('/users', UsersRouter)
+app.use('/users', UsersRouter);
+app.use('/locations', LocationsRouter);
 app.use(express.static(path.join(__dirname, 'views')));
 app.use(express.static('./public'));
 

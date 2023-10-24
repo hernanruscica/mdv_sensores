@@ -1,0 +1,123 @@
+
+<%- include('partials/cabecera', {titulo: "MDV Sensores - Tabla de Ubicaciones", nombre: user.nombre_1, apellido: user.apellido_1}) %>
+  
+
+<div class="container my-5 py-3 " >
+<% if (typeof user !== 'undefined' && user !== null && user.nombre_1 && user.apellido_1) { %>
+  <h1>Usuarios de MDV S.R.L.</h1>
+
+  <!--Breadcrumb-->
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Inicio</a></li>
+      <li class="breadcrumb-item"><a href="/users/dashboard">Panel de control</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Ubicaciones</li>
+    </ol>
+  </nav>
+
+  <p class="fs-5 mt-5">En esta sección usted puede realizar ALTAS, BAJAS, ACTUALIZACIONES y ELIMINACIONES de Ubicaciones, segun su rol definido por el administrador.</p>
+  <div class="container row justify-content-start">
+      <a href="/locations/registerForm" class="btn btn-success col-5 col-lg-2">Nueva ubicación</a>             
+      
+  </div>
+  
+  <div class="table-responsive">
+    <table class="table  table-striped">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Descripcion</th>
+          <th scope="col">Telefono</th>          
+        </tr>
+      </thead>
+      <tbody>
+       
+        <% locationsList.forEach(function(location, index) { %>
+          <tr>
+            <th scope="row"><%= index + 1 %></th>
+            <td><%= location.nombre %></td>
+            <td><%= location.descripcion %></td>
+            <td><%= location.telefono %></td>            
+            <td>
+              <a href="/locations/view/<%= location.id %>" class="btn btn-primary btn-sm mb-1">Ver</a>
+              <button type="button" class="btn btn-secondary btn-sm mb-1">Editar</button>
+              <button type="button" class="btn btn-danger btn-sm mb-1" 
+                      id="eliminarUsuario" 
+                      data-id="<%= location.id %>" 
+                      data-nombre="<%= user.nombre %>"
+                      >Eliminar</button>
+            </td>
+          </tr>
+        <% }); %>
+
+        
+      </tbody>
+    </table>
+  </div>
+<!--Paginacion-->
+  <nav aria-label="Tabla de usuarios a mostrar" >
+    <h5 class="text-center display-6 fs-5 my-3">Páginas de resultados</h5>
+    <ul class="pagination justify-content-center">
+      
+      <li class="page-item disabled">
+        <span class="page-link">Anterior</span>
+      </li>
+      
+      <li class="page-item active" aria-current="page">
+        <span class="page-link">1</span>
+      </li>
+      <li class="page-item"><a class="page-link" href="#">2</a></li>
+      <li class="page-item"><a class="page-link" href="#">3</a></li>
+      <li class="page-item">
+        <a class="page-link" href="#">Siguiente</a>
+      </li>
+    </ul>
+  </nav>
+
+
+
+
+
+  <% } else { %>
+    <h1>Error: Usuario no encontrado</h1>
+  <% } %>
+</div> 
+
+    
+<%- include('partials/piedepagina') %>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<%    
+    if (typeof results !== 'undefined' && results === 'registrocorrecto'){ %>
+      <script>
+          Swal.fire({
+                  title: 'Registro exitoso !',
+                  text: '<%= message %>',
+                  icon: 'success',
+                  confirmButtonText: 'Entendido'})
+      </script>
+    <%
+    } 
+   
+%>
+
+<%    
+    if (typeof results !== 'undefined' && results === 'registrofallido'){ %>
+      <script>
+          Swal.fire({
+                  title: 'Registro Fallido !',
+                  text: '<%= message %>',
+                  icon: 'error',
+                  confirmButtonText: 'Entendido'})
+      </script>
+    <%
+    } 
+   
+%>
+<script src="/scripts/usersFunctionsBtns.js"></script>
+
+</body>
+</html>
+
+
