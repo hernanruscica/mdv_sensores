@@ -68,10 +68,30 @@ module.exports = {
         const connection = await pool.getConnection();
         console.log("abierta la conexion con el pool de datos - getById");
         try {            
-            const [rows, fields] = await connection.execute(`SELECT nombre_1, nombre_2, apellido_1, apellido_2, dni, foto, password, email, telefono, estado, direcciones.calle, direcciones.numero, direcciones.localidad 
+            const [rows, fields] = await connection.execute(`SELECT usuarios.id, nombre_1, nombre_2, apellido_1, apellido_2, dni, foto, password, email, telefono, estado, direcciones.calle, direcciones.numero, direcciones.localidad 
              FROM usuarios 
              INNER JOIN direcciones ON usuarios.direcciones_id = direcciones.id
              WHERE dni = '${dni}'`);  
+            return rows;
+        } catch (error){
+            //console.error(error);
+            throw error;
+        } finally {
+            connection.release(); // Liberar la conexión de vuelta al pool cuando hayas terminado
+            console.log("cerrada la conexion con el pool de datos");
+        }
+    },
+    getLocationRolesById: async (id) => {
+        const connection = await pool.getConnection();
+        console.log("abierta la conexion con el pool de datos - getLocationRolesById");
+        try {                        
+            const [rows, fields] = await connection.execute(`SELECT ubicaciones.nombre, ubicaciones.descripcion, ubicaciones.foto, ubicaciones.telefono,
+                     usuarios_x_ubicaciones_x_roles.usuarios_id AS usuarios_id, usuarios_x_ubicaciones_x_roles.roles_id AS roles_id,
+                     roles.nombre AS nombre_rol
+             FROM ubicaciones 
+             INNER JOIN usuarios_x_ubicaciones_x_roles ON ubicaciones.id = usuarios_x_ubicaciones_x_roles.ubicaciones_id
+             INNER JOIN roles ON roles_id = roles.id
+             WHERE usuarios_id = '${id}'`);  
             return rows;
         } catch (error){
             //console.error(error);

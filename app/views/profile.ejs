@@ -55,6 +55,16 @@
                 <a href="/users/sendactivation/<%= userRequired.dni %>" class="btn btn-success  mb-1">Enviar correo</a>
             </div>
         <% } %>
+        <!-- userLocationRoles -->
+        
+        <p class="card-text">
+          <strong>Ubicación:</strong> <%= (userLocationRoles) ? userLocationRoles.nombre : '' %>           
+        </p>
+
+        <p class="card-text">
+          <strong>Rol:</strong> <%= (userLocationRoles) ? userLocationRoles.nombre_rol : '' %>
+        </p>
+        
       </div>
   </div>
   <!-- Fin de la Card -->
