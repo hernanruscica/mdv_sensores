@@ -168,26 +168,31 @@ module.exports = {
       res.render('registerUserForm', {user: req.session.user});      
     },
     editForm: async (req, res) => {
-        console.log("editUserForm");            
-        const EsUsuarioHabilitado = (typeof (req.session.user) !== 'undefined');
-        if (!EsUsuarioHabilitado){
-            console.log('No esta logueado o no tiene los permisos necesarios');
-            return res.redirect('/');
+        //prueba con 40159357
+        const userDni = parseInt(req.params.dni) || 0;
+        console.clear();
+        if (req.session.user == undefined){
+            console.log("Usuario que hace la consulta no esta logueado en la aplicacion.");
+            return res.redirect('/loginform');
         }
-        const dni = req.params.dni || 0;
-        const results = await UserModel.getByDni(dni); 
-        let userExists =  (results.length > 0) ;
+
+        
+        console.clear();
+        console.log(`editForm controller buscando usuario con dni: ${userDni}`);
+
+        const  results = await UserModel.getByDni(userDni);
         const userDataBD = results[0];
+        let userExists =  (results.length > 0) ;
         //console.log("viewUser controller", userExists, userDataBD);
         if (userExists === true){
-            console.log("usuario encontrado!", userDataBD.nombre_1, userDataBD.dni, userDataBD.password, userDataBD.calle, userDataBD.id);    
+            console.log("usuario encontrado para editar!", userDataBD.nombre_1, userDataBD.dni, userDataBD.password, userDataBD.calle, userDataBD.id);    
             const userId = userDataBD.id;
             const locationRoles = await UserModel.getLocationRolesById(userId);                                                
             console.log("datos de la ubicacion y roles del usuario:", locationRoles);                  
             return res.render('editUserForm', { user: req.session.user, userRequired: userDataBD, userLocationRoles: locationRoles[0]});
         }else{
-            console.log(`Usuario con dni: ${dni} No encontrado`);
-            // return res.redirect('/');
+            console.log(`Usuario con dni: ${userDni} No encontrado para editar`);
+            return res.redirect('/');
         }
            
     },
@@ -245,14 +250,14 @@ module.exports = {
     viewUser: async (req, res) => {
         //prueba con 40159357
         const userDni = parseInt(req.params.dni) || 0;
-        console.clear();
-        if (req.session.user == undefined){
-            console.log("Usuario que hace la consulta no esta logueado en la aplicacion.");
+        
+        if (req.session.user === undefined){
+            console.log("Usuario que hace la consulta no esta logueado en la aplicacion.", req.session.user);
             return res.redirect('/loginform');
         }
 
         
-        console.clear();
+        
         console.log(`viewUser controller buscando usuario con dni: ${userDni}`);
 
         const  results = await UserModel.getByDni(userDni);
