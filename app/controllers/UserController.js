@@ -167,24 +167,29 @@ module.exports = {
       console.log("registerUserForm");      
       res.render('registerUserForm', {user: req.session.user});      
     },
-    editForm: (req, res) => {
-        console.log("editUserForm");    
-        // Preparar el objeto de datos con el password hasheado
-        const userData = {
-            nombre_1: req.body.nombre_1,
-            nombre_2: req.body.nombre_2 || null,
-            apellido_1: req.body.apellido_1,
-            apellido_2: req.body.apellido_2 || null,  
-            dni: req.body.dni,
-            foto: req.body.foto || null,
-            email: req.body.email,
-            password:  null, // Guarda el password hasheado en la base de datos
-            telefono: req.body.telefono,
-            estado: req.body.estado || 0,
-            //fecha_creacion: req.body.fecha_creacion || '2023-10-12',
-            direcciones_id: req.body.direcciones_id || 1
-        }; 
-        res.render('editUserForm', {user: req.session.user, userRequired: userData});         
+    editForm: async (req, res) => {
+        console.log("editUserForm");            
+        const EsUsuarioHabilitado = (typeof (req.session.user) !== 'undefined');
+        if (!EsUsuarioHabilitado){
+            console.log('No esta logueado o no tiene los permisos necesarios');
+            return res.redirect('/');
+        }
+        const dni = req.params.dni || 0;
+        const results = await UserModel.getByDni(dni); 
+        let userExists =  (results.length > 0) ;
+        const userDataBD = results[0];
+        //console.log("viewUser controller", userExists, userDataBD);
+        if (userExists === true){
+            console.log("usuario encontrado!", userDataBD.nombre_1, userDataBD.dni, userDataBD.password, userDataBD.calle, userDataBD.id);    
+            const userId = userDataBD.id;
+            const locationRoles = await UserModel.getLocationRolesById(userId);                                                
+            console.log("datos de la ubicacion y roles del usuario:", locationRoles);                  
+            return res.render('editUserForm', { user: req.session.user, userRequired: userDataBD, userLocationRoles: locationRoles[0]});
+        }else{
+            console.log(`Usuario con dni: ${dni} No encontrado`);
+            // return res.redirect('/');
+        }
+           
     },
     authenticate: async (req, res) => {
         const userData = {

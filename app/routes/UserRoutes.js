@@ -5,7 +5,7 @@ var router = express.Router();
 
 
 router.get('/registerform',  UserController.registerForm );
-router.get('/editform',  UserController.editForm );
+router.get('/editform/:dni',  UserController.editForm );
 router.post('/add', UserController.add);
 router.get('/activate/:userToken', UserController.activate);
 router.post('/setPassword/:userToken', UserController.setPassword);
