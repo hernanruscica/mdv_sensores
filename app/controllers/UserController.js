@@ -5,9 +5,10 @@ const jwt = require('jsonwebtoken');
 const saltRounds = 10; // Número de rondas de sal para bcrypt
 
 
+
 module.exports = {
     getAll: async (req, res)=>
-    {
+    {        
         console.log('get all users controller');
         const usersList = await UserModel.getAll();
         res.render('users',{user: req.session.user, userList: usersList})
@@ -183,7 +184,7 @@ module.exports = {
         const  results = await UserModel.getByDni(userDni);
         const userDataBD = results[0];
         let userExists =  (results.length > 0) ;
-        //console.log("viewUser controller", userExists, userDataBD);
+        console.log("viewUser controller", userDataBD);
         if (userExists === true){
             console.log("usuario encontrado para editar!", userDataBD.nombre_1, userDataBD.dni, userDataBD.password, userDataBD.calle, userDataBD.id);    
             const userId = userDataBD.id;
