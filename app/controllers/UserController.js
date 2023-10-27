@@ -10,6 +10,8 @@ module.exports = {
     getAll: async (req, res)=>
     {        
         console.log('get all users controller');
+
+
         const usersList = await UserModel.getAll();
         res.render('users',{user: req.session.user, userList: usersList})
     },

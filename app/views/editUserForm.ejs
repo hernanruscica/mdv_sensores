@@ -174,6 +174,79 @@
 </div>
  
     
-<%- include('partials/piedepagina') %>            
+<%- include('partials/piedepagina') %>        
+
+<script>
+  console.log('desde script')
+  const convertJson = async () => {
+      try {
+          // Usa fetch para cargar el archivo JSON
+          const response = await fetch("../../scripts/localidades.json");
+
+          // Verifica si la respuesta es exitosa
+          if (!response.ok) {
+              throw new Error('No se pudo cargar el archivo JSON.');
+          }
+
+          // Convierte la respuesta a JSON
+          const results = await response.json();
+          const localidades = results.localidades;
+          console.log(localidades.length); //4142 localidades
+          console.log(localidades[4130]); //una localidad
+
+          /* Crear un nuevo array con provincias únicas
+          const provinciasUnicas = localidades.reduce((provincias, localidad) => {
+            const provinciaExistente = provincias.find(
+              provincia => provincia.id === localidad.provincia.id
+            );
+
+            if (!provinciaExistente) {
+              provincias.push({
+                id: localidad.provincia.id,
+                nombre: localidad.provincia.nombre
+              });
+            }
+
+            return provincias;
+          }, []);
+
+          console.log(provinciasUnicas);
+           Crear un nuevo array con provincias únicas*/
+
+          /*
+          localidades.forEach(localidad => {
+            console.log(localidad.provincia.nombre, localidad.provincia.id, 
+                        localidad.localidad_censal.nombre, localidad.localidad_censal.id, 
+                        localidad.nombre );
+          });
+          */
+         const localidades_censalesPorProv = localidades.filter(localidad => localidad.provincia.id == "10");
+         const localidadesCensalesNombres = localidades_censalesPorProv.map(localidad_censal => localidad_censal.nombre);
+         console.log(localidadesCensalesNombres);
+          /*
+          const barriosCaba = localidades.filter(localidad => localidad.provincia.id == '06');
+          const nombresBarriosCaba = barriosCaba.map(barrioCaba => barrioCaba.nombre);
+          console.log(nombresBarriosCaba);
+          
+           
+          Crea un nuevo arreglo con los atributos deseados
+          const nuevoFormato = localidades.map(localidad => {
+              return {
+                  nombre: localidad.nombre,
+                  municipio: localidad.municipio.nombre,
+                  provincia: localidad.provincia.nombre
+              };
+          });
+
+          // Devuelve el resultado como JSON
+          return JSON.stringify(nuevoFormato, null, 2);*/
+      } catch (error) {
+          // Maneja errores
+          console.error('Error:', error);
+          return null;
+      }
+  }
+  convertJson();
+</script>
    </body>
 </html>
