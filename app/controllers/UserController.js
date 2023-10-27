@@ -170,14 +170,14 @@ module.exports = {
     editForm: async (req, res) => {
         //prueba con 40159357
         const userDni = parseInt(req.params.dni) || 0;
-        console.clear();
+        //console.clear();
         if (req.session.user == undefined){
             console.log("Usuario que hace la consulta no esta logueado en la aplicacion.");
             return res.redirect('/loginform');
         }
 
         
-        console.clear();
+        //console.clear();
         console.log(`editForm controller buscando usuario con dni: ${userDni}`);
 
         const  results = await UserModel.getByDni(userDni);
@@ -249,7 +249,7 @@ module.exports = {
     },
     viewUser: async (req, res) => {
         //prueba con 40159357
-        const userDni = parseInt(req.params.dni) || 0;
+        const userDni = (req.params.dni) ?  parseInt(req.params.dni) : 0;
         
         if (req.session.user === undefined){
             console.log("Usuario que hace la consulta no esta logueado en la aplicacion.", req.session.user);
@@ -266,13 +266,14 @@ module.exports = {
         //console.log("viewUser controller", userExists, userDataBD);
         if (userExists === true){
             console.log("usuario encontrado!", userDataBD.nombre_1, userDataBD.dni, userDataBD.password, userDataBD.calle, userDataBD.id);    
+            console.log(`de la sesion de ${req.session.user.nombre_1}`)
             const userId = userDataBD.id;
             const locationRoles = await UserModel.getLocationRolesById(userId);                                                
             console.log("datos de la ubicacion y roles del usuario:", locationRoles);                  
             return res.render('profile', { user: req.session.user, userRequired: userDataBD, userLocationRoles: locationRoles[0]});
         }else{
             console.log(`Usuario con dni: ${userDni} No encontrado`);
-            return res.redirect('/');
+            return res.redirect('/users/all');
         }
         
     },
