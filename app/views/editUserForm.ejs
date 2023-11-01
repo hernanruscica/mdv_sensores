@@ -110,17 +110,35 @@
               inputmode="numeric" pattern="[0-9]{1,8}" title="Puede sólo números, hasta 8 dígitos numéricos" maxlength="8" required>     
           </div>
         </div>     
-        <!-- Localidad -->
+
+
+         <!-- Provincia -->         
+        <div class="mb-3 row">
+          <label for="provincia" class="col-sm-2 col-md-3 col-form-label">provincia</label>
+          <div class="col-sm-10 col-md-9">
+              <select class="form-select" id="provincia" name="provincia">
+                <option value="" disabled selected>Seleccione una provincia</option>
+              </select>
+          </div>
+        </div>
+        <!-- partido -->
+        <div class="mb-3 row">
+          <label for="partido" class="col-sm-6 col-md-5 col-form-label">Partido / Departamento / Comuna</label>
+          <div class="col-sm-6 col-md-7">
+              <select class="form-select" id="partido" name="partido" disabled>
+                <option value="" disabled selected>Seleccione una ...</option>
+              </select>
+          </div>
+        </div>
+        <!-- localidad -->
         <div class="mb-3 row">
           <label for="localidad" class="col-sm-2 col-md-3 col-form-label">Localidad</label>
-          <div class="col-sm-10  col-md-9">
-            <input type="text" class="form-control" id="localidad" name="localidad"  aria-describedby="localidadHelp"
-              value="<%= userRequired.localidad %>"            
-              maxlength="45"
-              title="Debe ser un nombre de localidad y no sobrepasar los 45 caracteres"
-              required>          
+          <div class="col-sm-10 col-md-9">
+              <select class="form-select" id="localidad" name="localidad" disabled>
+                <option value="" disabled selected>Seleccione una localidad</option>
+              </select>
           </div>
-        </div>   
+        </div>  
         
         <!-- Estado -->
         <div class="mb-3 row">
@@ -176,7 +194,9 @@
     
 <%- include('partials/piedepagina') %>        
 
+<!--
 <script>
+  
   console.log('desde script')
   const convertJson = async () => {
       try {
@@ -194,8 +214,61 @@
           console.log(localidades.length); //4142 localidades
           console.log(localidades[4130]); //una localidad
 
-          /* Crear un nuevo array con provincias únicas
-          const provinciasUnicas = localidades.reduce((provincias, localidad) => {
+           
+
+          // Función para obtener departamentos únicos filtrados por ID de provincia
+          const obtenerDepartamentosUnicosPorProvincia = (idProvincia) => {
+            const departamentosUnicos = localidades.reduce((departamentos, localidad) => {
+              if (
+                  localidad.departamento.id !== null &&
+                  localidad.departamento.nombre !== null &&
+                  !departamentos[localidad.departamento.id]) {
+                departamentos[localidad.departamento.id] = {
+                  id: localidad.departamento.id,
+                  nombre: localidad.departamento.nombre,
+                  provId: localidad.provincia.id
+                };
+              }
+              return departamentos;
+            }, {});
+
+            const resultado = Object.values(departamentosUnicos);
+
+            return resultado;
+          };
+
+          const idProvinciaParametro = '58';
+          const departamentosFiltrados = obtenerDepartamentosUnicosPorProvincia(idProvinciaParametro);
+          //console.log(departamentosFiltrados);   
+
+         const localidades_x_departamento = localidades.filter(localidad => localidad.departamento.id == "58056").map((loc_x_depto) => {
+              return {
+                id: loc_x_depto.localidad_censal.id,
+                nombre: loc_x_depto.nombre
+              }
+         })   
+         //console.log(localidades_x_departamento);
+
+         const misLocalidades = localidades.map((localidad) => {
+              return {
+                id: localidad.localidad_censal.id,
+                nombre: localidad.nombre,
+                departamentoId: localidad.departamento.id,
+                proviciaId: localidad.provincia.id
+              }
+         })   
+         console.log(misLocalidades);
+        
+      } catch (error) {
+          // Maneja errores
+          console.error('Error:', error);
+          return null;
+      }
+  }
+  convertJson();
+
+  //Crear un nuevo array con provincias únicas
+  const provinciasUnicas = localidades.reduce((provincias, localidad) => {
             const provinciaExistente = provincias.find(
               provincia => provincia.id === localidad.provincia.id
             );
@@ -209,44 +282,12 @@
 
             return provincias;
           }, []);
+          //Crear un nuevo array con provincias únicas
+          //console.log(provinciasUnicas);
 
-          console.log(provinciasUnicas);
-           Crear un nuevo array con provincias únicas*/
-
-          /*
-          localidades.forEach(localidad => {
-            console.log(localidad.provincia.nombre, localidad.provincia.id, 
-                        localidad.localidad_censal.nombre, localidad.localidad_censal.id, 
-                        localidad.nombre );
-          });
-          */
-         const localidades_censalesPorProv = localidades.filter(localidad => localidad.provincia.id == "10");
-         const localidadesCensalesNombres = localidades_censalesPorProv.map(localidad_censal => localidad_censal.nombre);
-         console.log(localidadesCensalesNombres);
-          /*
-          const barriosCaba = localidades.filter(localidad => localidad.provincia.id == '06');
-          const nombresBarriosCaba = barriosCaba.map(barrioCaba => barrioCaba.nombre);
-          console.log(nombresBarriosCaba);
-          
-           
-          Crea un nuevo arreglo con los atributos deseados
-          const nuevoFormato = localidades.map(localidad => {
-              return {
-                  nombre: localidad.nombre,
-                  municipio: localidad.municipio.nombre,
-                  provincia: localidad.provincia.nombre
-              };
-          });
-
-          // Devuelve el resultado como JSON
-          return JSON.stringify(nuevoFormato, null, 2);*/
-      } catch (error) {
-          // Maneja errores
-          console.error('Error:', error);
-          return null;
-      }
-  }
-  convertJson();
+  
 </script>
+-->
+<script src="/scripts/localidadesData.js"></script>
    </body>
 </html>
