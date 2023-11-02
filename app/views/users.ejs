@@ -43,7 +43,7 @@
             <td>Admin</td>
             <td>
               <a href="/users/view/<%= user.dni %>" class="btn btn-primary btn-sm mb-1">Ver</a>
-              <button type="button" class="btn btn-secondary btn-sm mb-1">Editar</button>
+              <a href="/users/editform/<%= user.dni %>"  class="btn btn-secondary btn-sm mb-1">Editar</a>
               <button type="button" class="btn btn-danger btn-sm mb-1" 
                       id="eliminarUsuario" 
                       data-dni="<%= user.dni %>" 

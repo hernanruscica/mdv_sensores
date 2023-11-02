@@ -1,0 +1,72 @@
+
+<%- include('partials/cabecera', {titulo: "MDV Sensores - Panel de Control", nombre: user.nombre_1, apellido: user.apellido_1}) %>
+  
+
+<div class="container my-5 py-3 " >
+<% if (typeof user !== 'undefined' && user !== null && user.nombre_1 && user.apellido_1) { %>
+    <h1>Perfil de la ubicación <%= location[0].nombre %> </h1>
+
+    <!--Breadcrumb-->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Inicio</a></li>        
+        <li class="breadcrumb-item"><a href="/users/dashboard">Panel de control</a></li> 
+        <li class="breadcrumb-item"><a href="/locations/all">Ubicaciones</a></li>   
+        <li class="breadcrumb-item active" aria-current="page">Ver ubicación</li>
+      </ol>
+    </nav>
+
+    <p class="fs-5 mt-5">En esta sección usted puede ver la información de una ubicación.</p>
+    <div class="container row justify-content-start">
+       <a href="/locations/editform/<%= location[0].id %>" class="btn btn-secondary col-5 col-lg-2">Editar Ubicación</a>     
+  </div>
+
+  <div class="d-flex flex-column flex-lg-row ">
+    <div class="card m-3 col-12 col-lg-6">
+        <div class="card-body">
+            <!-- Nombre y Apellido -->
+            <h5 class="card-title">
+                <%= location[0].nombre %>  
+            </h5>
+
+            <!-- Direccion -->
+            <p class="card-text"><strong>Direccion:</strong> <%= location[0].calle %> <%= location[0].numero %> <%= location[0].localidad %></p>
+
+            <!-- Foto -->
+            <img src="<%= location.foto %>" class="card-img-top" alt="Foto de la ubicacion <%= location.nombre %> ">
+
+            
+            <!-- Teléfono -->
+            <p class="card-text"><strong>Teléfono:</strong> <%= location[0].telefono %></p>
+
+        </div>
+        
+    </div>
+    <!-- Fin de la Card personal-->
+
+    <!-- Principio de la Card de datalogger-->
+    <div class="card m-3 col-12 col-lg-6">    
+      <div class="card-body">
+        <h5 class="card-title">
+          Dataloggers
+        </h5>
+        <!-- userLocationRoles -->        
+        <p class="card-text">
+          Informacion y enlaces a los dataloggers instalados en esta ubicacion.
+        </p>
+      </div>
+    </div>
+  <!-- Fin  de la Card de dataloggers-->
+    </div>
+
+
+  <% } else { %>
+    <h1>Error: Usuario no encontrado</h1>
+  <% } %>
+</div>
+ 
+    
+<%- include('partials/piedepagina') %>        
+    
+</body>
+</html>

@@ -8,7 +8,7 @@ router.get('/all', LocationController.getAll);
 // router.post('/add', UserController.add);
 // router.get('/profile', UserController.profile);
 // router.delete('/:dni', UserController.deleteByDni);
-// router.get('/view/:dni', UserController.viewUser);
+ router.get('/view/:id', LocationController.viewLocation);
 
 
 

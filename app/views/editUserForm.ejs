@@ -116,7 +116,7 @@
         <div class="mb-3 row">
           <label for="provincia" class="col-sm-2 col-md-3 col-form-label">provincia</label>
           <div class="col-sm-10 col-md-9">
-              <select class="form-select" id="provincia" name="provincia">
+              <select class="form-select" id="provincias" name="provincias">
                 <option value="" disabled selected>Seleccione una provincia</option>
               </select>
           </div>
@@ -125,17 +125,17 @@
         <div class="mb-3 row">
           <label for="partido" class="col-sm-6 col-md-5 col-form-label">Partido / Departamento / Comuna</label>
           <div class="col-sm-6 col-md-7">
-              <select class="form-select" id="partido" name="partido" disabled>
+              <select class="form-select" id="partidos" name="partidos" disabled>
                 <option value="" disabled selected>Seleccione una ...</option>
               </select>
           </div>
         </div>
         <!-- localidad -->
         <div class="mb-3 row">
-          <label for="localidad" class="col-sm-2 col-md-3 col-form-label">Localidad</label>
+          <label for="localidad" class="col-sm-2 col-md-3 col-form-label">Localidad / Barrio</label>
           <div class="col-sm-10 col-md-9">
-              <select class="form-select" id="localidad" name="localidad" disabled>
-                <option value="" disabled selected>Seleccione una localidad</option>
+              <select class="form-select" id="localidades" name="localidades" disabled>
+                <option value="" disabled selected>Seleccione una ...</option>
               </select>
           </div>
         </div>  
@@ -288,6 +288,6 @@
   
 </script>
 -->
-<script src="/scripts/localidadesData.js"></script>
+<script src="/scripts/loadComboLocation.mjs" type="module"></script>
    </body>
 </html>

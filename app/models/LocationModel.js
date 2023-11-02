@@ -28,5 +28,23 @@ module.exports = {
             connection.release(); // Liberar la conexión de vuelta al pool cuando hayas terminado
             console.log("cerrada la conexion con el pool de datos");
         }
+    },
+    getById: async (id) => {        
+        const connection = await pool.getConnection();
+        console.log("abierta la conexion con el pool de datos - Location getById");
+        try {            
+            const [rows, fields] = await connection.execute(`SELECT ubicaciones.id, ubicaciones.nombre, ubicaciones.telefono, ubicaciones.foto, direcciones.calle, direcciones.numero, direcciones.localidad 
+             FROM ubicaciones 
+             INNER JOIN direcciones ON ubicaciones.direcciones_id = direcciones.id
+             WHERE ubicaciones.id = '${id}'`);  
+             
+            return rows;
+        } catch (error){
+            //console.error(error);
+            throw error;
+        } finally {
+            connection.release(); // Liberar la conexión de vuelta al pool cuando hayas terminado
+            console.log("cerrada la conexion con el pool de datos");
+        }
     }
 }
