@@ -1,3 +1,4 @@
+const LocationModel = require('../models/LocationModel.js');
 const UserModel = require('../models/UserModel.js');
 const mail = require('../utils/mail.js');
 const bcrypt  = require('bcryptjs');
@@ -166,9 +167,30 @@ module.exports = {
               }
         }
     },
-    registerForm: (req, res) => {
+    registerForm: async (req, res) => {
       console.log("registerUserForm");      
-      res.render('registerUserForm', {user: req.session.user});      
+
+      const  locations = await LocationModel.getAll();
+
+      const roles = [
+        {
+          id: 7,
+          nombre: "operario",
+          descripcion: "Operario de una ubicación",
+        },
+        {
+          id: 8,
+          nombre: "administrador",
+          descripcion: "Admin de una ubicacion, controla operarios",
+         }
+        // {
+        //   id: 9,
+        //   nombre: "propietario",
+        //   descripcion: "'Todos los permisos, sobre las demas tablas'",
+        // }
+      ];
+
+      res.render('registerUserForm', {user: req.session.user, locations: locations, roles: roles});      
     },
     editForm: async (req, res) => {
         //prueba con 40159357
@@ -187,12 +209,27 @@ module.exports = {
         const userDataBD = results[0];
         let userExists =  (results.length > 0) ;
         console.log("viewUser controller", userDataBD);
+
+        const  locations = await LocationModel.getAll();
+        const roles = [
+            {
+              id: 7,
+              nombre: "operario",
+              descripcion: "Operario de una ubicación",
+            },
+            {
+              id: 8,
+              nombre: "administrador",
+              descripcion: "Admin de una ubicacion, controla operarios",
+             }            
+          ];
+
         if (userExists === true){
             console.log("usuario encontrado para editar!", userDataBD.nombre_1, userDataBD.dni, userDataBD.password, userDataBD.calle, userDataBD.id);    
             const userId = userDataBD.id;
             const locationRoles = await UserModel.getLocationRolesById(userId);                                                
             console.log("datos de la ubicacion y roles del usuario:", locationRoles);                  
-            return res.render('editUserForm', { user: req.session.user, userRequired: userDataBD, userLocationRoles: locationRoles[0]});
+            return res.render('editUserForm', { user: req.session.user, userRequired: userDataBD, userLocationRoles: locationRoles[0], locations: locations, roles: roles});
         }else{
             console.log(`Usuario con dni: ${userDni} No encontrado para editar`);
             return res.redirect('/');

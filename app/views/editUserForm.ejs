@@ -171,16 +171,38 @@
         <h5 class="card-title">
           Ubicaciones y roles
         </h5>
-        <!-- userLocationRoles -->
-        <p class="card-text">
-          <strong>Ubicación:</strong>
-          <%= (userLocationRoles) ? userLocationRoles.nombre : '' %>
-        </p>
+       
 
-        <p class="card-text">
-          <strong>Rol:</strong>
-          <%= (userLocationRoles) ? userLocationRoles.nombre_rol : '' %>
-        </p>
+        <div class="mb-3 row">
+          <label for="ubicacion" class="col-sm-3 col-md-5 col-form-label">Ubicación</label>
+          <div class="col-sm-9 col-md-7 my-2">
+            <select class="form-select" id="ubicacion" name="ubicacion">
+              <option value="" disabled selected>Seleccione una ...</option>
+              <% locations.forEach(function(location, index) { %>
+                <option value="<%= location.id %>"                  
+                  <%= userLocationRoles.nombre === location.nombre ? 'selected' : '' %>
+                  >
+                  <%= location.nombre %>
+                </option>
+                <% }); %>
+            </select>
+          </div>
+        </div>
+        <div class="mb-3 row">
+          <label for="rol" class="col-sm-3 col-md-5 col-form-label">Rol</label>
+          <div class="col-sm-9 col-md-7  my-2">
+            <select class="form-select" id="rol" name="rol">
+              <option value="" disabled selected>Seleccione una ...</option>
+              <% roles.forEach(function(rol, index) { %>
+                <option value="<%= rol.id %>"
+                  <%= userLocationRoles.roles_id === rol.id ? 'selected' : '' %>
+                  >
+                  <%= rol.nombre %>
+                </option>
+                <% }); %>
+            </select>
+          </div>
+        </div>   
       </div>
     </div>
     <!-- Fin  de la Card de ubicaciones y roles-->
