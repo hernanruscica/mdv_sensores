@@ -227,9 +227,10 @@ module.exports = {
         if (userExists === true){
             console.log("usuario encontrado para editar!", userDataBD.nombre_1, userDataBD.dni, userDataBD.password, userDataBD.calle, userDataBD.id);    
             const userId = userDataBD.id;
-            const locationRoles = await UserModel.getLocationRolesById(userId);                                                
+            let locationRoles = await UserModel.getLocationRolesById(userId);        
+            locationRoles = locationRoles.length > 0 ? locationRoles[0] :  {nombre: null, roles_id: null} ;                                      
             console.log("datos de la ubicacion y roles del usuario:", locationRoles);                  
-            return res.render('editUserForm', { user: req.session.user, userRequired: userDataBD, userLocationRoles: locationRoles[0], locations: locations, roles: roles});
+            return res.render('editUserForm', { user: req.session.user, userRequired: userDataBD, userLocationRoles: locationRoles, locations: locations, roles: roles});
         }else{
             console.log(`Usuario con dni: ${userDni} No encontrado para editar`);
             return res.redirect('/');

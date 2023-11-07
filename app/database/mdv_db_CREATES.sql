@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `grupo97ispc`.`usuarios` (
   `telefono` VARCHAR(45) NOT NULL,
   `estado` INT NOT NULL,
   `fecha_creacion` DATE NULL,
-  `direcciones_id` INT UNSIGNED NOT NULL,
+  `direcciones_id` INT UNSIGNED  NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`, `direcciones_id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC) ,
   UNIQUE INDEX `dni_UNIQUE` (`dni` ASC) ,

@@ -38,12 +38,11 @@ ALTER TABLE `mdvsrl`.`usuarios`
 MODIFY  COLUMN `direcciones_id` INT UNSIGNED NULL;
 
 ALTER TABLE `mdvsrl`.`usuarios`
-MODIFY COLUMN `direcciones_id` INT UNSIGNED NULL;
-
-ALTER TABLE `mdvsrl`.`usuarios`
 DROP PRIMARY KEY,
 ADD UNIQUE INDEX `unique_direcciones_id` (`direcciones_id` ASC);
 
+ALTER TABLE `usuarios`
+MODIFY COLUMN `direcciones_id` INT UNSIGNED NOT NULL DEFAULT 0;
 
 
 SELECT * FROM `mdvsrl`.`direcciones`;
