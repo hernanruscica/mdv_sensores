@@ -361,9 +361,10 @@ module.exports = {
             console.log('Usuario No Encontrado !');
         }
         
-        
-        
-        
-        
+    },
+    update: (req, res) => {
+        const data = req.body;
+        res.redirect('/');
+        console.log(data);
     }
 }

@@ -52,14 +52,7 @@
             <!-- Dirección -->
             <p class="card-text"><strong>Dirección:</strong> <%= userRequired.calle %>, <%= userRequired.numero %>, <%= userRequired.localidad %></p>
 
-            <!-- Estado -->
-            <p class="card-text"><strong>Estado:</strong> <%= userRequired.estado === 1 ? 'Alta' : 'Baja' %></p>
-            <% if (userRequired.estado === 0) { %>
-              <div class="alert alert-warning mt-3" role="alert">
-                  El usuario <strong> debe activar la cuenta </strong> , verificando el correo. Si es necesario, puede <strong> enviar el correo</strong> de activación <strong>nuevamente</strong>.
-                  <a href="/users/sendactivation/<%= userRequired.dni %>" class="btn btn-success  mb-1">Enviar correo</a>
-              </div>
-          <% } %>                
+                        
         </div>
         
     </div>
@@ -79,6 +72,15 @@
         <p class="card-text">
           <strong>Rol:</strong> <%= (userLocationRoles) ? userLocationRoles.nombre_rol : '' %>
         </p>
+
+        <!-- Estado -->
+        <p class="card-text"><strong>Estado:</strong> <%= userRequired.estado === 1 ? 'Alta' : 'Baja' %></p>
+        <% if (userRequired.estado === 0) { %>
+          <div class="alert alert-warning mt-3" role="alert">
+              El usuario <strong> debe activar la cuenta </strong> , verificando el correo. Si es necesario, puede <strong> enviar el correo</strong> de activación <strong>nuevamente</strong>.
+              <a href="/users/sendactivation/<%= userRequired.dni %>" class="btn btn-success  mb-1">Enviar correo</a>
+          </div>
+      <% } %>    
       </div>
     </div>
   <!-- Fin  de la Card de ubicaciones y roles-->

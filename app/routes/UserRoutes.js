@@ -3,7 +3,7 @@ const UserController = require('../controllers/UserController.js');
 
 var router = express.Router();
 
-
+router.post('/update', UserController.update);
 router.get('/registerform',  UserController.registerForm );
 router.get('/editform/:dni',  UserController.editForm );
 router.post('/add', UserController.add);
@@ -17,5 +17,6 @@ router.get('/all', UserController.getAll);
 router.delete('/:dni', UserController.deleteByDni);
 router.get('/view/:dni', UserController.viewUser);
 router.get('/sendactivation/:dni', UserController.sendActivation);
+
 
 module.exports = router;

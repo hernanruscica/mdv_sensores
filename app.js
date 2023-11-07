@@ -3,6 +3,7 @@ const dotenv = require('dotenv').config();
 const path = require('path');
 const bodyParser = require('body-parser');
 const cookieSession = require("cookie-session");
+const methodOverride = require('method-override');
 
 
 const app = express();
@@ -24,6 +25,7 @@ const  IndexRouter = require('./app/routes/IndexRoutes.js');
 const UsersRouter = require('./app/routes/UserRoutes.js');
 const LocationsRouter = require('./app/routes/LocationRoutes.js')
 
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use('/', IndexRouter);
@@ -31,6 +33,8 @@ app.use('/users', UsersRouter);
 app.use('/locations', LocationsRouter);
 app.use(express.static(path.join(__dirname, 'views')));
 app.use(express.static('./public'));
+app.use(methodOverride('_method'));
+
 
 
 app.listen(port, () => console.log(`App escuchando en http://${hostName}:${port}`));

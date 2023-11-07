@@ -18,166 +18,151 @@
       
   <div class="d-flex flex-column flex-lg-row ">
     <div class="card m-3 col-12 col-lg-6">
-      <div class="card-body">      
+      <div class="card-body">   
+        <form action="/users/update" method="post" >
+          <input type="hidden" name="_method" value="put">
+          <!-- Foto -->
+          <img src="<%= userRequired.foto %>" class="card-img-top"
+            alt="Foto del usuario <%= userRequired.nombre_1 %> <%= userRequired.apellido_1 %>">
 
-        <!-- Foto -->
-        <img src="<%= userRequired.foto %>" class="card-img-top"
-          alt="Foto del usuario <%= userRequired.nombre_1 %> <%= userRequired.apellido_1 %>">
+          <!--Primer nombre-->
+          <div class="mb-3 row">
+            <label for="nombre_1" class="col-sm-2 col-md-3 col-form-label">Primer Nombre</label>
+            <div class="col-sm-10  col-md-9">
+              <input type="text" class="form-control" id="nombre_1" name="nombre_1"
+                value="<%= userRequired.nombre_1 %>">
+            </div>
+          </div>
+          <!--Segundo nombre-->
+          <div class="mb-3 row">
+            <label for="nombre_2" class="col-sm-2 col-md-3 col-form-label">Segundo Nombre</label>
+            <div class="col-sm-10  col-md-9">
+              <input type="text" class="form-control" id="nombre_2" name="nombre_2"
+                value="<%= userRequired.nombre_2 %>">
+            </div>
+          </div>
+          <!--Primer apellido-->
+          <div class="mb-3 row">
+            <label for="apellido_1" class="col-sm-2 col-md-3 col-form-label">Primer apellido</label>
+            <div class="col-sm-10  col-md-9">
+              <input type="text" class="form-control" id="apellido_1" name="apellido_1"
+                value="<%= userRequired.apellido_1 %>">
+            </div>
+          </div>
+          <!--Segundo apellido-->
+          <div class="mb-3 row">
+            <label for="apellido_2" class="col-sm-2 col-md-3 col-form-label">Segundo apellido</label>
+            <div class="col-sm-10  col-md-9">
+              <input type="text" class="form-control" id="apellido_2" name="apellido_2"
+                value="<%= userRequired.apellido_2 %>">
+            </div>
+          </div>
+          <!--DNI-->
+          <div class="mb-3 row">
+            <label for="dni" class="col-sm-2 col-md-3 col-form-label">D.N.I.</label>
+            <div class="col-sm-10  col-md-9">
+              <input type="text" class="form-control" id="dni" name="dni"
+                value="<%= userRequired.dni %>">
+            </div>
+          </div>
+          <!--Email-->
+          <div class="mb-3 row">
+            <label for="email" class="col-sm-2 col-md-3 col-form-label">Correo electrónico</label>
+            <div class="col-sm-10  col-md-9">
+              <input type="email" class="form-control" id="email" name="email"  aria-describedby="emailHelp"
+                value="<%= userRequired.email %>"
+                pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" 
+                maxlength="45" 
+                title="Debe tener formato de correo electrónico válido y no sobrepasar los 45 caracteres [CAMPO OBLIGATORIO]" 
+                required>
+              
+            </div>
+          </div>     
+          <!--Teléfono-->
+          <div class="mb-3 row">
+            <label for="telefono" class="col-sm-2 col-md-3 col-form-label">Teléfono</label>
+            <div class="col-sm-10  col-md-9">
+              <input type="tel" class="form-control" id="telefono" name="telefono"  aria-describedby="telefonoHelp"
+                value="<%= userRequired.telefono %>"
+                pattern="^(?:(?:[1-9]\d{1}[1-9]\d{7})|(?:[1-9]\d{2}[1-9]\d{6}))$"
+                maxlength="10"
+                title="Debe tener formato de teléfono válido en Argentina y no sobrepasar los 10 dígitos"
+                required>          
+            </div>
+          </div>       
+          
+          <h3 class="display-3 fs-2 ">Domicilio</h3>
 
-        <!--Primer nombre-->
-        <div class="mb-3 row">
-          <label for="nombre_1" class="col-sm-2 col-md-3 col-form-label">Primer Nombre</label>
-          <div class="col-sm-10  col-md-9">
-            <input type="text" class="form-control" id="nombre_1" name="nombre_1"
-              value="<%= userRequired.nombre_1 %>">
+          <% if (userRequired.calle === 'null' || userRequired.numero === 0  ) { %>
+            <div class="alert alert-warning mt-3" role="alert">
+              El usuario <strong> debe indicar su domicilio </strong> , completando, calle, numero, provincia, partido, y localidad. 
+              <!-- estos datos <strong> son obligatorios </strong>.             -->
+            </div>
+          <% } %>
+
+          <!-- calle -->
+          <div class="mb-3 row">
+            <label for="calle" class="col-sm-2 col-md-3 col-form-label">Calle</label>
+            <div class="col-sm-10  col-md-9">
+              <input type="text" class="form-control" id="calle" name="calle"  aria-describedby="calleHelp"
+                value="<%=  userRequired.calle  %>"            
+                maxlength="45"
+                title="Debe ser un nombre de calle y no sobrepasar los 45 caracteres"
+                required>          
+            </div>
+          </div>     
+          <!-- Número -->
+          <div class="mb-3 row">
+            <label for="numero" class="col-sm-2 col-md-3 col-form-label">Número</label>
+            <div class="col-sm-10  col-md-9">
+              <input type="text" class="form-control" id="numero" name="numero" aria-describedby="numeroHelp" 
+              value="<%= userRequired.numero  %>"            
+                inputmode="numeric" pattern="[0-9]{1,8}" title="Puede sólo números, hasta 8 dígitos numéricos" maxlength="8" required>     
+            </div>
+          </div>     
+
+
+          <!-- Provincia -->         
+          <div class="mb-3 row">
+            <label for="provincia" class="col-sm-2 col-md-3 col-form-label">provincia</label>
+            <div class="col-sm-10 col-md-9">
+                <select class="form-select" id="provincias" name="provincias">
+                  <option value="" disabled selected>Seleccione una provincia</option>
+                </select>
+            </div>
           </div>
-        </div>
-        <!--Segundo nombre-->
-        <div class="mb-3 row">
-          <label for="nombre_2" class="col-sm-2 col-md-3 col-form-label">Segundo Nombre</label>
-          <div class="col-sm-10  col-md-9">
-            <input type="text" class="form-control" id="nombre_2" name="nombre_2"
-              value="<%= userRequired.nombre_2 %>">
+          <!-- partido -->
+          <div class="mb-3 row">
+            <label for="partido" class="col-sm-6 col-md-5 col-form-label">Partido / Departamento / Comuna</label>
+            <div class="col-sm-6 col-md-7">
+                <select class="form-select" id="partidos" name="partidos" disabled>
+                  <option value="" disabled selected>Seleccione una ...</option>
+                </select>
+            </div>
           </div>
-        </div>
-        <!--Primer apellido-->
-        <div class="mb-3 row">
-          <label for="apellido_1" class="col-sm-2 col-md-3 col-form-label">Primer apellido</label>
-          <div class="col-sm-10  col-md-9">
-            <input type="text" class="form-control" id="apellido_1" name="apellido_1"
-              value="<%= userRequired.apellido_1 %>">
-          </div>
-        </div>
-        <!--Segundo apellido-->
-        <div class="mb-3 row">
-          <label for="apellido_2" class="col-sm-2 col-md-3 col-form-label">Segundo apellido</label>
-          <div class="col-sm-10  col-md-9">
-            <input type="text" class="form-control" id="apellido_2" name="apellido_2"
-              value="<%= userRequired.apellido_2 %>">
-          </div>
-        </div>
-        <!--DNI-->
-        <div class="mb-3 row">
-          <label for="dni" class="col-sm-2 col-md-3 col-form-label">D.N.I.</label>
-          <div class="col-sm-10  col-md-9">
-            <input type="text" class="form-control" id="dni" name="dni"
-              value="<%= userRequired.dni %>">
-          </div>
-        </div>
-        <!--Email-->
-        <div class="mb-3 row">
-          <label for="email" class="col-sm-2 col-md-3 col-form-label">Correo electrónico</label>
-          <div class="col-sm-10  col-md-9">
-            <input type="email" class="form-control" id="email" name="email"  aria-describedby="emailHelp"
-              value="<%= userRequired.email %>"
-              pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" 
-              maxlength="45" 
-              title="Debe tener formato de correo electrónico válido y no sobrepasar los 45 caracteres [CAMPO OBLIGATORIO]" 
-              required>
+          <!-- localidad -->
+          <div class="mb-3 row">
+            <label for="localidad" class="col-sm-2 col-md-3 col-form-label">Localidad / Barrio</label>
+            <div class="col-sm-10 col-md-9">
+                <select class="form-select" id="localidades" name="localidades" disabled>
+                  <option value="" disabled selected>Seleccione una ...</option>
+                </select>
+            </div>
+          </div>  
+          <div class="mb-3 row">
             
+            <button type="submit" class="btn btn-primary">Guardar cambios</button>
           </div>
-        </div>     
-        <!--Teléfono-->
-        <div class="mb-3 row">
-          <label for="telefono" class="col-sm-2 col-md-3 col-form-label">Teléfono</label>
-          <div class="col-sm-10  col-md-9">
-            <input type="tel" class="form-control" id="telefono" name="telefono"  aria-describedby="telefonoHelp"
-              value="<%= userRequired.telefono %>"
-              pattern="^(?:(?:[1-9]\d{1}[1-9]\d{7})|(?:[1-9]\d{2}[1-9]\d{6}))$"
-              maxlength="10"
-              title="Debe tener formato de teléfono válido en Argentina y no sobrepasar los 10 dígitos"
-              required>          
-          </div>
-        </div>       
-        
-        <h3 class="display-3 fs-2 ">Domicilio</h3>
-
-        <% if (userRequired.calle === 'null' || userRequired.numero === 0  ) { %>
-          <div class="alert alert-warning mt-3" role="alert">
-            El usuario <strong> debe indicar su domicilio </strong> , completando, calle, numero, provincia, partido, y localidad. 
-            estos datos <strong> son obligatorios </strong>.            
-          </div>
-        <% } %>
-
-        <!-- calle -->
-        <div class="mb-3 row">
-          <label for="calle" class="col-sm-2 col-md-3 col-form-label">Calle</label>
-          <div class="col-sm-10  col-md-9">
-            <input type="text" class="form-control" id="calle" name="calle"  aria-describedby="calleHelp"
-              value="<%=  userRequired.calle  %>"            
-              maxlength="45"
-              title="Debe ser un nombre de calle y no sobrepasar los 45 caracteres"
-              required>          
-          </div>
-        </div>     
-        <!-- Número -->
-        <div class="mb-3 row">
-          <label for="numero" class="col-sm-2 col-md-3 col-form-label">Número</label>
-          <div class="col-sm-10  col-md-9">
-            <input type="text" class="form-control" id="numero" name="numero" aria-describedby="numeroHelp" 
-            value="<%= userRequired.numero  %>"            
-              inputmode="numeric" pattern="[0-9]{1,8}" title="Puede sólo números, hasta 8 dígitos numéricos" maxlength="8" required>     
-          </div>
-        </div>     
-
-
-         <!-- Provincia -->         
-        <div class="mb-3 row">
-          <label for="provincia" class="col-sm-2 col-md-3 col-form-label">provincia</label>
-          <div class="col-sm-10 col-md-9">
-              <select class="form-select" id="provincias" name="provincias">
-                <option value="" disabled selected>Seleccione una provincia</option>
-              </select>
-          </div>
-        </div>
-        <!-- partido -->
-        <div class="mb-3 row">
-          <label for="partido" class="col-sm-6 col-md-5 col-form-label">Partido / Departamento / Comuna</label>
-          <div class="col-sm-6 col-md-7">
-              <select class="form-select" id="partidos" name="partidos" disabled>
-                <option value="" disabled selected>Seleccione una ...</option>
-              </select>
-          </div>
-        </div>
-        <!-- localidad -->
-        <div class="mb-3 row">
-          <label for="localidad" class="col-sm-2 col-md-3 col-form-label">Localidad / Barrio</label>
-          <div class="col-sm-10 col-md-9">
-              <select class="form-select" id="localidades" name="localidades" disabled>
-                <option value="" disabled selected>Seleccione una ...</option>
-              </select>
-          </div>
-        </div>  
-        
-        <!-- Estado -->
-        <div class="mb-3 row">
-          <label for="estado" class="col-sm-2 col-md-3 col-form-label">Estado</label>
-          <div class="col-sm-10 col-md-9">
-              <select class="form-select" id="estado" name="estado">
-                  <option value="1" <%= userRequired.estado === 1 ? 'selected' : '' %>>Alta</option>
-                  <option value="0" <%= userRequired.estado === 0 ? 'selected' : '' %>>Baja</option>
-              </select>
-          </div>
-        </div>
-
-      </div>
-            
+        </form> 
+      </div>    
       
-
-      <% if (userRequired.estado===0) { %>
-        <div class="alert alert-warning mt-3" role="alert">
-          El usuario <strong> debe activar la cuenta </strong> , verificando el correo. Si es necesario, puede <strong>
-            enviar el correo</strong> de activación <strong>nuevamente</strong>.
-          <a href="/users/sendactivation/<%= userRequired.dni %>" class="btn btn-success  mb-1">Enviar correo</a>
-        </div>
-        <% } %>
     </div>
     <!-- Fin de la Card personal-->
   
     <div class="card m-3 col-12 col-lg-6">
       <div class="card-body">
         <h5 class="card-title">
-          Ubicaciones y roles
+          Ubicaciones, roles y estado
         </h5>
        
 
@@ -211,6 +196,24 @@
             </select>
           </div>
         </div>   
+        <!-- Estado -->
+        <div class="mb-3 row">
+          <label for="estado" class="col-sm-2 col-md-3 col-form-label">Estado</label>
+          <div class="col-sm-10 col-md-9">
+              <select class="form-select" id="estado" name="estado">
+                  <option value="1" <%= userRequired.estado === 1 ? 'selected' : '' %>>Alta</option>
+                  <option value="0" <%= userRequired.estado === 0 ? 'selected' : '' %>>Baja</option>
+              </select>
+          </div>
+          <% if (userRequired.estado===0) { %>
+            <div class="alert alert-warning mt-3" role="alert">
+              El usuario <strong> debe activar la cuenta </strong> , verificando el correo. Si es necesario, puede <strong>
+                enviar el correo</strong> de activación <strong>nuevamente</strong>.
+              <a href="/users/sendactivation/<%= userRequired.dni %>" class="btn btn-success  mb-1">Enviar correo</a>
+            </div>
+            <% } %>
+        </div>
+
       </div>
     </div>
     <!-- Fin  de la Card de ubicaciones y roles-->

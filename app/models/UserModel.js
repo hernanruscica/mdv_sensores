@@ -68,7 +68,7 @@ module.exports = {
         const connection = await pool.getConnection();
         console.log("abierta la conexion con el pool de datos - getById");
         try {            
-            const [rows, fields] = await connection.execute(`SELECT usuarios.id, nombre_1, nombre_2, apellido_1, apellido_2, dni, foto, password, email, telefono, estado, direcciones.calle, direcciones.numero, direcciones.localidad 
+            const [rows, fields] = await connection.execute(`SELECT usuarios.id, nombre_1, nombre_2, apellido_1, apellido_2, dni, foto, password, email, telefono, estado, usuarios.direcciones_id, direcciones.calle, direcciones.numero, direcciones.localidad 
              FROM usuarios 
              INNER JOIN direcciones ON usuarios.direcciones_id = direcciones.id
              WHERE dni = '${dni}'`);  
