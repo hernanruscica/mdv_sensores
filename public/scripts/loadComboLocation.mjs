@@ -6,9 +6,9 @@ import data from './data.js';
 console.log("Cargando los combo box de las direcciones desde el modulo loadComboLocation.mjs");
 
 
-const provinciasSelect = document.getElementById("provincias");
-const partidosSelect = document.getElementById("partidos");
-const localidadesSelect = document.getElementById("localidades");
+const provinciasSelect = document.getElementById("provincia");
+const partidosSelect = document.getElementById("partido");
+const localidadesSelect = document.getElementById("localidad");
 
 // Función para llenar el combo box de provincias
 function llenarProvincias() {

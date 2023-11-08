@@ -362,9 +362,29 @@ module.exports = {
         }
         
     },
-    update: (req, res) => {
-        const data = req.body;
+    update: async (req, res) => {                
+        const data = {
+            nombre_1: req.body.nombre_1,
+            nombre_2: req.body.nombre_2,
+            apellido_1: req.body.apellido_1,
+            apellido_2: req.body.apellido_2,
+            dni: parseInt(req.body.dni),
+            email: req.body.email,
+            telefono: req.body.telefono,
+            direcciones_id: parseInt(req.body.direcciones_id),
+            calle: req.body.calle,
+            numero: parseInt(req.body.numero),
+            provincia: req.body.provincia || 0,
+            partido: req.body.partido || 0,
+            localidad: req.body.localidad || 0,
+        };
+        console.log(`editando al usuario con dni ${data.dni}`, data);
+
+        const results = await UserModel.updateUser(data);
+        console.log(results);
+
+
         res.redirect('/');
-        console.log(data);
+        
     }
 }

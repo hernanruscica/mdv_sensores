@@ -68,7 +68,7 @@ module.exports = {
         const connection = await pool.getConnection();
         console.log("abierta la conexion con el pool de datos - getById");
         try {            
-            const [rows, fields] = await connection.execute(`SELECT usuarios.id, nombre_1, nombre_2, apellido_1, apellido_2, dni, foto, password, email, telefono, estado, usuarios.direcciones_id, direcciones.calle, direcciones.numero, direcciones.localidad 
+            const [rows, fields] = await connection.execute(`SELECT usuarios.id, nombre_1, nombre_2, apellido_1, apellido_2, dni, foto, password, email, telefono, estado, usuarios.direcciones_id, direcciones.calle, direcciones.numero, direcciones.localidad, direcciones.partido, direcciones.provincia 
              FROM usuarios 
              INNER JOIN direcciones ON usuarios.direcciones_id = direcciones.id
              WHERE dni = '${dni}'`);  
@@ -129,6 +129,49 @@ module.exports = {
             console.log("cerrada la conexion con el pool de datos");
         }
     },
+    updateUser: async (data) => {
+        const connection = await pool.getConnection();
+        console.log("abierta la conexion con el pool de datos - updateUser");
+        
+        try {
+            await connection.beginTransaction(); // Inicia la transacción
+            
+            // Actualiza la tabla 'usuarios'
+            await connection.execute(`UPDATE usuarios
+                SET
+                    nombre_1 = ?,
+                    nombre_2 = ?,
+                    apellido_1 = ?,
+                    apellido_2 = ?,
+                    email = ?,
+                    telefono = ?
+                WHERE dni = ?`, [data.nombre_1, data.nombre_2, data.apellido_1, data.apellido_2, data.email, data.telefono, data.dni]);
+            
+            // Actualiza la tabla 'direcciones'
+            await connection.execute(`UPDATE direcciones
+                SET
+                    calle = ?,
+                    numero = ?,
+                    localidad = ?,
+                    partido = ?,
+                    provincia = ?,
+                    fecha_creacion = CURDATE()
+                WHERE id = ?`, [data.calle, data.numero, data.localidad, data.partido, data.provincia, data.direcciones_id]);
+            
+            await connection.commit(); // Confirma la transacción
+            console.log("Transacción completada con éxito.");
+            return "Transacción completada con éxito.";
+        } catch (error) {
+            await connection.rollback(); // Revierte la transacción en caso de error
+            console.error("Error en la transacción:", error);
+            throw error;
+        } finally {
+            connection.release(); // Liberar la conexión de vuelta al pool
+            console.log("cerrada la conexion con el pool de datos");
+        }
+    }
+    
+    ,
     deleteByDni: async (dni) => {        
         const connection = await pool.getConnection();
         console.log("abierta la conexion con el pool de datos - getById");

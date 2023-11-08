@@ -19,8 +19,7 @@
   <div class="d-flex flex-column flex-lg-row ">
     <div class="card m-3 col-12 col-lg-6">
       <div class="card-body">   
-        <form action="/users/update" method="post" >
-          <input type="hidden" name="_method" value="put">
+        <form action="/users/update" method="post" >          
           <!-- Foto -->
           <img src="<%= userRequired.foto %>" class="card-img-top"
             alt="Foto del usuario <%= userRequired.nombre_1 %> <%= userRequired.apellido_1 %>">
@@ -91,7 +90,9 @@
             </div>
           </div>       
           
-          <h3 class="display-3 fs-2 ">Domicilio</h3>
+          <h3 class="display-3 fs-2 ">Domicilio</h3>     
+          
+          <input type="hidden" name="direcciones_id" value="<%= userRequired.direcciones_id %>">
 
           <% if (userRequired.calle === 'null' || userRequired.numero === 0  ) { %>
             <div class="alert alert-warning mt-3" role="alert">
@@ -126,7 +127,7 @@
           <div class="mb-3 row">
             <label for="provincia" class="col-sm-2 col-md-3 col-form-label">provincia</label>
             <div class="col-sm-10 col-md-9">
-                <select class="form-select" id="provincias" name="provincias">
+                <select class="form-select" id="provincia" name="provincia">
                   <option value="" disabled selected>Seleccione una provincia</option>
                 </select>
             </div>
@@ -135,7 +136,7 @@
           <div class="mb-3 row">
             <label for="partido" class="col-sm-6 col-md-5 col-form-label">Partido / Departamento / Comuna</label>
             <div class="col-sm-6 col-md-7">
-                <select class="form-select" id="partidos" name="partidos" disabled>
+                <select class="form-select" id="partido" name="partido" disabled>
                   <option value="" disabled selected>Seleccione una ...</option>
                 </select>
             </div>
@@ -144,7 +145,7 @@
           <div class="mb-3 row">
             <label for="localidad" class="col-sm-2 col-md-3 col-form-label">Localidad / Barrio</label>
             <div class="col-sm-10 col-md-9">
-                <select class="form-select" id="localidades" name="localidades" disabled>
+                <select class="form-select" id="localidad" name="localidad" disabled>
                   <option value="" disabled selected>Seleccione una ...</option>
                 </select>
             </div>
@@ -228,100 +229,7 @@
     
 <%- include('partials/piedepagina') %>        
 
-<!--
-<script>
-  
-  console.log('desde script')
-  const convertJson = async () => {
-      try {
-          // Usa fetch para cargar el archivo JSON
-          const response = await fetch("../../scripts/localidades.json");
 
-          // Verifica si la respuesta es exitosa
-          if (!response.ok) {
-              throw new Error('No se pudo cargar el archivo JSON.');
-          }
-
-          // Convierte la respuesta a JSON
-          const results = await response.json();
-          const localidades = results.localidades;
-          console.log(localidades.length); //4142 localidades
-          console.log(localidades[4130]); //una localidad
-
-           
-
-          // Función para obtener departamentos únicos filtrados por ID de provincia
-          const obtenerDepartamentosUnicosPorProvincia = (idProvincia) => {
-            const departamentosUnicos = localidades.reduce((departamentos, localidad) => {
-              if (
-                  localidad.departamento.id !== null &&
-                  localidad.departamento.nombre !== null &&
-                  !departamentos[localidad.departamento.id]) {
-                departamentos[localidad.departamento.id] = {
-                  id: localidad.departamento.id,
-                  nombre: localidad.departamento.nombre,
-                  provId: localidad.provincia.id
-                };
-              }
-              return departamentos;
-            }, {});
-
-            const resultado = Object.values(departamentosUnicos);
-
-            return resultado;
-          };
-
-          const idProvinciaParametro = '58';
-          const departamentosFiltrados = obtenerDepartamentosUnicosPorProvincia(idProvinciaParametro);
-          //console.log(departamentosFiltrados);   
-
-         const localidades_x_departamento = localidades.filter(localidad => localidad.departamento.id == "58056").map((loc_x_depto) => {
-              return {
-                id: loc_x_depto.localidad_censal.id,
-                nombre: loc_x_depto.nombre
-              }
-         })   
-         //console.log(localidades_x_departamento);
-
-         const misLocalidades = localidades.map((localidad) => {
-              return {
-                id: localidad.localidad_censal.id,
-                nombre: localidad.nombre,
-                departamentoId: localidad.departamento.id,
-                proviciaId: localidad.provincia.id
-              }
-         })   
-         console.log(misLocalidades);
-        
-      } catch (error) {
-          // Maneja errores
-          console.error('Error:', error);
-          return null;
-      }
-  }
-  convertJson();
-
-  //Crear un nuevo array con provincias únicas
-  const provinciasUnicas = localidades.reduce((provincias, localidad) => {
-            const provinciaExistente = provincias.find(
-              provincia => provincia.id === localidad.provincia.id
-            );
-
-            if (!provinciaExistente) {
-              provincias.push({
-                id: localidad.provincia.id,
-                nombre: localidad.provincia.nombre
-              });
-            }
-
-            return provincias;
-          }, []);
-          //Crear un nuevo array con provincias únicas
-          //console.log(provinciasUnicas);
-
-  
-</script>
--->
 <script src="/scripts/loadComboLocation.mjs" type="module"></script>
    </body>
 </html>
