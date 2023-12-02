@@ -5,7 +5,7 @@ const bcrypt  = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const saltRounds = 10; // Número de rondas de sal para bcrypt
 
-
+const DatalogerModel = require('../models/DatalogerModel.js');
 
 module.exports = {
     getAll: async (req, res)=>
@@ -14,6 +14,10 @@ module.exports = {
 
 
         const usersList = await UserModel.getAll();
+
+        const tramaGuemes = await DatalogerModel.getById('guemes', 13);
+        console.log(tramaGuemes);
+
         res.render('users',{user: req.session.user, userList: usersList})
     },
     add: async (req, res) => {
