@@ -1,5 +1,5 @@
 
-<%- include('partials/cabecera', {titulo: "MDV Sensores - Panel de Control", nombre: user.nombre_1, apellido: user.apellido_1}) %>
+<%- include('partials/cabecera', {titulo: "MDV Sensores - Ver ubicacion", nombre: user.nombre_1, apellido: user.apellido_1}) %>
   
 
 <div class="container my-5 py-3 " >
@@ -54,6 +54,24 @@
         <p class="card-text">
           Informacion y enlaces a los dataloggers instalados en esta ubicacion.
         </p>
+        <% if (dataloggersInfo !== null) { %>
+          <ul>
+            <% dataloggersInfo.forEach(datalogger => { %>
+              <li>
+                <a href="/dataloggers/view/<%= datalogger.id %>">
+                  <%= datalogger.nombre %>
+                </a>
+                <p>
+                  <%= datalogger.descripcion %>
+                </p>
+              </li>
+            <% }); %>
+          </ul>
+        <% } else { %>
+          <p>No tiene dataloggers asociados.</p>
+        <% } %>
+        
+        
       </div>
     </div>
   <!-- Fin  de la Card de dataloggers-->

@@ -1,0 +1,93 @@
+
+<%- include('partials/cabecera', {titulo: "MDV Sensores - Ver Datalogger", nombre: user.nombre_1, apellido: user.apellido_1}) %>
+  
+
+<div class="container my-5 py-3 " >
+<% if (typeof user !== 'undefined' && user !== null && user.nombre_1 && user.apellido_1) { %>
+    <h1>Perfil del datalogger X</h1>
+
+    <!--Breadcrumb-->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/">Inicio</a></li>        
+        <li class="breadcrumb-item"><a href="/users/dashboard">Panel de control</a></li> 
+        <li class="breadcrumb-item"><a href="/dataloggers/all">Datalogger</a></li>   
+        <li class="breadcrumb-item active" aria-current="page">Ver datalogger</li>
+      </ol>
+    </nav>
+
+    <p class="fs-5 mt-5">En esta sección usted puede ver la información de un datalogger.</p>
+    <div class="container row justify-content-start">
+       <a href="/dataloggers/editform/1" class="btn btn-secondary col-5 col-lg-2">Editar Datalogger</a>     
+  </div>
+
+  <div class="d-flex flex-column flex-lg-row ">
+    <div class="card m-3 col-12 col-lg-6">
+        <div class="card-body">
+            <!-- Nombre y Apellido -->
+            <h5 class="card-title">
+               Nombre del datalogger 
+            </h5>
+
+            <!-- Descripcion -->
+            <p class="card-text">Descripcion del datalogger</p>
+
+            <!-- Foto -->
+            <img src="" class="card-img-top" alt="Foto del datalogger ">
+
+            
+            <!-- Teléfono -->
+            <p class="card-text">Fecha de creacion</p>
+
+        </div>
+        
+    </div>
+    <!-- Fin de la Card personal-->
+
+    <!-- Principio de la Card de Entradas-->
+    <div class="card m-3 col-12 col-lg-6">    
+      <div class="card-body">
+        <h5 class="card-title">
+          Canales Digitales y/o analogicos
+        </h5>
+        <!-- userLocationRoles -->        
+        <p class="card-text">
+          Listado de los canales Digitales y/o Analogicas usados en este datalogger.
+        </p>        
+          <ul>            
+              <li>
+                <a href="/dataloggers/view/1">
+                  Canal digital 1
+                </a>
+                <p>
+                  Descripcion del canal 1
+                </p>
+              </li>   
+              <li>
+                <a href="/dataloggers/view/2">
+                  Canal Analogico 2
+                </a>
+                <p>
+                  Descripcion del canal analogico 2
+                </p>
+              </li>            
+          </ul>      
+        
+      </div>
+    </div>
+  <!-- Fin  de la Card de dataloggers-->
+    </div>    
+
+
+  <% } else { %>
+    <h1>Error: Usuario no encontrado</h1>
+  <% } %>
+</div>
+ 
+    
+<%- include('partials/piedepagina') %>        
+
+    
+</body>
+</html>
+

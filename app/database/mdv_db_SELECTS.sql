@@ -53,3 +53,12 @@ SELECT * FROM `mdvsrl`.`direcciones`;
 SELECT * FROM `mdvsrl`.`dataloggers`;
 SELECT * FROM `mdvsrl`.`ubicaciones`;
 SELECT * FROM `mdvsrl`.`dataloggers_x_ubicacion`;
+
+SELECT mdvsrl.dataloggers_x_ubicacion.datalogger_id 
+FROM mdvsrl.dataloggers_x_ubicacion
+INNER JOIN mdvsrl.ubicaciones ON  mdvsrl.dataloggers_x_ubicacion.ubicaciones_id = mdvsrl.ubicaciones.id
+WHERE mdvsrl.ubicaciones.id = 5;
+
+SELECT direccion_mac, nombre, descripcion, foto
+FROM mdvsrl.dataloggers
+WHERE id  = 3;

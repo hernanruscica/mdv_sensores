@@ -16,22 +16,27 @@ module.exports = {
             //const currentLocation = results[0];
             //console.log(location);            
             const results02 = await LocationModel.getDataloggersByLocationId(id);
-            //[ { datalogger_id: 1 }, { datalogger_id: 2 } ]
+            
             const dataloggersIds = results02.map(result => result.datalogger_id) ;
-            console.log(dataloggersIds, dataloggersIds.length);
-            const dataloggers = [];
+            //console.log(dataloggersIds, dataloggersIds.length);     
 
-            if (dataloggersIds.length > 0 ){
-                dataloggersIds.forEach(async dataloggerId => {
-                    const results03 = await DataloggerModel.getById(dataloggerId);
-                    console.log(results03)
-                    dataloggers.push(results03 );
-                }); 
-                console.log(dataloggers);
-            }
+            const GetDataloggersInfo = async (ids) => {
+                if (ids.length === 0) return null;
+            
+                const dataloggersPromises = ids.map(async (id) => {
+                    const results03 = await DataloggerModel.getById(id);
+                    return results03[0];
+                });
+            
+                const dataloggers = await Promise.all(dataloggersPromises);
+                return dataloggers;
+            };
+            
+            const dataloggers = await GetDataloggersInfo(dataloggersIds);
+            //console.log(dataloggers);
             
             
-            res.render('viewLocation', { user: req.session.user, location: results });
+            res.render('viewLocation', { user: req.session.user, location: results, dataloggersInfo: dataloggers});
         } catch (error) {
             console.error(error);
             res.status(500).send('Error interno del servidor');
