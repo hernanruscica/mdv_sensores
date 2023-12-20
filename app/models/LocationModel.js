@@ -46,5 +46,28 @@ module.exports = {
             connection.release(); // Liberar la conexión de vuelta al pool cuando hayas terminado
             console.log("cerrada la conexion con el pool de datos");
         }
+    },
+    getDataloggersByLocationId: async (locationId) => {        
+        const connection = await pool.getConnection();
+        console.log("abierta la conexion con el pool de datos - Location getById");
+        try {            
+            const [rows, fields] = await connection.execute(`SELECT mdvsrl.dataloggers_x_ubicacion.datalogger_id 
+            FROM mdvsrl.dataloggers_x_ubicacion
+            INNER JOIN mdvsrl.ubicaciones ON  mdvsrl.dataloggers_x_ubicacion.ubicaciones_id = mdvsrl.ubicaciones.id
+            WHERE mdvsrl.ubicaciones.id = ${locationId};`);              
+            return rows;
+        } catch (error){
+            //console.error(error);
+            throw error;
+        } finally {
+            connection.release(); // Liberar la conexión de vuelta al pool cuando hayas terminado
+            console.log("cerrada la conexion con el pool de datos");
+        }
     }
+
 }
+
+/*
+Error Code: 1054. Unknown column 'mdvsrl.ubicaciones.id' in 'where clause'
+
+*/

@@ -44,37 +44,12 @@ ADD UNIQUE INDEX `unique_direcciones_id` (`direcciones_id` ASC);
 ALTER TABLE `usuarios`
 MODIFY COLUMN `direcciones_id` INT UNSIGNED NOT NULL DEFAULT 0;
 
-ALTER TABLE direcciones ADD provincia VARCHAR(255) DEFAULT "0";
+UPDATE  `usuarios`
+SET `direcciones_id` = 0
+WHERE `id` >= 26;
+
 
 SELECT * FROM `mdvsrl`.`direcciones`;
-
-START TRANSACTION;
--- Primero, actualiza la tabla 'usuarios'
-UPDATE `mdvsrl`.`usuarios`
-SET
-  `nombre_1` = 'Nuevo nombre',
-  `nombre_2` = 'Nuevo segundo nombre',
-  `apellido_1` = 'Nuevo apellido',
-  `apellido_2` = 'Nuevo segundo apellido',  
-  `email` = 'nuevo_email@example.com',  
-  `telefono` = '1234567890'
-WHERE
-  `usuarios`.`dni` = 22232312
-; 
-
--- Luego, actualiza la tabla 'direcciones'
-UPDATE `mdvsrl`.`direcciones`
-SET
-  `calle` = 'Nueva calle',
-  `numero` = 123,
-  `localidad` = 'Nueva localidad',
-  `partido` = 'Nuevo partido',
-  `provincia` = 'Nueva provincia'    
-WHERE
-  `direcciones`.`id` = 1; 
-
--- Si llega hasta este punto sin errores, confirma la transacción
-COMMIT;
-
--- Si ocurre algún error, deshace la transacción
-ROLLBACK;
+SELECT * FROM `mdvsrl`.`dataloggers`;
+SELECT * FROM `mdvsrl`.`ubicaciones`;
+SELECT * FROM `mdvsrl`.`dataloggers_x_ubicacion`;
