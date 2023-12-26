@@ -59,9 +59,11 @@
         
       </div>
     </div>
+    
   <!-- Fin  de la Card de dataloggers-->
     </div>    
-
+    <!-- Aquí es donde se mostrará el gráfico -->
+    <div id="chart"></div>
 
   <% } else { %>
     <h1>Error: Usuario no encontrado</h1>
@@ -70,7 +72,8 @@
  
     
 <%- include('partials/piedepagina') %>        
-
+<!-- Incluye ApexCharts.js -->
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     
 </body>
 </html>

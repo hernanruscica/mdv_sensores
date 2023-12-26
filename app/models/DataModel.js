@@ -17,7 +17,7 @@ module.exports = {
         const connection = await pool.getConnection();
         console.log("abierta la conexion con el pool de datos - getData - ejemplo de fecha_inicio: '2023-08-01' y '2023-09-04'");
         try {            
-            const [rows, fields] = await connection.execute(`select * from ${table} where fecha >= '${fecha_inicio}' and fecha <= '${fecha_final}' limit 90000;`);  
+            const [rows, fields] = await connection.execute(`select * from ${table} where fecha >= '${fecha_inicio}' and fecha <= '${fecha_final}' order by fecha desc limit 90000;`);  
             return rows;
         } catch (error){
             //console.error(error);
