@@ -31,8 +31,8 @@ module.exports = {
 
         //aca tengo que hacer la busqueda en la BD de los datos del canal y los datos de las ultimas 24 hs. o tiempo necesario para atras.
 
-        const currentData = await DataModel.getData('guemes', '2023-12-22', '2023-12-26');
-        console.log(currentData[1]);
+        const currentData = await DataModel.getData('guemes', '2023-12-23', '2023-12-27');
+        //console.log(currentData[1]);
 
         res.render('viewChannel', {user: req.session.user, id: id, idChannel: idChannel, currentData: currentData});
     }

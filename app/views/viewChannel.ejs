@@ -71,12 +71,49 @@
 </div>
  
     
-<%- include('partials/piedepagina') %>        
+<%- include('partials/piedepagina') %>   
+
+
 <!-- Incluye ApexCharts.js -->
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
 <script>
 
+
+var currentData = <%- JSON.stringify(currentData) %>;
+    console.log(currentData);
+// ... (resto de tu código) ...
+
+/* Preparacion de datos     */
+const myFactor = 0.027;
+const myTimeStamps = currentData.map(data => data.fecha);
+    const myCantidadEncendidos = currentData.map(data => data.a2_inst * myFactor);
+    //console.log(myTimeStamps, myCantidadEncendidos);
+
+    // Datos del gráfico
+    var options = {
+        title: {
+        text : "Tension instantanea"
+        },
+      chart: {
+        type: 'line',
+        height: 400,
+        width: 1200,
+        background: '#f4f4f4'
+      },
+      series: [{       
+        name: "Cantidad de encendidos",
+        data: myCantidadEncendidos
+      }],
+      xaxis: {
+        categories: myTimeStamps,
+        type: 'datetime'
+      }
+    }  
+    // Inicializar el gráfico
+    var chart = new ApexCharts(document.querySelector("#chart"), options);  
+    // Renderizar el gráfico
+    chart.render();
   
 </script>
     

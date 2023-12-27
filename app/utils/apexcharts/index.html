@@ -91,40 +91,40 @@ function generateDates(startDate, endDate, interval) {
     /*probando*/
 
     // Función para calcular el porcentaje de encendido por hora
-// Función para calcular el promedio de tiempo encendido por hora
-function calcularPorcentajeEncendidoPorHora(data, tiempoTrama) {
-  const promedioEncendidoPorHora = [];
+      // Función para calcular el promedio de tiempo encendido por hora
+      function calcularPorcentajeEncendidoPorHora(data, tiempoTrama) {
+        const promedioEncendidoPorHora = [];
 
-  // Iterar por cada hora en el día
-  for (let hora = 0; hora < 24; hora++) {
-    let tiempoEncendidoEnHora = 0;
-    let tramasEnHora = 0;
+        // Iterar por cada hora en el día
+        for (let hora = 0; hora < 24; hora++) {
+          let tiempoEncendidoEnHora = 0;
+          let tramasEnHora = 0;
 
-    // Iterar por cada dato en el array
-    data.forEach((item) => {
-      const { tiempoEncendido, fechaYhora } = item;
-      const horaDato = new Date(fechaYhora).getUTCHours();
+          // Iterar por cada dato en el array
+          data.forEach((item) => {
+            const { tiempoEncendido, fechaYhora } = item;
+            const horaDato = new Date(fechaYhora).getUTCHours();
 
-      // Verificar si el dato está en la hora actual
-      if (horaDato === hora) {
-        tiempoEncendidoEnHora += tiempoEncendido ;
-        tramasEnHora += tiempoTrama;
+            // Verificar si el dato está en la hora actual
+            if (horaDato === hora) {
+              tiempoEncendidoEnHora += tiempoEncendido;
+              tramasEnHora += tiempoTrama;
+            }
+          });
+
+          // Calcular el promedio si hay datos en la hora
+          const promedioEncendido = tramasEnHora > 0 ? (tiempoEncendidoEnHora / tramasEnHora) : 0;
+
+          // Crear el objeto para la hora actual
+          const fechaYhora = new Date(`2023-11-30T${hora.toString().padStart(2, '0')}:00:00.000Z`).toISOString();
+          promedioEncendidoPorHora.push({
+            promedioEncendido: promedioEncendido.toFixed(2), // Redondear a dos decimales
+            fechaYhora
+          });
+        }
+
+        return promedioEncendidoPorHora;
       }
-    });
-
-    // Calcular el promedio si hay datos en la hora
-    const promedioEncendido = tramasEnHora > 0 ? (tiempoEncendidoEnHora / tramasEnHora) : 0;
-
-    // Crear el objeto para la hora actual
-    const fechaYhora = new Date(`2023-11-30T${hora.toString().padStart(2, '0')}:00:00.000Z`).toISOString();
-    promedioEncendidoPorHora.push({
-      promedioEncendido: promedioEncendido.toFixed(2), // Redondear a dos decimales
-      fechaYhora
-    });
-  }
-
-  return promedioEncendidoPorHora;
-}
 
 
     // Generar el nuevo array con porcentajes de encendido por hora
