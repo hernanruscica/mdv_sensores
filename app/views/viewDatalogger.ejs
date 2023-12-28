@@ -87,7 +87,15 @@
  
     
 <%- include('partials/piedepagina') %>        
+<script>
+  // Accede al array de datos desde la cookie de sesión
+  const currentData= <%- JSON.stringify(a1_inst || []) %>;
+  const currentFechas= <%- JSON.stringify(fechas || []) %>;
 
+  // Ahora puedes usar el arrayDeDatos en tu código JavaScript
+  console.log(currentFechas, currentData);
+
+</script>
     
 </body>
 </html>
