@@ -24,6 +24,11 @@ module.exports = {
         // Cambia a este formato 2023-08-23 12:50:02
         //const fechaFormateadaParaApex = dataloggerData[0].fecha.toISOString().slice(0, 19).replace('T', ' ');   
         //console.log(fechaFormateadaParaApex);        
+
+        /*
+            el controller puede traer la data de todo un mes, ahora tengo mapear los datos para cada entrada, 
+            segun su estado (si se usa o no), para cada canal, envio los datos que necesita la vista
+        */
         req.session.fecha = currentData.map(data => data.fecha);        
         req.session.a1_inst = currentData.map(data => data.a1_inst);
 
