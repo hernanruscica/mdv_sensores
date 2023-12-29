@@ -10,30 +10,23 @@ module.exports = {
         res.render('locations',{user: req.session.user, locationsList: locationsList});
     },
     viewDatalogger: async (req, res) => {
-        const id = parseInt(req.params.id);        
+        const id = parseInt(req.params.id);      
+        const now =  '2023-12-29 13:27:00' 
         console.log(`viewDatalogger Controller con id ${id}`);     
 
         //para la pagina viewDatalogger, obtengo datos de hace una hora para mostrar los indicadores resumidos de cada canal,
-        //pero esta misma funcion puedo usarla para mostrar mas datos en los detalles de cada canal.
-        //2023-08-23T21:20:01.000Z    2023-08-23T21:25:01.000Z  
-        //const dataloggerData = await DataModel.getData('guemes', '2023-08-23 09:50:02', '2023-08-23 11:50:01');  
-
-        const currentData = await DataModel.getData('guemes', '2023-11-27', '2023-12-27');
-        //console.log(currentData[1]);
         
+
+        // El Modelo puede traer la data de un periodo de tiempo determinado, de un determinado datalogger y de un determinado canal 
+        const currentData = await DataModel.getData('guemes', 'a1', '2023-12-29 12:27:00', '2023-12-29 13:27:00');
+        const currentData02= await DataModel.getData('guemes', 'a2', '2023-12-29 12:27:00', '2023-12-29 13:27:00');
+
+        console.log(currentData, currentData02);        
+        res.render('viewDatalogger', {user: req.session.user, dataChannel: currentData || [], dataChannel02: currentData02 || []});
+
         // Cambia a este formato 2023-08-23 12:50:02
         //const fechaFormateadaParaApex = dataloggerData[0].fecha.toISOString().slice(0, 19).replace('T', ' ');   
-        //console.log(fechaFormateadaParaApex);        
-
-        /*
-            el controller puede traer la data de todo un mes, ahora tengo mapear los datos para cada entrada, 
-            segun su estado (si se usa o no), para cada canal, envio los datos que necesita la vista
-        */
-        req.session.fecha = currentData.map(data => data.fecha);        
-        req.session.a1_inst = currentData.map(data => data.a1_inst);
-
-        console.group(req.session.fecha);
-        res.render('viewDatalogger', {user: req.session.user, fechas: req.session.fecha, a1_inst: req.session.a1_inst});
+        //console.log(fechaFormateadaParaApex);    
     },
     viewChannel: async (req, res) => {
         const id = req.params.id;

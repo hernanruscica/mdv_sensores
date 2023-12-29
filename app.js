@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv').config();
 const path = require('path');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 const cookieSession = require("cookie-session");
 const methodOverride = require('method-override');
 
@@ -14,10 +15,13 @@ const port = 3001;
 app.set('views', path.join(__dirname, 'app/views'));
 app.set('view engine', 'ejs');
 
+app.use(cookieParser());
 app.use(cookieSession({
     name: "session",
     keys: ["secret-key"],
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours    
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours    
+    secure: false,
+    httpOnly: true,    
   }));
 
 

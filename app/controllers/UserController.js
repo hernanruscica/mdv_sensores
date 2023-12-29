@@ -255,6 +255,9 @@ module.exports = {
                 console.log(passwordMatch ? 'Password correcta - Iniciar sesion' : 'Password Incorrecta');
                 
                 if (passwordMatch){
+                    if (!req.session) {
+                        req.session = {};
+                      }
                     req.session.user = {
                         dni: userDataBD.dni,
                         nombre_1: userDataBD.nombre_1,
@@ -262,6 +265,9 @@ module.exports = {
                         email: userDataBD.email,
                         estado: userDataBD.estado
                     };
+                    // En tu controlador o middleware después de establecer req.session.user y req.session.arrayDatos
+                    console.log(req.session.user, req.session.a1_inst, req.session.fecha);
+
                     res.redirect('/users/dashboard');
                 }else{
                     console.log("Contrasenia incorrecta!");

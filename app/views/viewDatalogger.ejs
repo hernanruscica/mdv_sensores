@@ -89,11 +89,12 @@
 <%- include('partials/piedepagina') %>        
 <script>
   // Accede al array de datos desde la cookie de sesión
-  const currentData= <%- JSON.stringify(a1_inst || []) %>;
-  const currentFechas= <%- JSON.stringify(fechas || []) %>;
+  const dataChannel= <%- JSON.stringify(dataChannel || []) %>;
+  const dataChannel02= <%- JSON.stringify(dataChannel02 || []) %>;
+  
 
   // Ahora puedes usar el arrayDeDatos en tu código JavaScript
-  console.log(currentFechas, currentData);
+  console.log(dataChannel, dataChannel02);
 
 </script>
     
