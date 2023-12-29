@@ -116,6 +116,15 @@ const myTimeStamps = currentData.map(data => data.fecha);
   
 </script>
     
+<script>
+  // Accede al array de datos desde la cookie de sesión
+  const dataChannel= <%- JSON.stringify(dataChannel || []) %>;  
+  
+
+  // Ahora puedes usar el arrayDeDatos en tu código JavaScript
+  console.log(dataChannel, dataChannel02);
+
+</script>
 </body>
 </html>
 

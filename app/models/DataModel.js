@@ -13,7 +13,7 @@ const pool = mysql2.createPool({
 
 module.exports = {
     
-    getData: async (table, channel, fecha_inicio, fecha_final) => {        
+    getDataByChannel: async (table, channel, fecha_inicio, fecha_final) => {        
         const connection = await pool.getConnection();
         console.log("abierta la conexion con el pool de datos - getData - ejemplo de fecha_inicio: '2023-08-01' y '2023-09-04'");
         try {            
