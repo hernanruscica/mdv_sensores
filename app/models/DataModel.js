@@ -17,7 +17,7 @@ module.exports = {
         const connection = await pool.getConnection();
         console.log("abierta la conexion con el pool de datos - getData - ejemplo de fecha_inicio: '2023-08-01' y '2023-09-04'");
         try {            
-            const [rows, fields] = await connection.execute(`select fecha, ${channel}_inst, ${channel}_min, ${channel}_max, ${channel}_cantidad, ${channel}_tiempo from ${table} where fecha >= '${fecha_inicio}' and fecha <= '${fecha_final}' order by fecha desc limit 90000;`);  
+            const [rows, fields] = await connection.execute(`select fecha, ${channel}_inst AS inst, ${channel}_min AS min, ${channel}_max AS max, ${channel}_cantidad AS cantidad, ${channel}_tiempo AS tiempo from ${table} where fecha >= '${fecha_inicio}' and fecha <= '${fecha_final}' order by fecha desc limit 90000;`);  
             return rows;
         } catch (error){
             //console.error(error);
@@ -26,6 +26,21 @@ module.exports = {
             connection.release(); // Liberar la conexión de vuelta al pool cuando hayas terminado
             console.log("cerrada la conexion con el pool de datos");
         }
-    }
+    },
+    //fecha >= CURDATE() - INTERVAL 1 DAY AND fecha < CURDATE() + INTERVAL 1 DAY
+    getDataByChannelOneDay: async (table, channel) => {        
+        const connection = await pool.getConnection();
+        console.log("abierta la conexion con el pool de datos - getData - ejemplo de fecha_inicio: '2023-08-01' y '2023-09-04'");
+        try {            
+            const [rows, fields] = await connection.execute(`select fecha, ${channel}_inst AS inst, ${channel}_min AS min, ${channel}_max AS max, ${channel}_cantidad AS cantidad, ${channel}_tiempo AS tiempo from ${table} where fecha >= CURDATE() - INTERVAL 1 DAY AND fecha < CURDATE() + INTERVAL 1 DAY order by fecha desc limit 90000;`);  
+            return rows;
+        } catch (error){
+            //console.error(error);
+            throw error;
+        } finally {
+            connection.release(); // Liberar la conexión de vuelta al pool cuando hayas terminado
+            console.log("cerrada la conexion con el pool de datos");
+        }
+    },
 
 }

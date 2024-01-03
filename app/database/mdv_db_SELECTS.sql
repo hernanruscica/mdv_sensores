@@ -62,3 +62,20 @@ WHERE mdvsrl.ubicaciones.id = 5;
 SELECT direccion_mac, nombre, descripcion, foto
 FROM mdvsrl.dataloggers
 WHERE id  = 3;
+
+
+use mdvsrldatos;
+show tables;
+
+drop table trama2022;
+
+/*
+identificador  tabla
+84CCA87AB934   guemes (tiene a1)
+83AF27C42B8     test  (tiene a1)
+no tiene 		iriarte
+*/
+select * from guemes order by fecha desc limit 100; 
+select fecha, a1_inst, a1_min, a1_max, a1_cantidad, a1_tiempo from guemes where fecha >= '2023-12-28' and fecha <= '2023-12-29' order by fecha desc;
+
+
