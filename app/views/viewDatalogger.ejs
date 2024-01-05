@@ -55,8 +55,8 @@
         <p class="card-text">
           Listado de los canales Digitales y/o Analogicas usados en este datalogger.
         </p>        
-          <ul>            
-              <li>
+                      
+              <!-- <ul><li>
                 <a href="/dataloggers/view/1/channels/1">
                   Canal digital 1
                 </a>
@@ -71,8 +71,24 @@
                 <p>
                   Descripcion del canal analogico 2
                 </p>
-              </li>            
-          </ul>      
+              </li>  </ul>           -->
+              
+              <% if (channels.length > 0) { %>
+                <ul>
+                  <% channels.forEach(channel => { %>
+                    <li>
+                      <a href="/dataloggers/view/<%= datalogger.id %>/channels/1">
+                        <%= channel.canal_nombre %>
+                      </a>
+                      <p>
+                        <%= channel.canal_descripcion %>
+                      </p>
+                    </li>
+                  <% }); %>
+                </ul>
+              <% } else { %>
+                <p>No tiene canales asociados.</p>
+              <% } %>
         
       </div>
     </div>

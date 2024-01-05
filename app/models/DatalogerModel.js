@@ -15,11 +15,27 @@ module.exports = {
     
     getById: async (id) => {        
         const connection = await pool.getConnection();
-        console.log("abierta la conexion con el pool de datos - getByid");
+        console.log("abierta la conexion con el pool de datos - Datalogger.getByid");
         try {            
             const [rows, fields] = await connection.execute(`SELECT id, direccion_mac, nombre, descripcion, foto, nombre_tabla, fecha_creacion
-            FROM mdvsrl.dataloggers
-            WHERE id  = ${id}`);  
+            FROM dataloggers
+            WHERE dataloggers.id  = '${id}'`);  
+            return rows;
+        } catch (error){
+            //console.error(error);
+            throw error;
+        } finally {
+            connection.release(); // Liberar la conexión de vuelta al pool cuando hayas terminado
+            console.log("cerrada la conexion con el pool de datos");
+        }
+    },
+    getChannelsById: async (id) => {        
+        const connection = await pool.getConnection();
+        console.log("abierta la conexion con el pool de datos - Datalogger.getChannelsById");
+        try {            
+            const [rows, fields] = await connection.execute(`select canales.nombre_columna, canales.nombre as canal_nombre, canales.descripcion as canal_descripcion
+                from canales
+                where datalogger_id = '${id}'`);  
             return rows;
         } catch (error){
             //console.error(error);

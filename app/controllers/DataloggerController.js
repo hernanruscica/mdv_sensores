@@ -10,13 +10,14 @@ module.exports = {
         res.render('locations',{user: req.session.user, locationsList: locationsList});
     },
     viewDatalogger: async (req, res) => {
-        const id = parseInt(req.params.id);              
-        console.log(`viewDatalogger Controller con id ${id}`);     
+        const id = req.params.id;                      
+        //console.log(`viewDatalogger Controller con id ${id}`);     
 
         //  traer la info de la tabla dataloggers y la data de los canales activos de hace una hora. buscando con la id del datalogger
-        const datalogger = await DataloggerModel.getById(id);
-        console.log(datalogger);
-        res.render('viewDatalogger', {user: req.session.user, datalogger: datalogger[0]});
+        const results = await DataloggerModel.getById(id);         
+        const results02 = await DataloggerModel.getChannelsById(id);
+        //console.log(results02);
+        res.render('viewDatalogger', {user: req.session.user, datalogger: results[0] || [], channels: results02 || []});
 
         // Cambia a este formato 2023-08-23 12:50:02
         //const fechaFormateadaParaApex = dataloggerData[0].fecha.toISOString().slice(0, 19).replace('T', ' ');   
@@ -32,7 +33,7 @@ module.exports = {
         // El Modelo puede traer la data de un periodo de tiempo determinado, de un determinado datalogger y de un determinado canal 
         //const currentData = await DataModel.getDataByChannel('guemes', 'a1', '2023-12-28', '2023-12-29');        
         const currentData = await DataModel.getDataByChannelOneDay('guemes', 'a1');
-        //console.log(currentData);        
+        console.log(currentData);        
 
         res.render('viewChannel', {user: req.session.user, id: id, idChannel: idChannel, dataChannel: currentData || []});
         
