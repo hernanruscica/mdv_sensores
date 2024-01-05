@@ -17,7 +17,7 @@ module.exports = {
         const connection = await pool.getConnection();
         console.log("abierta la conexion con el pool de datos - getByid");
         try {            
-            const [rows, fields] = await connection.execute(`SELECT id, direccion_mac, nombre, descripcion, foto
+            const [rows, fields] = await connection.execute(`SELECT id, direccion_mac, nombre, descripcion, foto, nombre_tabla, fecha_creacion
             FROM mdvsrl.dataloggers
             WHERE id  = ${id}`);  
             return rows;

@@ -27,18 +27,18 @@
         <div class="card-body">
             <!-- Nombre y Apellido -->
             <h5 class="card-title">
-               Nombre del datalogger 
+               <%= datalogger.nombre %>
             </h5>
 
             <!-- Descripcion -->
-            <p class="card-text">Descripcion del datalogger</p>
+            <p class="card-text"><%= datalogger.descripcion %></p>
 
             <!-- Foto -->
-            <img src="" class="card-img-top" alt="Foto del datalogger ">
+            <img src="<%= datalogger.foto %>" class="card-img-top" alt="Foto del datalogger ">
 
             
             <!-- Teléfono -->
-            <p class="card-text">Fecha de creacion</p>
+            <p class="card-text">Fecha de creacion: <%= datalogger.fecha_creacion %></p>
 
         </div>
         

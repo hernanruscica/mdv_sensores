@@ -13,11 +13,10 @@ module.exports = {
         const id = parseInt(req.params.id);              
         console.log(`viewDatalogger Controller con id ${id}`);     
 
-
-        // El Modelo puede traer la data de hace una hora para mostrar los indicadores resumidos de cada canal activo
-
-        
-        res.render('viewDatalogger', {user: req.session.user, id: id});
+        //  traer la info de la tabla dataloggers y la data de los canales activos de hace una hora. buscando con la id del datalogger
+        const datalogger = await DataloggerModel.getById(id);
+        console.log(datalogger);
+        res.render('viewDatalogger', {user: req.session.user, datalogger: datalogger[0]});
 
         // Cambia a este formato 2023-08-23 12:50:02
         //const fechaFormateadaParaApex = dataloggerData[0].fecha.toISOString().slice(0, 19).replace('T', ' ');   
