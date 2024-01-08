@@ -14,8 +14,14 @@ module.exports = {
         try {
             const id = parseInt(req.params.id);
             const results = await LocationModel.getById(id);
-            //const currentLocation = results[0];
-            //console.log(location);            
+
+            //saco el id y el nombre y lo pongo en session cookie para armar el breadcrumb
+            //console.log(results[0]);            
+            req.session.location = {
+                id: results[0].id,
+                nombre: results[0].nombre
+            }
+
             const results02 = await LocationModel.getDataloggersByLocationId(id);
             
             const dataloggersIds = results02.map(result => result.datalogger_id) ;
