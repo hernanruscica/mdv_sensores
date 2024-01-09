@@ -6,6 +6,8 @@ const cookieParser = require('cookie-parser');
 const cookieSession = require("cookie-session");
 const methodOverride = require('method-override');
 
+const axios = require('axios');
+
 
 const app = express();
 
@@ -25,10 +27,14 @@ app.use(cookieSession({
   }));
 
 
+
+
 const  IndexRouter = require('./app/routes/IndexRoutes.js');
 const UsersRouter = require('./app/routes/UserRoutes.js');
 const LocationsRouter = require('./app/routes/LocationRoutes.js');
 const DataloggersRouter = require('./app/routes/DataloggerRoutes.js');
+const UploadRouter = require('./app/routes/UploadRoutes.js');
+
 
 
 app.use(bodyParser.json());
@@ -37,9 +43,14 @@ app.use('/', IndexRouter);
 app.use('/users', UsersRouter);
 app.use('/locations', LocationsRouter);
 app.use('/dataloggers', DataloggersRouter);
+app.use('/uploads', UploadRouter);
 app.use(express.static(path.join(__dirname, 'views')));
 app.use(express.static('./public'));
 app.use(methodOverride('_method'));
+
+
+
+
 
 
 

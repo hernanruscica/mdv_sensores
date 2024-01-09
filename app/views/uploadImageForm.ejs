@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subir Imágenes con Datos Adicionales</title>
+</head>
+<body>
+  <!-- <h1>Subir Imágenes con Datos Adicionales</h1> -->
+  
+  <form action="/uploads" method="post" enctype="multipart/form-data">
+    <!-- Campo de archivo para la imagen -->
+    <input type="file" name="image" accept="image/*" required>
+    
+    <!-- Otros campos con diferentes tipos de datos -->
+    <input type="text" name="nombre" placeholder="Nombre" required>
+    <input type="number" name="edad" placeholder="Edad" required>
+    
+    <button type="submit">Subir Imagen</button>
+  </form>
+</body>
+</html>
