@@ -21,7 +21,7 @@ router.get('/', (req, res) => {
     res.render('uploadImageForm');
   });
   
-  // Ruta para manejar la carga de imágenes y datos adicionales
-  router.post('/', upload.single('image'), UploadController.UploadImage);
+// Ruta para manejar la carga de imágenes y datos adicionales
+router.post('/', upload.single('image'), UploadController.UploadImage);
   
   module.exports = router;
