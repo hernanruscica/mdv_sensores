@@ -49,6 +49,9 @@ UPDATE  `usuarios`
 SET `direcciones_id` = 0
 WHERE `id` >= 26;
 
+update usuarios
+set foto = 'default_avatar.png';
+
 
 SELECT * FROM `mdvsrl`.`direcciones`;
 SELECT * FROM `mdvsrl`.`dataloggers`;
@@ -94,9 +97,10 @@ insert into canales
 values
 (4, 2, 'Cantidad de encendidos', 'Mide la cantidad de encendidos de la heladera patrick', 'd1', 1, '2024-01-04');
 
-select dataloggers.nombre , dataloggers.descripcion, direccion_mac, foto, nombre_tabla, fecha_creacion
+
+select nombre , descripcion, direccion_mac, foto, nombre_tabla, fecha_creacion
 from dataloggers
-where dataloggers.id = 1;
+where dataloggers.id = 2;
 
 select canales.nombre_columna, canales.nombre as canal_nombre, canales.descripcion as canal_descripcion
 from canales
