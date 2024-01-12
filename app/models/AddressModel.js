@@ -13,6 +13,25 @@ const pool = mysql2.createPool({
 
 
 module.exports = {
+    insert: async (data) => {        
+        const connection = await pool.getConnection();
+        console.log("abierta la conexion con el pool de datos - insert Location");
+        try {            
+            const [rows, fields] = await connection.execute(`insert into direcciones
+            (calle, numero, localidad, partido, provincia, codigo_postal, latitud, longitud, fecha_creacion )
+        values
+            ('${data.calle}', '${data.numero}', '${data.localidad}', '${data.partido}', '${data.provincia}', '${data.codigo_postal}', '${data.latitud}', '${data.longitud}', curdate());`);            
+            //console.log(rows)
+            return rows;
+        }catch (error){
+            console.error(error);
+            throw error;
+        } finally {
+            connection.release(); // Liberar la conexión de vuelta al pool cuando hayas terminado
+            console.log("cerrada la conexion con el pool de datos");
+        }
+    },
+    
     getAll: async () => {
         //conn.query(`SELECT * FROM users`, myFunction);
         const connection = await pool.getConnection();

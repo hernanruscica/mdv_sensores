@@ -1,9 +1,11 @@
 const LocationModel = require('../models/LocationModel.js');
 const UserModel = require('../models/UserModel.js');
+const AddressModel = require('../models/AddressModel.js');
 const mail = require('../utils/mail.js');
 const bcrypt  = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const saltRounds = 10; // Número de rondas de sal para bcrypt
+
 
 
 
@@ -22,6 +24,22 @@ module.exports = {
     add: async (req, res) => {
         console.log('add User controller', req.body.nombre_1);
 
+        const dataDireccion = {
+            calle: 'calle false',
+            numero: 1234,
+            localidad: "0",
+            partido: 0,
+            provincia: "06",
+            codigo_postal: 0,
+            latitud: 0,
+            longitud: 0
+          }
+          const results = await AddressModel.insert(dataDireccion);
+          if (results.affectedRows > 0){
+            console.log(`Datos insertados correctamente con el id: ${results.insertId}`);
+          }else
+            console.log(`Datos no insertados`);
+
         // Preparar el objeto de datos con el password hasheado
         const userData = {
             nombre_1: req.body.nombre_1,
@@ -35,7 +53,7 @@ module.exports = {
             telefono: req.body.telefono,
             estado: req.body.estado || 0,
             //fecha_creacion: req.body.fecha_creacion || '2023-10-12',
-            direcciones_id: req.body.direcciones_id || 1
+            direcciones_id: results.insertId || 1
         };
 
         const userToken = jwt.sign({dni: userData.dni}, process.env.SECRET_KEY, {expiresIn: 86400}); //expira en un dia
@@ -174,6 +192,9 @@ module.exports = {
       console.log("registerUserForm");      
 
       const  locations = await LocationModel.getAll();
+
+      
+      
 
       const roles = [
         {

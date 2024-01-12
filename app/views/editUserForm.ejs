@@ -21,7 +21,7 @@
       <div class="card-body">   
         <form action="/users/update" method="post" >          
           <!-- Foto -->
-          <img src="/images/<%= userRequired.foto %>" class="card-img-top"
+          <img src="/images/<%= userRequired.foto %>" class="card-img-top" style="width: 200px; height:auto;"
             alt="Foto del usuario <%= userRequired.nombre_1 %> <%= userRequired.apellido_1 %>">
 
           <!--Primer nombre-->
@@ -94,7 +94,7 @@
           
           <input type="hidden" name="direcciones_id" value="<%= userRequired.direcciones_id %>">
 
-          <% if (userRequired.calle === 'null' || userRequired.numero === 0  ) { %>
+          <% if (userRequired.calle === 'calle falsa' ) { %>
             <div class="alert alert-warning mt-3" role="alert">
               El usuario <strong> debe indicar su domicilio </strong> , completando, calle, numero, provincia, partido, y localidad. 
               <!-- estos datos <strong> son obligatorios </strong>.             -->

@@ -7,6 +7,14 @@ SELECT * FROM `mdvsrl`.`usuarios` WHERE `dni` = 28470300;
 
 SELECT * FROM `mdvsrl`.`direcciones`;
 
+update direcciones 
+set
+	calle = "calle falsa",
+    numero = 123
+where
+	id = 1;
+    
+
 SELECT `nombre_1`, `apellido_1`, `dni`, `password`, `foto`, `email`, `telefono`, `estado`, `direcciones`.`calle`, `direcciones`.`numero`, `direcciones`.`localidad` 
 FROM `usuarios` 
 INNER JOIN `direcciones` ON  `usuarios`.`direcciones_id` = `direcciones`.`id` 
