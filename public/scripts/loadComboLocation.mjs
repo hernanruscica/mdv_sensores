@@ -9,15 +9,23 @@ console.log("Cargando los combo box de las direcciones desde el modulo loadCombo
 const provinciasSelect = document.getElementById("provincia");
 const partidosSelect = document.getElementById("partido");
 const localidadesSelect = document.getElementById("localidad");
+const provinciaId = document.getElementById("provincia_id").value;
+const partidoId = document.getElementById("partido_id").value;
+const localidadId = document.getElementById("localidad_id").value;
 
 // Función para llenar el combo box de provincias
-function llenarProvincias() {
+export const llenarProvincias = () => {
+    console.log("llenar provincias")
     data.provincias.forEach(provincia => {
         const option = document.createElement("option");
         option.value = provincia.id;
         option.text = provincia.nombre;
         provinciasSelect.appendChild(option);
     });
+
+    provinciasSelect.value = provinciaId;
+
+    console.log(provinciaId, partidoId, localidadId);
 };
 
 // Función para llenar el combo box de partidos
@@ -36,6 +44,7 @@ function llenarPartidos(provinciaId) {
             partidosSelect.appendChild(option);
         });
         partidosSelect.disabled = false;
+        partidosSelect.value = partidoId;
     } else {
         partidosSelect.disabled = true;
         localidadesSelect.disabled = true;
@@ -58,6 +67,7 @@ function llenarLocalidades(partidoId) {
             localidadesSelect.appendChild(option);
         });
         localidadesSelect.disabled = false;
+        localidadesSelect.value = localidadId;
     } else {
         localidadesSelect.disabled = true;
     }
@@ -66,17 +76,20 @@ function llenarLocalidades(partidoId) {
 document.addEventListener('DOMContentLoaded', () => {
     // Llenar combo box de provincias al cargar la página
     llenarProvincias();
-});
-
-// Agregar evento de cambio a provinciasSelect
-provinciasSelect.addEventListener("change", () => {
-    const provinciaId = provinciasSelect.value;
     llenarPartidos(provinciaId);
-});
-
-// Agregar evento de cambio a partidosSelect
-partidosSelect.addEventListener("change", () => {
-    const partidoId = partidosSelect.value;
     llenarLocalidades(partidoId);
-});
+  });
+
+  // Agregar evento de cambio a provinciasSelect
+  provinciasSelect.addEventListener("change", () => {
+      const provinciaId = provinciasSelect.value;
+      llenarPartidos(provinciaId);
+  });
+
+  // Agregar evento de cambio a partidosSelect
+  partidosSelect.addEventListener("change", () => {
+      const partidoId = partidosSelect.value;
+      llenarLocalidades(partidoId);
+  });
+
 

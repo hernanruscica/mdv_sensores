@@ -1,4 +1,4 @@
-const provincias = [
+export const provincias = [
     {
         "id": "06",
         "nombre": "Buenos Aires"

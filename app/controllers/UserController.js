@@ -414,7 +414,7 @@ module.exports = {
         console.log(results);
 
 
-        res.redirect('/');
+        res.redirect('/users/all');
         
     }
 }

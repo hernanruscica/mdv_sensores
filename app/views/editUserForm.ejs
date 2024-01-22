@@ -93,6 +93,10 @@
           <h3 class="display-3 fs-2 ">Domicilio</h3>     
           
           <input type="hidden" name="direcciones_id" value="<%= userRequired.direcciones_id %>">
+          <input type="hidden" id="provincia_id" value="<%= userRequired.provincia %>">
+          <input type="hidden" id="partido_id" value="<%= userRequired.partido %>">
+          <input type="hidden" id="localidad_id" value="<%= userRequired.localidad %>">
+
 
           <% if (userRequired.calle === 'calle falsa' ) { %>
             <div class="alert alert-warning mt-3" role="alert">
@@ -230,6 +234,7 @@
 <%- include('partials/piedepagina') %>        
 
 
-<script src="/scripts/loadComboLocation.mjs" type="module"></script>
+<script src="/scripts/loadComboLocation.mjs" type="module"></script> 
+
    </body>
 </html>
