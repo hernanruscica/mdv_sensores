@@ -20,7 +20,7 @@ module.exports = {
         // Definir los detalles del correo electrónico
         let mailOptions = {
             from: 'info@ruscica-code.ar',
-            to: 'cesarhernanruscica@gmail.com',//aca deberia ir data.email
+            to: `${data.email}`,//aca deberia ir data.email
             subject: 'Registrado - ABM users API',
             html: ` <div style="font-size: 1rem">
                         <h1>ABM users API</h1>
