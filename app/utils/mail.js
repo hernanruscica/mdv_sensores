@@ -51,7 +51,7 @@ module.exports = {
         // Definir los detalles del correo electrónico
         let mailOptions = {
             from: 'info@ruscica-code.ar',
-            to: 'cesarhernanruscica@gmail.com',//aca deberia ir data.email
+            to: `${data.email}`,//aca deberia ir data.email
             subject: 'Verificando correo - MDV Sensores',
             html: ` <div style="font-size: 1rem">
                         <h1>Verificando correo - MDV Sensores</h1>
