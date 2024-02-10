@@ -17,10 +17,8 @@ const upload = multer({ storage: storage });
 // Configuración de Multer para gestionar la carga de imágenes y datos adicionales - FIN
 
 // Ruta principal
-router.get('/', (req, res) => {
-    res.render('uploadImageForm');
-  });
-  
+router.get('/', (req, res) => {res.render('uploadImageForm');});  
+
 // Ruta para manejar la carga de imágenes y datos adicionales
 router.post('/', upload.single('image'), UploadController.UploadImage);
   

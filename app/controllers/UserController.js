@@ -392,7 +392,9 @@ module.exports = {
         }
         
     },
-    update: async (req, res) => {                
+    update: async (req, res) => {               
+        // Accede a la información del archivo cargado
+        const imageName = (req.file != undefined) ? req.file.filename : req.body.foto;                          
         const data = {
             nombre_1: req.body.nombre_1,
             nombre_2: req.body.nombre_2,
@@ -407,6 +409,7 @@ module.exports = {
             provincia: req.body.provincia || 0,
             partido: req.body.partido || 0,
             localidad: req.body.localidad || 0,
+            foto: imageName
         };
         console.log(`editando al usuario con dni ${data.dni}`, data);
 
@@ -414,7 +417,8 @@ module.exports = {
         console.log(results);
 
 
-        res.redirect('/users/all');
+        //res.redirect('/users/all');
+        res.render('dashboard', {user: req.session.user,  results : 'edicioncorrecta', message: `El usuario ${data.nombre_1} ${data.apellido_1} fue editado correctamente!`})
         
     }
 }

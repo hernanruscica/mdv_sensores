@@ -144,8 +144,9 @@ module.exports = {
                     apellido_1 = ?,
                     apellido_2 = ?,
                     email = ?,
-                    telefono = ?
-                WHERE dni = ?`, [data.nombre_1, data.nombre_2, data.apellido_1, data.apellido_2, data.email, data.telefono, data.dni]);
+                    telefono = ?,
+                    foto = ?
+                WHERE dni = ?`, [data.nombre_1, data.nombre_2, data.apellido_1, data.apellido_2, data.email, data.telefono, data.foto, data.dni]);
             
             // Actualiza la tabla 'direcciones'
             await connection.execute(`UPDATE direcciones

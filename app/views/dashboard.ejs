@@ -75,6 +75,20 @@
   <%
   } 
 %>
+
+<%    
+    if (typeof results !== 'undefined' && results === 'edicioncorrecta'){ %>
+      <script>
+          Swal.fire({
+                  title: 'Edicion exitosa !',
+                  text: '<%= message %>',
+                  icon: 'success',
+                  confirmButtonText: 'Entendido'})
+      </script>
+    <%
+    } 
+   
+%>
 </body>
 </html>
 

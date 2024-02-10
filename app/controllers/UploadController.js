@@ -7,8 +7,10 @@ const request = require('request');
 exports.UploadImage = async (req, res) => {
 
   // Accede a los datos adicionales en req.body
-  const nombre = req.body.nombre;
-  const edad = req.body.edad;
+  // const nombre = req.body.nombre;
+  // const edad = req.body.edad;
+
+  if (req.file == undefined) return; 
 
   // Accede a la información del archivo cargado
   const imagePath = req.file.path;
@@ -29,6 +31,6 @@ exports.UploadImage = async (req, res) => {
           console.error(err);
           return;
         }
-        console.log(body);
+        console.log('Imagen enviada correctamente a ruscica-code.ar');
       });  
 };

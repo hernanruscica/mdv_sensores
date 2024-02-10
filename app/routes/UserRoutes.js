@@ -1,22 +1,22 @@
 const express = require('express');
 const UserController = require('../controllers/UserController.js');
 
+
 const multer = require('multer');
 const storage = multer.diskStorage({
 destination: (req, file, cb) => {
     cb(null, 'public/images/');
 },
 filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`);
+    cb(null, `${Date.now()}-${file.originalname.slice(-4)}`);
 },
 });
 const upload = multer({ storage: storage });
 
-
 var router = express.Router();
 
 // podria ser util para update, upload.fields([{name: 'image', maxCount: 1}, {name: 'nombre_1'}, {name: 'nombre_2'}, {name: 'apellido_1'}, {name: 'apellido_2'}, {name: 'dni'}, {name: 'email'}, {name: 'telefono'}])
-router.post('/update', UserController.update);
+router.post('/update', upload.single("image"),   UserController.update);
 router.get('/register',  UserController.registerForm );
 router.get('/editform/:dni',  UserController.editForm );
 router.post('/add', UserController.add);

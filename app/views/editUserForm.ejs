@@ -19,11 +19,20 @@
   <div class="d-flex flex-column flex-lg-row ">
     <div class="card m-3 col-12 col-lg-6">
       <div class="card-body">   
-        <form action="/users/update" method="post" >          
-          <!-- Foto -->
-          <img src="/images/<%= userRequired.foto %>" class="card-img-top" style="width: 200px; height:auto;"
-            alt="Foto del usuario <%= userRequired.nombre_1 %> <%= userRequired.apellido_1 %>">
+        <form action="/users/update" method="post"  enctype="multipart/form-data">          
 
+          <!--vista previa de la Foto -->
+          <img src="/images/<%= userRequired.foto %>" class="card-img-top" style="width: 200px; height:auto;  margin-top: 10px;"
+            alt="Foto del usuario <%= userRequired.nombre_1 %> <%= userRequired.apellido_1 %>" id="imagePreview">
+          <input type="hidden" name="foto" id="foto" value="<%= userRequired.foto %>">
+
+          <!--cambiar foto-->
+          <div class="mb-3 row">
+              <label for="image" class="col-sm-2 col-md-3 col-form-label">Cambiar imagen</label>
+              <div class="col-sm-10 col-md-9">
+                  <input type="file" class="form-control" id="image" name="image" accept="image/*">                  
+              </div>
+          </div>
           <!--Primer nombre-->
           <div class="mb-3 row">
             <label for="nombre_1" class="col-sm-2 col-md-3 col-form-label">Primer Nombre</label>
@@ -235,6 +244,31 @@
 
 
 <script src="/scripts/loadComboLocation.mjs" type="module"></script> 
+
+<script>
+  document.getElementById('image').addEventListener('change', function(event) {
+        var file = event.target.files[0];
+        var imgPreview = document.getElementById('imagePreview');
+
+        // Verifica si se seleccionó una imagen
+        if (file) {
+            var reader = new FileReader();
+
+            // Cuando se cargue el archivo, muestra la vista previa de la imagen
+            reader.onload = function(e) {
+                imgPreview.src = e.target.result;
+                imgPreview.style.display = 'block';
+            };
+
+            // Lee el archivo como una URL de datos
+            reader.readAsDataURL(file);
+        } else {
+            // Si no se seleccionó ninguna imagen, oculta la vista previa
+            imgPreview.src = '';
+            imgPreview.style.display = 'none';
+        }
+    });
+</script>
 
    </body>
 </html>
