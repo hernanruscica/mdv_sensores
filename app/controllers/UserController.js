@@ -298,7 +298,8 @@ module.exports = {
             }
         else{
             console.log("usuario NO encontrado!");
-            res.redirect('/loginForm');
+            res.render('loginForm', {results: 'loginFails',
+                                            message: 'El DNI y/o la contraseña son incorrectos, comuniquese con el administrador para restablecer la contraseña.'});
         }
     },
     dashboard: (req, res) => {

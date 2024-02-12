@@ -114,3 +114,18 @@ select canales.nombre_columna, canales.nombre as canal_nombre, canales.descripci
 from canales
 where datalogger_id = 2;
 
+select * from roles;
+select * from usuarios_x_ubicaciones_x_roles;
+
+/*ya tengo los datos principales del usuario, con esta consulta obtengo los permisos que tiene sobre ubicaciones*/
+select  ubicaciones.id as ubicacion_id, ubicaciones.nombre as ubicacion_nombre, usuarios_x_ubicaciones_x_roles.roles_id as rol_id
+FROM usuarios_x_ubicaciones_x_roles 
+INNER JOIN ubicaciones ON  usuarios_x_ubicaciones_x_roles.ubicaciones_id = ubicaciones.id
+where usuarios_x_ubicaciones_x_roles.usuarios_id = 1;
+
+/*obtengo los usuarios asignados a una ubicacion*/
+select *
+from usuarios_x_ubicaciones_x_roles
+inner join ubicaciones on usuarios_x_ubicaciones_x_roles.ubicaciones_id = ubicaciones.id
+where ubicaciones_id = 1;
+
