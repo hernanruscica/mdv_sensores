@@ -173,64 +173,65 @@
     </div>
     <!-- Fin de la Card personal-->
   
+    <!-- Comienzo de la Card de roles, estados y ubicaciones-->
     <div class="card m-3 col-12 col-lg-6">
       <div class="card-body">
-        <h5 class="card-title">
-          Ubicaciones, roles y estado
-        </h5>
-       
+        <h5 class="card-title">Roles del usuario y estado</h5>
+        <p>En esta sección se pueden asignar roles y estados para el usuario en distintas ubicaciones.</p>
+        <!-- Botón para agregar una nueva carga de ubicación -->
+        <button type="button" class="btn btn-success mb-3" id="agregarUbicacion">Agregar nuevo rol</button>
+        <button type="button" class="btn btn-primary mb-3" id="agregarUbicacion">Guardar cambios</button>
 
-        <div class="mb-3 row">
-          <label for="ubicacion" class="col-sm-3 col-md-5 col-form-label">Ubicación</label>
-          <div class="col-sm-9 col-md-7 my-2">
-            <select class="form-select" id="ubicacion" name="ubicacion">
-              <option value="" disabled selected>Seleccione una ...</option>
-              <% locations.forEach(function(location, index) { %>
-                <option value="<%= location.id %>"                  
-                  <%=  userLocationRoles.nombre === location.nombre ? 'selected' : '' %>
-                  >
-                  <%= location.nombre %>
-                </option>
-                <% }); %>
-            </select>
-          </div>
-        </div>
-        <div class="mb-3 row">
-          <label for="rol" class="col-sm-3 col-md-5 col-form-label">Rol</label>
-          <div class="col-sm-9 col-md-7  my-2">
-            <select class="form-select" id="rol" name="rol">
-              <option value="" disabled selected>Seleccione una ...</option>
-              <% roles.forEach(function(rol, index) { %>
-                <option value="<%= rol.id %>"
-                  <%= userLocationRoles.roles_id === rol.id ? 'selected' : '' %>
-                  >
-                  <%= rol.nombre %>
-                </option>
-                <% }); %>
-            </select>
-          </div>
-        </div>   
-        <!-- Estado -->
-        <div class="mb-3 row">
-          <label for="estado" class="col-sm-2 col-md-3 col-form-label">Estado</label>
-          <div class="col-sm-10 col-md-9">
-              <select class="form-select" id="estado" name="estado">
-                  <option value="1" <%= userRequired.estado === 1 ? 'selected' : '' %>>Alta</option>
-                  <option value="0" <%= userRequired.estado === 0 ? 'selected' : '' %>>Baja</option>
-              </select>
-          </div>
-          <% if (userRequired.estado===0) { %>
-            <div class="alert alert-warning mt-3" role="alert">
-              El usuario <strong> debe activar la cuenta </strong> , verificando el correo. Si es necesario, puede <strong>
-                enviar el correo</strong> de activación <strong>nuevamente</strong>.
-              <a href="/users/sendactivation/<%= userRequired.dni %>" class="btn btn-success  mb-1">Enviar correo</a>
+        <!-- COMIENZO de una  Card de roles, estados y ubicaciones-->
+        <% userLocationRoles.forEach(function(locationRole, i) { %>
+          <div class="card mb-3">
+            <div class="card-body">
+              <div class="mb-3 row">
+                <label for="ubicacion<%= i %>" class="col-sm-3 col-md-5 col-form-label">Ubicación</label>
+                <div class="col-sm-9 col-md-7 my-2">
+                  <select class="form-select" id="ubicacion<%= i %>" name="ubicacion">
+                    <option value="" disabled selected>Seleccione una ...</option>
+                    <% locations.forEach(function(location, index) { %>
+                      <option value="<%= location.id %>" <%= locationRole.nombre === location.nombre ? 'selected' : '' %>>
+                        <%= location.nombre %>
+                      </option>
+                    <% }); %>
+                  </select>
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label for="rol<%= i %>" class="col-sm-3 col-md-5 col-form-label">Rol</label>
+                <div class="col-sm-9 col-md-7 my-2">
+                  <select class="form-select" id="rol<%= i %>" name="rol">
+                    <option value="" disabled selected>Seleccione una ...</option>
+                    <% roles.forEach(function(rol, index) { %>
+                      <option value="<%= rol.id %>" <%= locationRole.roles_id === rol.id ? 'selected' : '' %>>
+                        <%= rol.nombre %>
+                      </option>
+                    <% }); %>
+                  </select>
+                </div>
+              </div>
+              <div class="mb-3 row">
+                <label for="estado<%= i %>" class="col-sm-2 col-md-3 col-form-label">Estado</label>
+                <div class="col-sm-10 col-md-9">
+                  <select class="form-select" id="estado<%= i %>" name="estado">
+                    <option value="1" <%= locationRole.estado === 1 ? 'selected' : '' %>>Alta</option>
+                    <option value="0" <%= locationRole.estado === 0 ? 'selected' : '' %>>Baja</option>
+                  </select>
+                </div>
+              </div>
+              <!-- Botón para eliminar esta tarjeta de ubicación -->
+              <button type="button" class="btn btn-danger eliminarUbicacion">Eliminar ubicación</button>
             </div>
-            <% } %>
-        </div>
-
+          </div>
+        <% }); %>
+        
+        <!-- FIN de una  Card de roles, estados y ubicaciones-->
+        
       </div>
     </div>
-    <!-- Fin  de la Card de ubicaciones y roles-->
+    <!-- FIN de la Card de roles, estados y ubicaciones-->
 
   </div>
 
