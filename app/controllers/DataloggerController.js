@@ -2,13 +2,41 @@
 const LocationModel = require('../models/LocationModel');
 const DataloggerModel = require('../models/DatalogerModel');
 const DataModel = require('../models/DataModel');
+const UserModel = require('../models/UserModel');
 
 module.exports = {
     getAll: async (req, res) => {
-        console.log("getAll Locations");
-        const locationsList = await LocationModel.getAll();        
-        res.render('locations',{user: req.session.user, locationsList: locationsList});
+        try {
+            const userId = req.params.userid;
+            console.log(`Obteniendo todos los dataloggers para el usuario con ID ${userId}`);
+    
+            // Obtener la lista de ubicaciones y roles por ID de usuario
+            const locationsRolesList = await UserModel.getLocationRolesById(userId);
+            
+            // Inicializar un array para almacenar todos los dataloggers
+            const allDataloggers = [];
+    
+            // Iterar sobre cada ubicación y obtener los dataloggers asociados
+            for (const locationRole of locationsRolesList) {
+                const locationId = locationRole.id;
+                console.log(`Buscando dataloggers para la ubicación con ID ${locationId}`);
+                
+                // Obtener los dataloggers para la ubicación actual
+                const dataloggers = await DataloggerModel.getByLocationId(locationId);
+                
+                // Agregar los dataloggers al array general
+                allDataloggers.push(...dataloggers);
+            }
+    
+            // Enviar todos los dataloggers al cliente como respuesta
+            res.status(200).json({ allDataloggers: allDataloggers });
+        } catch (error) {
+            console.error('Error al obtener los dataloggers:', error);
+            res.status(500).json({ error: 'Ocurrió un error al obtener los dataloggers.' });
+        }
     },
+    
+    
     viewDatalogger: async (req, res) => {
         const id = req.params.id;                      
         //console.log(`viewDatalogger Controller con id ${id}`);     

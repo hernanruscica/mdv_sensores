@@ -114,6 +114,7 @@ select canales.nombre_columna, canales.nombre as canal_nombre, canales.descripci
 from canales
 where datalogger_id = 2;
 
+select * from usuarios;
 select * from roles;
 select * from usuarios_x_ubicaciones_x_roles;
 
@@ -121,11 +122,47 @@ select * from usuarios_x_ubicaciones_x_roles;
 select  ubicaciones.id as ubicacion_id, ubicaciones.nombre as ubicacion_nombre, usuarios_x_ubicaciones_x_roles.roles_id as rol_id
 FROM usuarios_x_ubicaciones_x_roles 
 INNER JOIN ubicaciones ON  usuarios_x_ubicaciones_x_roles.ubicaciones_id = ubicaciones.id
-where usuarios_x_ubicaciones_x_roles.usuarios_id = 1;
+where usuarios_x_ubicaciones_x_roles.usuarios_id = 32;
 
 /*obtengo los usuarios asignados a una ubicacion*/
 select *
 from usuarios_x_ubicaciones_x_roles
 inner join ubicaciones on usuarios_x_ubicaciones_x_roles.ubicaciones_id = ubicaciones.id
-where ubicaciones_id = 1;
+where ubicaciones_id = 2;
+
+insert into usuarios_x_ubicaciones_x_roles
+(usuarios_id, ubicaciones_id, roles_id, fecha_creacion)
+values
+(32, 3, 7, curdate());
+
+delete from usuarios_x_ubicaciones_x_roles
+where id = 15;
+
+select * from usuarios_x_ubicaciones_x_roles;
+
+select * from dataloggers;
+select * from dataloggers_x_ubicacion;
+
+#selecciona id, direccion_mac, nombre, descripcion, foto, nombre_tabla, fecha_creacion de datalogger
+#de una determinada ubicacion
+select dataloggers.* 
+from dataloggers
+inner join dataloggers_x_ubicacion on dataloggers.id = dataloggers_x_ubicacion.datalogger_id
+where dataloggers_x_ubicacion.ubicaciones_id = 2;
+
+select ubicaciones_id from dataloggers_x_ubicacion where datalogger_id = 1;
+
+select *
+from dataloggers_x_ubicacion
+inner join dataloggers on dataloggers_x_ubicacion.dataloggers_id = dataloggers.id
+where dataloggers_x_ubicacion.ubicaciones_id = (select ubicaciones_id from dataloggers_x_ubicacion where datalogger_id = 1);
+
+delete from dataloggers_x_ubicacion
+where id = 1 ;
+
+insert into dataloggers_x_ubicacion
+(ubicaciones_id, datalogger_id, fecha_creacion)
+values
+(2, 3, CURRENT_TIMESTAMP());
+
 

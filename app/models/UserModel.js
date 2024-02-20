@@ -85,7 +85,7 @@ module.exports = {
         const connection = await pool.getConnection();
         console.log("abierta la conexion con el pool de datos - getLocationRolesById");
         try {                        
-            const [rows, fields] = await connection.execute(`SELECT ubicaciones.nombre, ubicaciones.descripcion, ubicaciones.foto, ubicaciones.telefono,
+            const [rows, fields] = await connection.execute(`SELECT ubicaciones.id, ubicaciones.nombre, ubicaciones.descripcion, ubicaciones.foto, ubicaciones.telefono,
                      usuarios_x_ubicaciones_x_roles.usuarios_id AS usuarios_id, usuarios_x_ubicaciones_x_roles.roles_id AS roles_id,
                      roles.nombre AS nombre_rol
              FROM ubicaciones 
