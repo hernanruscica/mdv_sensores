@@ -7,8 +7,14 @@ const UserModel = require('../models/UserModel');
 module.exports = {
     getAll: async (req, res) => {
         try {
-            const userId = req.params.userid;
-            console.log(`Obteniendo todos los dataloggers para el usuario con ID ${userId}`);
+            //const userId = req.params.userid;
+
+            if (req.session.user == undefined){
+                console.log('usuario no logueado o no encontrado');
+                return res.status(200).send('usuario no logueado o no encontrado');                
+            }
+            const userId = req.session.user.id;
+            console.log(`Obteniendo todos los dataloggers para el usuario con ID ${req.session.user.id}`);
     
             // Obtener la lista de ubicaciones y roles por ID de usuario
             const locationsRolesList = await UserModel.getLocationRolesById(userId);
@@ -23,16 +29,23 @@ module.exports = {
                 
                 // Obtener los dataloggers para la ubicación actual
                 const dataloggers = await DataloggerModel.getByLocationId(locationId);
+
+                // Agregar el atributo 'nombre' de locationRole a cada datalogger
+                dataloggers.forEach(datalogger => {
+                    datalogger.ubicacion_nombre = locationRole.nombre;
+                });
                 
                 // Agregar los dataloggers al array general
                 allDataloggers.push(...dataloggers);
+
+                return res.render('dataloggers',{user: req.session.user, dataloggersList: allDataloggers})
             }
     
             // Enviar todos los dataloggers al cliente como respuesta
-            res.status(200).json({ allDataloggers: allDataloggers });
+            return res.status(200).json({ allDataloggers: allDataloggers });
         } catch (error) {
             console.error('Error al obtener los dataloggers:', error);
-            res.status(500).json({ error: 'Ocurrió un error al obtener los dataloggers.' });
+            return res.status(500).json({ error: 'Ocurrió un error al obtener los dataloggers.' });
         }
     },
     

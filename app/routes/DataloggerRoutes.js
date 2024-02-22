@@ -3,7 +3,7 @@ const DataloggerController = require('../controllers/DataloggerController.js');
 
 var router = express.Router();
 
-router.get('/all/:userid', DataloggerController.getAll);
+router.get('/all/', DataloggerController.getAll);
 // router.get('/registerform',  UserController.registerForm );
 // router.post('/add', UserController.add);
 // router.get('/profile', UserController.profile);

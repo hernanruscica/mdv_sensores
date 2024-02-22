@@ -1,0 +1,189 @@
+<%- include('partials/cabecera', {titulo: "MDV Sensores - Tabla usuarios", nombre: user.nombre_1, apellido: user.apellido_1}) %>
+
+<div class="container my-5 py-3">
+  <% if (typeof user !== 'undefined' && user !== null && user.nombre_1 && user.apellido_1) { %>
+  <h1>Usuarios de MDV Sensores</h1>
+
+  <!--Breadcrumb-->
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Inicio</a></li>
+      <li class="breadcrumb-item"><a href="/users/dashboard">Panel de control</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Usuarios</li>
+    </ol>
+  </nav>
+
+  <p class="fs-5 mt-5">En esta sección usted puede realizar ALTAS, BAJAS, ACTUALIZACIONES y ELIMINACIONES de usuarios, segun su rol definido por el administrador.</p>
+  <div class="container row justify-content-start">
+    <a href="/dataloggers/register" class="btn btn-success col-5 col-lg-2">Nuevo usuario</a>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table  table-striped">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">ID</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Ubicacion</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="userTableBody">
+        <!--userList-->
+        <% dataloggersList.forEach(function(datalogger, index) { %>
+        <tr>
+          <th scope="row"><%= index + 1 %></th>
+          <td><%= datalogger.id %></td>
+          <td><%= datalogger.nombre %></td>
+          <td><%= datalogger.ubicacion_nombre %></td>
+          <td>
+            <a href="/users/view/<%= datalogger.dni %>" class="btn btn-primary btn-sm mb-1">Ver</a>
+            <a href="/users/editform/<%= datalogger.dni %>" class="btn btn-secondary btn-sm mb-1">Editar</a>
+            <button type="button" class="btn btn-danger btn-sm mb-1 eliminarUsuario" id="eliminarUsuario"
+              data-dni="<%= datalogger.id %>" 
+              data-nombre="<%= datalogger.nombre %>" 
+              data-ubicacion="<%= datalogger.ubicacion_nombre %>">Eliminar</button>
+          </td>
+        </tr>
+        <% }); %>
+
+
+      </tbody>
+    </table>
+  </div>
+  <!--Paginacion-->
+  <nav aria-label="Tabla de usuarios a mostrar">
+    <h5 class="text-center display-6 fs-5 my-3">Páginas de resultados</h5>
+    <ul class="pagination justify-content-center" id="pagination" data-userlist="<%= JSON.stringify(dataloggersList) %>">
+      <!-- Aquí se generará la paginación con JavaScript -->
+    </ul>
+  </nav>
+
+  <% } else { %>
+  <h1>Error: Usuario no encontrado</h1>
+  <% } %>
+</div>
+
+<%- include('partials/piedepagina') %>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<%
+    if (typeof results !== 'undefined' && results === 'registrocorrecto'){ %>
+<script>
+  Swal.fire({
+    title: 'Registro exitoso !',
+    text: '<%= message %>',
+    icon: 'success',
+    confirmButtonText: 'Entendido'
+  })
+</script>
+<%
+    } 
+
+%>
+
+<%
+    if (typeof results !== 'undefined' && results === 'registrofallido'){ %>
+<script>
+  Swal.fire({
+    title: 'Registro Fallido !',
+    text: '<%= message %>',
+    icon: 'error',
+    confirmButtonText: 'Entendido'
+  })
+</script>
+<%
+    }    
+%>
+
+<script src="/scripts/usersFunctionsBtns.js"></script>
+<!--
+<script>
+  // Función para generar la paginación
+  function generatePagination(totalPages) {
+    var paginationContainer = document.getElementById('pagination');
+    paginationContainer.innerHTML = ''; // Limpiar el contenido existente
+    for (var i = 1; i <= totalPages; i++) {
+      var li = document.createElement('li');
+      li.classList.add('page-item');
+      var a = document.createElement('a');
+      a.classList.add('page-link');
+      a.setAttribute('href', '#');
+      a.textContent = i;
+      li.appendChild(a);
+      paginationContainer.appendChild(li);
+    }
+  }
+
+  // Calcula el número total de páginas basado en la cantidad de usuarios
+  var userListData = JSON.parse(document.getElementById('pagination').dataset.userlist);
+  var totalPages = Math.ceil(userListData.length / 10);
+
+  // Genera la paginación
+  generatePagination(totalPages);
+
+  // Muestra los usuarios de la página seleccionada
+  var currentPage = 1;
+  var userTableBody = document.getElementById('userTableBody');
+
+  function showUsers(page) {
+    userTableBody.innerHTML = '';
+    var start = (page - 1) * 10;
+    var end = page * 10;
+    var usersToShow = userListData.slice(start, end);
+    usersToShow.forEach(function(user, index) {
+      var tr = document.createElement('tr');
+      var th = document.createElement('th');
+      th.setAttribute('scope', 'row');
+      th.textContent = start + index + 1;
+      tr.appendChild(th);
+      var tdIdentificacion = document.createElement('td');
+      tdIdentificacion.textContent = user.dni;
+      tr.appendChild(tdIdentificacion);
+      var tdNombre = document.createElement('td');
+      tdNombre.textContent = user.nombre_1;
+      tr.appendChild(tdNombre);
+      var tdApellido = document.createElement('td');
+      tdApellido.textContent = user.apellido_1;
+      tr.appendChild(tdApellido);
+      var tdAcciones = document.createElement('td');
+      var verBtn = document.createElement('a');
+      verBtn.setAttribute('href', '/users/view/' + user.dni);
+      verBtn.classList.add('btn', 'btn-primary', 'btn-sm', 'mb-1');
+      verBtn.textContent = 'Ver';
+      tdAcciones.appendChild(verBtn);
+      var editarBtn = document.createElement('a');
+      editarBtn.setAttribute('href', '/users/editform/' + user.dni);
+      editarBtn.classList.add('btn', 'btn-secondary', 'btn-sm', 'mb-1');
+      editarBtn.textContent = 'Editar';
+      tdAcciones.appendChild(editarBtn);
+      var eliminarBtn = document.createElement('button');
+      eliminarBtn.setAttribute('type', 'button');
+      eliminarBtn.classList.add('btn', 'btn-danger', 'btn-sm', 'mb-1', 'eliminarUsuario');
+      eliminarBtn.setAttribute("id", "eliminarUsuario");
+      eliminarBtn.setAttribute('data-dni', user.dni);
+      eliminarBtn.setAttribute('data-nombre_1', user.nombre_1);
+      eliminarBtn.setAttribute('data-apellido_1', user.apellido_1);
+      eliminarBtn.textContent = 'Eliminar';
+      tdAcciones.appendChild(eliminarBtn);
+      tr.appendChild(tdAcciones);
+      userTableBody.appendChild(tr);
+    });
+  }
+
+  showUsers(currentPage);
+
+  // Maneja la navegación entre páginas
+  var paginationLinks = document.querySelectorAll('#pagination a');
+  paginationLinks.forEach(function(link) {
+    link.addEventListener('click', function(event) {
+      event.preventDefault();
+      currentPage = parseInt(event.target.textContent);
+      showUsers(currentPage);
+    });
+  });
+</script>
+-->
+</body>
+</html>

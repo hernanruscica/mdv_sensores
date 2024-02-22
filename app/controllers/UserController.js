@@ -281,6 +281,7 @@ module.exports = {
                         req.session = {};
                       }
                     req.session.user = {
+                        id: userDataBD.id,
                         dni: userDataBD.dni,
                         nombre_1: userDataBD.nombre_1,
                         apellido_1: userDataBD.apellido_1,
