@@ -2,20 +2,20 @@
 
 <div class="container my-5 py-3">
   <% if (typeof user !== 'undefined' && user !== null && user.nombre_1 && user.apellido_1) { %>
-  <h1>Usuarios de MDV Sensores</h1>
+  <h1>Dataloggers</h1>
 
   <!--Breadcrumb-->
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
       <li class="breadcrumb-item"><a href="/">Inicio</a></li>
       <li class="breadcrumb-item"><a href="/users/dashboard">Panel de control</a></li>
-      <li class="breadcrumb-item active" aria-current="page">Usuarios</li>
+      <li class="breadcrumb-item active" aria-current="page">Dataloggers</li>
     </ol>
   </nav>
 
-  <p class="fs-5 mt-5">En esta sección usted puede realizar ALTAS, BAJAS, ACTUALIZACIONES y ELIMINACIONES de usuarios, segun su rol definido por el administrador.</p>
+  <p class="fs-5 mt-5">En esta sección usted puede realizar ALTAS, BAJAS, ACTUALIZACIONES y ELIMINACIONES de dataloggers, segun su rol definido por el administrador.</p>
   <div class="container row justify-content-start">
-    <a href="/dataloggers/register" class="btn btn-success col-5 col-lg-2">Nuevo usuario</a>
+    <a href="/dataloggers/register" class="btn btn-success col-5 col-lg-2">Nuevo datalogger</a>
   </div>
 
   <div class="table-responsive">
@@ -38,8 +38,8 @@
           <td><%= datalogger.nombre %></td>
           <td><%= datalogger.ubicacion_nombre %></td>
           <td>
-            <a href="/users/view/<%= datalogger.dni %>" class="btn btn-primary btn-sm mb-1">Ver</a>
-            <a href="/users/editform/<%= datalogger.dni %>" class="btn btn-secondary btn-sm mb-1">Editar</a>
+            <a href="/dataloggers/view/<%= datalogger.id %>" class="btn btn-primary btn-sm mb-1">Ver</a>
+            <a href="/dataloggers/editform/<%= datalogger.id %>" class="btn btn-secondary btn-sm mb-1">Editar</a>
             <button type="button" class="btn btn-danger btn-sm mb-1 eliminarUsuario" id="eliminarUsuario"
               data-dni="<%= datalogger.id %>" 
               data-nombre="<%= datalogger.nombre %>" 

@@ -1,12 +1,29 @@
 
 const LocationModel = require('../models/LocationModel');
 const DataloggerModel = require('../models/DatalogerModel');
+const UserModel = require('../models/UserModel');
 
 module.exports = {
     getAll: async (req, res) => {
         console.log("getAll Locations");
+
+        if (req.session.user == undefined){
+            console.log('usuario no logueado o no encontrado');
+            return res.status(200).send('usuario no logueado o no encontrado');                
+        }
+        const userId = req.session.user.id;
+        const locationRoles = await UserModel.getLocationRolesById(userId);   
+        const locationsList = [];
+        console.log("datos de la ubicacion y roles del usuario:", locationRoles);     
         
-        const locationsList = await LocationModel.getAll();        
+        for (const locationRole of locationRoles){            
+            const location = await LocationModel.getById(locationRole.id);            
+            locationsList.push(...location);
+        }
+        console.log(locationsList);
+        
+        //const locationsList = await LocationModel.getAll();        
+        
         res.render('locations',{user: req.session.user, locationsList: locationsList});
     },
     viewLocation: async (req, res) => {
@@ -48,5 +65,8 @@ module.exports = {
             console.error(error);
             res.status(500).send('Error interno del servidor');
         }
-    }    
+    }  ,
+    registerForm: (req, res)   => {
+        res.render('registerLocationForm', {user: req.session.user});
+    }
 }
