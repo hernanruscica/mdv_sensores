@@ -2,19 +2,26 @@
 const LocationModel = require('../models/LocationModel');
 const DataloggerModel = require('../models/DatalogerModel');
 const UserModel = require('../models/UserModel');
+const AddressController = require('./AddressController');
 
 module.exports = {
+    add: async (req, res) => {
+        console.log(`Agregando la ubicacion ${req.body.nombre}, descripcion: ${req.body.descripcion}`);
+        return res.status(200).send(`Agregando la ubicacion ${req.body.nombre}, descripcion: ${req.body.descripcion}`); 
+        //const results = await AddressController.add()
+    },
     getAll: async (req, res) => {
-        console.log("getAll Locations");
+        console.log("getAll Locations for one particular user");
 
         if (req.session.user == undefined){
             console.log('usuario no logueado o no encontrado');
             return res.status(200).send('usuario no logueado o no encontrado');                
         }
         const userId = req.session.user.id;
+        //consigo las ubicaciones y los roles en cada una de ellas, para un determinado usuario
         const locationRoles = await UserModel.getLocationRolesById(userId);   
         const locationsList = [];
-        console.log("datos de la ubicacion y roles del usuario:", locationRoles);     
+        //console.log("datos de la ubicacion y roles del usuario:", locationRoles);     
         
         for (const locationRole of locationRoles){            
             const location = await LocationModel.getById(locationRole.id);            

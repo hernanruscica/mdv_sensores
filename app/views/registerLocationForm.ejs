@@ -1,71 +1,112 @@
 <%- include('partials/cabecera', {titulo: "MDV Sensores - Registro de nueva ubicación"}) %>   
 
-<div class="container-md my-5 py-3 " >
-  <h1>Registro de una nueva ubicación </h1> 
+<div class="container-md my-5 py-3">
+  <h1>Registro de una nueva ubicación</h1> 
   
-    <!--Breadcrumb-->
-    <nav aria-label="breadcrumb">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/">Inicio</a></li>
-        <li class="breadcrumb-item"><a href="/users/dashboard">Panel de control</a></li>
-        <li class="breadcrumb-item"><a href="/users/all">Ubicaciones</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Nueva ubicación</li>
-      </ol>
-    </nav>  
+  <!-- Breadcrumb -->
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Inicio</a></li>
+      <li class="breadcrumb-item"><a href="/users/dashboard">Panel de control</a></li>
+      <li class="breadcrumb-item"><a href="/locations/all">Ubicaciones</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Nueva ubicación</li>
+    </ol>
+  </nav>  
 
   <p>
     En esta página puede <b>crear</b> una nueva ubicación.
   </p>
-  <form action="/locations/add" method="post">
 
-    <input type="hidden" name="foto" value="default_avatar.png">
-
-    <!--NOMBRE-->
-    <div class="mb-3">      
-      <label for="nombre_1" class="form-label">Nombre</label>
-      <input type="text" class="form-control" id="nombre" name="nombre" aria-describedby="nombrelHelp" 
-            pattern="[A-Za-z\s]{1,45}" title="Debe contener solo letras y tener como máximo 45 caracteres" maxlength="45" required>   
-      <div id="nombreHelp" class="form-text">[CAMPO OBLIGATORIO]</div>        
-    </div>  
-
-    <!--DESCRIPCION-->
-    <div class="mb-3">      
-      <label for="descripcion" class="form-label">Descripcion</label>
-      <input type="text" class="form-control" id="descripcion" name="descripcion" aria-describedby="descripcionlHelp" 
-            pattern="[A-Za-z\s]{1,45}" title="Debe contener solo letras y tener como máximo 100 caracteres" maxlength="100" >         
-    </div> 
-        
-    <!-- CORREO ELECTRONICO -->
-    <div class="mb-3">
-      <label for="email" class="form-label">Correo electrónico</label>
-      <input type="email" class="form-control" id="email" name="email"  aria-describedby="emailHelp" 
-        pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" 
-        maxlength="45" 
-        title="Debe tener formato de correo electrónico válido y no sobrepasar los 45 caracteres" 
-        required>
-      <div id="emailHelp" class="form-text">[CAMPO OBLIGATORIO]</div>
-    </div>    
-
-    <!-- TELEFONO  hay que agregarlo a la bd-->
-    <div class="mb-3">
-      <label for="telefono" class="form-label">Teléfono</label>
-      <input type="tel" class="form-control" id="telefono" name="telefono"
-       pattern="^(?:(?:[1-9]\d{1}[1-9]\d{7})|(?:[1-9]\d{2}[1-9]\d{6}))$"
-       maxlength="10"
-       title="Debe tener formato de teléfono válido en Argentina y no sobrepasar los 10 dígitos"
-       required>
-      <div id="telefonoHelp" class="form-text">[CAMPO OBLIGATORIO] <b>Formato:</b> Caracteristica <b>sin el 0</b> delante. <br>
-        Por ejemplo: <b>11 para AMBA</b>, 220 para Merlo. El resto es el número de teléfono, <b>sin guión, sin espacios</b>.</div>
-    </div>   
+  <div class="row">
+    <!-- Columna de Nombre de la ubicación -->
+    <div class="col-md-6 mb-3">
+      <div class="card">
+        <div class="card-body">
+          <h3 class="card-title">Nombre de la ubicación</h3>
+          <form action="/locations/add" method="post">       
+            <div class="mb-3 row">
+              <!-- Vista previa de la Foto -->
+              <img src="/images/default_location.png" class="card-img-top" style="width: 200px; height:auto; margin-top: 10px;" 
+                alt="Foto de la ubicación" id="imagePreview">
+              <label for="image" class="col-sm-2 col-md-3 col-form-label">Cambiar imagen</label>
+              <div class="col-sm-10 col-md-9">
+                <input type="file" class="form-control" id="image" name="image" accept="image/*">                  
+              </div>
+            </div>
+            <!-- Nombre -->
+            <div class="mb-3">      
+              <label for="nombre_1" class="form-label">Nombre</label>
+              <input type="text" class="form-control" id="nombre" name="nombre" aria-describedby="nombreHelp" pattern="[A-Za-z\s]{1,45}" title="Debe contener solo letras y tener como máximo 45 caracteres" maxlength="45" required>   
+              <div id="nombreHelp" class="form-text">[CAMPO OBLIGATORIO]</div>        
+            </div>  
+            <!-- Descripción -->
+            <div class="mb-3">      
+              <label for="descripcion" class="form-label">Descripción</label>
+              <input type="text" class="form-control" id="descripcion" name="descripcion" aria-describedby="descripcionHelp" pattern="[A-Za-z\s]{1,45}" title="Debe contener solo letras y tener como máximo 100 caracteres" maxlength="100">         
+            </div>        
+            <!-- Correo electrónico -->
+            <div class="mb-3">
+              <label for="email" class="form-label">Correo electrónico</label>
+              <input type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" maxlength="45" title="Debe tener formato de correo electrónico válido y no sobrepasar los 45 caracteres" required>
+              <div id="emailHelp" class="form-text">[CAMPO OBLIGATORIO]</div>
+            </div>   
+            <!-- Teléfono -->
+            <div class="mb-3">
+              <label for="telefono" class="form-label">Teléfono</label>
+              <input type="tel" class="form-control" id="telefono" name="telefono" pattern="^(?:(?:[1-9]\d{1}[1-9]\d{7})|(?:[1-9]\d{2}[1-9]\d{6}))$" maxlength="10" title="Debe tener formato de teléfono válido en Argentina y no sobrepasar los 10 dígitos" required>
+              <div id="telefonoHelp" class="form-text">[CAMPO OBLIGATORIO] <b>Formato:</b> Característica <b>sin el 0</b> delante. <br> Por ejemplo: <b>11 para AMBA</b>, 220 para Merlo. El resto es el número de teléfono, <b>sin guión, sin espacios</b>.</div>
+            </div>   
+          </form>
+        </div>
+      </div>
+    </div>
     
+    <!-- Columna de Datos del domicilio -->
+    <div class="col-md-6 mb-3">
+      <div class="card">
+        <div class="card-body">
+          <h3 class="card-title">Datos del domicilio</h3>
+          <form action="/locations/add" method="post">       
+            <div class="mb-3">      
+              <label for="calle" class="form-label">Calle</label>
+              <input type="text" class="form-control" id="calle" name="calle" aria-describedby="calleHelp" value="" maxlength="45" title="Debe ser un nombre de calle y no sobrepasar los 45 caracteres" required>          
+            </div>     
+            <div class="mb-3">      
+              <label for="numero" class="form-label">Número</label>
+              <input type="text" class="form-control" id="numero" name="numero" aria-describedby="numeroHelp" value="" inputmode="numeric" pattern="[0-9]{1,8}" title="Puede solo números, hasta 8 dígitos numéricos" maxlength="8" required>     
+            </div>     
+            <div class="mb-3">      
+              <label for="provincia" class="form-label">Provincia</label>
+              <select class="form-select" id="provincia" name="provincia">
+                <option value="" disabled selected>Seleccione una provincia</option>
+              </select>
+            </div>
+            <div class="mb-3">      
+              <label for="partido" class="form-label">Partido / Departamento / Comuna</label>
+              <select class="form-select" id="partido" name="partido" disabled>
+                <option value="" disabled selected>Seleccione una ...</option>
+              </select>
+            </div>
+            <div class="mb-3">      
+              <label for="localidad" class="form-label">Localidad / Barrio</label>
+              <select class="form-select" id="localidad" name="localidad" disabled>
+                <option value="" disabled selected>Seleccione una ...</option>
+              </select>
+            </div>  
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    <!--ENVIAR DATOS. -->
-    <button type="submit" class="btn btn-primary">Registrar usuario</button>
-  </form>
+  <!-- Botón Enviar -->
+  <div class="row">
+    <div class="col">
+      <form action="/locations/add" method="post">
+        <button type="submit" class="btn btn-primary w-100">Registrar ubicación</button>
+      </form>
+    </div>
+  </div>
 </div>
     
-<%- include('partials/piedepagina') %>        
-
-
-</body>
-</html>
+<%- include('partials/piedepagina') %>

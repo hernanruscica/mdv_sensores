@@ -13,7 +13,7 @@ const pool = mysql2.createPool({
 
 
 module.exports = {
-    insert: async (data) => {        
+    add: async (data) => {        
         const connection = await pool.getConnection();
         console.log("abierta la conexion con el pool de datos - insert Location");
         try {            

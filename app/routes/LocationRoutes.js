@@ -5,7 +5,7 @@ var router = express.Router();
 
 router.get('/all', LocationController.getAll);
 router.get('/register',  LocationController.registerForm );
-// router.post('/add', UserController.add);
+router.post('/add', LocationController.add);
 // router.get('/profile', UserController.profile);
 // router.delete('/:dni', UserController.deleteByDni);
  router.get('/view/:id', LocationController.viewLocation);

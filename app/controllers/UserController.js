@@ -4,41 +4,23 @@ const AddressModel = require('../models/AddressModel.js');
 const mail = require('../utils/mail.js');
 const bcrypt  = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const AddressController = require('./AddressController.js');
 const saltRounds = 10; // Número de rondas de sal para bcrypt
 
 
 
 
 module.exports = {
-    getAll: async (req, res)=>
-    {        
+    getAll: async (req, res)=>    {        
         console.log('get all users controller');
-
-
-        const usersList = await UserModel.getAll();
-
-        
+        const usersList = await UserModel.getAll();       
 
         res.render('users',{user: req.session.user, userList: usersList})
     },
     add: async (req, res) => {
         console.log('add User controller', req.body.nombre_1);
 
-        const dataDireccion = {
-            calle: 'calle false',
-            numero: 1234,
-            localidad: "0",
-            partido: 0,
-            provincia: "06",
-            codigo_postal: 0,
-            latitud: 0,
-            longitud: 0
-          }
-          const results = await AddressModel.insert(dataDireccion);
-          if (results.affectedRows > 0){
-            console.log(`Datos insertados correctamente con el id: ${results.insertId}`);
-          }else
-            console.log(`Datos no insertados`);
+        const insertId = await AddressController.add();
 
         // Preparar el objeto de datos con el password hasheado
         const userData = {
@@ -53,7 +35,7 @@ module.exports = {
             telefono: req.body.telefono,
             estado: req.body.estado || 0,
             //fecha_creacion: req.body.fecha_creacion || '2023-10-12',
-            direcciones_id: results.insertId || 1
+            direcciones_id: insertId || 1
         };
 
         const userToken = jwt.sign({dni: userData.dni}, process.env.SECRET_KEY, {expiresIn: 86400}); //expira en un dia
