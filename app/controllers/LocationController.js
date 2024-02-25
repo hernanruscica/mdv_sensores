@@ -2,12 +2,58 @@
 const LocationModel = require('../models/LocationModel');
 const DataloggerModel = require('../models/DatalogerModel');
 const UserModel = require('../models/UserModel');
-const AddressController = require('./AddressController');
+const AddressModel = require('../models/AddressModel');
 
 module.exports = {
     add: async (req, res) => {
         console.log(`Agregando la ubicacion ${req.body.nombre}, descripcion: ${req.body.descripcion}`);
-        return res.status(200).send(`Agregando la ubicacion ${req.body.nombre}, descripcion: ${req.body.descripcion}`); 
+        let insertId = null;
+        //envio datos falsos o los que luego se usaran como default, pero deberia recibir los datos del form de registro de ubicacion
+        const dataDireccion = {
+            calle: req.body.calle  ,
+            numero: req.body.numero  ,
+            localidad: req.body.localidad  ,
+            partido: req.body.partido  ,
+            provincia: req.body.provincia  ,
+            codigo_postal: 0,
+            latitud: 0,
+            longitud: 0
+          }
+        
+          //console.log(dataDireccion)
+        try {
+            const results = await AddressModel.add(dataDireccion);
+            if (results.affectedRows > 0){
+                console.log(`Datos insertados correctamente con el id: ${results.insertId}`);
+                insertId = results.insertId;
+                // aca tengo que insertar la ubicacion con el locationModel.add
+                //falta agregar el campo email a la BD domingo 25/02/2024
+                //puedo registrar una ubicacion con su direccion correctamente, pero me falta tener los permisos para verla
+                const dataUbicacion = {
+                    nombre: req.body.nombre,
+                    descripcion: req.body.descripcion,
+                    foto: req.body.foto,
+                    telefono: req.body.telefono,
+                    direcciones_id: insertId
+                }
+
+                const resultsLocationAdd = await LocationModel.add(dataUbicacion);
+                console.log(resultsLocationAdd.affectedRows);
+
+                if (resultsLocationAdd.affectedRows > 0){
+                    res.render('dashboard', {results: 'registrocorrecto', message: `La ubicacion ${dataUbicacion.nombre} se registro correctamente`, user: req.session.user});
+                }else{
+                    res.render('dashboard', {results: 'registrofallido', message: `La ubicacion ${dataUbicacion.nombre} No se registro correctamente`, user: req.session.user})
+                }
+
+              }else
+                console.log(`Datos no insertados`);
+        } catch (error) {
+            console.error(error);
+            return res.status(500).send('Error interno del servidor');
+        }        
+
+        //return res.status(200).send(`Agregando la ubicacion ${req.body.nombre}, descripcion: ${req.body.descripcion} con el insertId: ${insertId}`); 
         //const results = await AddressController.add()
     },
     getAll: async (req, res) => {

@@ -20,7 +20,7 @@ module.exports = {
     add: async (req, res) => {
         console.log('add User controller', req.body.nombre_1);
 
-        const insertId = await AddressController.add();
+        const results = await AddressModel.add(null);
 
         // Preparar el objeto de datos con el password hasheado
         const userData = {
@@ -35,7 +35,7 @@ module.exports = {
             telefono: req.body.telefono,
             estado: req.body.estado || 0,
             //fecha_creacion: req.body.fecha_creacion || '2023-10-12',
-            direcciones_id: insertId || 1
+            direcciones_id: results.insertId || 1
         };
 
         const userToken = jwt.sign({dni: userData.dni}, process.env.SECRET_KEY, {expiresIn: 86400}); //expira en un dia

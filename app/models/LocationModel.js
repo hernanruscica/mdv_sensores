@@ -13,6 +13,22 @@ const pool = mysql2.createPool({
 
 
 module.exports = {
+    add: async (data) => {        
+        const connection = await pool.getConnection();
+        console.log("abierta la conexion con el pool de datos - insert");
+        
+         try {
+             const [rows, fields] = await connection.execute(`INSERT INTO ubicaciones (nombre, descripcion, foto, telefono, fecha_creacion, direcciones_id)         
+             VALUES ('${data.nombre}', '${data.descripcion}', '${data.foto}', '${data.telefono}', CURDATE(), '${data.direcciones_id}')`);
+             console.log(`Rows affeted: ${rows.affectedRows}`);
+             return rows;
+         } catch (error){                       
+             throw error;
+         } finally {
+             connection.release(); 
+             console.log("cerrada la conexion con el pool de datos");
+         }
+    },
     getAll: async () => {
         //conn.query(`SELECT * FROM users`, myFunction);
         const connection = await pool.getConnection();

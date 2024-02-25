@@ -5,11 +5,11 @@ module.exports = {
 
         //envio datos falsos o los que luego se usaran como default, pero deberia recibir los datos del form de registro de ubicacion
         const dataDireccion = {
-            calle: 'calle false',
-            numero: 1234,
-            localidad: "0",
-            partido: 0,
-            provincia: "06",
+            calle: req.calle  ,
+            numero: req.numero  ,
+            localidad: req.localidad  ,
+            partido: req.partido  ,
+            provincia: req.provincia  ,
             codigo_postal: 0,
             latitud: 0,
             longitud: 0

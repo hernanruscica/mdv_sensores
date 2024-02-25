@@ -16,11 +16,23 @@ module.exports = {
     add: async (data) => {        
         const connection = await pool.getConnection();
         console.log("abierta la conexion con el pool de datos - insert Location");
+
+        const dataDireccion = {
+            calle: (data !== null && data.calle) ? data.calle  : 'calle false',
+            numero: (data !== null && data.numero) ? data.numero  : 1234,
+            localidad: (data !== null && data.localidad) ? data.localidad  : "0",
+            partido: (data !== null && data.partido) ? data.partido  : "0",
+            provincia: (data !== null && data.provincia) ? data.provincia  : "06",
+            codigo_postal: 0,
+            latitud: 0,
+            longitud: 0
+          }
+
         try {            
             const [rows, fields] = await connection.execute(`insert into direcciones
             (calle, numero, localidad, partido, provincia, codigo_postal, latitud, longitud, fecha_creacion )
         values
-            ('${data.calle}', '${data.numero}', '${data.localidad}', '${data.partido}', '${data.provincia}', '${data.codigo_postal}', '${data.latitud}', '${data.longitud}', curdate());`);            
+            ('${dataDireccion.calle}', '${dataDireccion.numero}', '${dataDireccion.localidad}', '${dataDireccion.partido}', '${dataDireccion.provincia}', '${dataDireccion.codigo_postal}', '${dataDireccion.latitud}', '${dataDireccion.longitud}', curdate());`);            
             //console.log(rows)
             return rows;
         }catch (error){
