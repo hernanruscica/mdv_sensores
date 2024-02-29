@@ -29,18 +29,31 @@ module.exports = {
                 // aca tengo que insertar la ubicacion con el locationModel.add
                 //falta agregar el campo email a la BD domingo 25/02/2024
                 //puedo registrar una ubicacion con su direccion correctamente, pero me falta tener los permisos para verla
+                const imageName = (req.file != undefined) ? req.file.filename : req.body.foto;  
                 const dataUbicacion = {
                     nombre: req.body.nombre,
                     descripcion: req.body.descripcion,
-                    foto: req.body.foto,
+                    foto: imageName,
                     telefono: req.body.telefono,
                     direcciones_id: insertId
-                }
+                };
 
                 const resultsLocationAdd = await LocationModel.add(dataUbicacion);
-                console.log(resultsLocationAdd.affectedRows);
+                console.log(resultsLocationAdd.insertId);
 
-                if (resultsLocationAdd.affectedRows > 0){
+                const dataLocationUserRole = {
+                    usuarios_id: req.session.user.id,
+                    ubicaciones_id: resultsLocationAdd.insertId,
+                    roles_id: 9
+                }
+
+                //console.log('dataLocationUserRole', dataLocationUserRole)
+
+                const locationUserRoleAdded = await LocationModel.addLocationUserRole(dataLocationUserRole);
+                console.log(locationUserRoleAdded);
+
+                //deberia poder hacer un rollback aunque en el metodo de agregar una ubicacion, el usuario y la ubicacion son nuevas y el rol es propietario
+                if (resultsLocationAdd.affectedRows > 0 && locationUserRoleAdded.affectedRows > 0){
                     res.render('dashboard', {results: 'registrocorrecto', message: `La ubicacion ${dataUbicacion.nombre} se registro correctamente`, user: req.session.user});
                 }else{
                     res.render('dashboard', {results: 'registrofallido', message: `La ubicacion ${dataUbicacion.nombre} No se registro correctamente`, user: req.session.user})
@@ -86,7 +99,7 @@ module.exports = {
             const results = await LocationModel.getById(id);
 
             //saco el id y el nombre y lo pongo en session cookie para armar el breadcrumb
-            //console.log(results[0]);            
+            console.log(results[0]);            
             req.session.location = {
                 id: results[0].id,
                 nombre: results[0].nombre

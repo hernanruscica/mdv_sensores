@@ -29,6 +29,22 @@ module.exports = {
              console.log("cerrada la conexion con el pool de datos");
          }
     },
+    addLocationUserRole: async (data) => {        
+        const connection = await pool.getConnection();
+        console.log("abierta la conexion con el pool de datos - insert de addLocationUserRole");
+        
+         try {
+             const [rows, fields] = await connection.execute(`INSERT INTO usuarios_x_ubicaciones_x_roles (usuarios_id, ubicaciones_id, roles_id, fecha_creacion)         
+             VALUES ('${data.usuarios_id}', '${data.ubicaciones_id}', '${data.roles_id}', CURDATE())`);
+             //console.log(`Rows affeted: ${rows.affectedRows}`);
+             return rows;
+         } catch (error){                       
+             throw error;
+         } finally {
+             connection.release(); 
+             console.log("cerrada la conexion con el pool de datos");
+         }
+    },
     getAll: async () => {
         //conn.query(`SELECT * FROM users`, myFunction);
         const connection = await pool.getConnection();

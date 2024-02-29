@@ -24,20 +24,22 @@
   <div class="d-flex flex-column flex-lg-row ">
     <div class="card m-3 col-12 col-lg-6">
         <div class="card-body">
-            <!-- Nombre y Apellido -->
-            <h5 class="card-title">
-                <%= location[0].nombre %>  
-            </h5>
 
-            <!-- Direccion -->
-            <p class="card-text"><strong>Direccion:</strong> <%= location[0].calle %> <%= location[0].numero %> <%= location[0].localidad %></p>
+          <!-- Foto -->
+          <img src="/images/<%= location[0].foto %>" class="card-img-top"  style="width: 200px; height:auto;"
+            alt="Foto de la ubicacion <%= location.nombre %> ">
 
-            <!-- Foto -->
-            <img src="<%= location.foto %>" class="card-img-top" alt="Foto de la ubicacion <%= location.nombre %> ">
+          <!-- Nombre y Apellido -->
+          <h3 class="card-title my-3">
+               <%= location[0].nombre %>  
+          </h3>
 
-            
-            <!-- Teléfono -->
-            <p class="card-text"><strong>Teléfono:</strong> <%= location[0].telefono %></p>
+          <!-- Direccion -->
+          <p class="card-text"><strong>Direccion:</strong> <%= location[0].calle %> <%= location[0].numero %> <%= location[0].localidad %></p>          
+
+          
+          <!-- Teléfono -->
+          <p class="card-text"><strong>Teléfono:</strong> <%= location[0].telefono %></p>
 
         </div>
         

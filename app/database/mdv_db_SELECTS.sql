@@ -25,6 +25,7 @@ SELECT * FROM `mdvsrl`.`usuarios`; /*tengo el id para usarlo en */
 SELECT * FROM `usuarios_x_ubicaciones_x_roles`;
 SELECT * FROM `roles`;
 SELECT * FROM `ubicaciones`;
+SELECT * FROM `direciones`;
 SELECT * FROM `ubicaciones` WHERE `id` = 8;
 
 
@@ -166,3 +167,18 @@ values
 (2, 3, CURRENT_TIMESTAMP());
 
 
+SELECT * FROM `usuarios_x_ubicaciones_x_roles`;
+
+#revisa si ya existe un usuario_id con esa ubicacion_id
+SELECT EXISTS (
+    SELECT 1
+    FROM usuarios_x_ubicaciones_x_roles
+    WHERE usuarios_id = 32
+    AND ubicaciones_id = 2
+) AS existe_relacion;
+
+#Agrega un nuevo registro
+insert into usuarios_x_ubicaciones_x_roles
+(usuarios_id, ubicaciones_id, roles_id, fecha_creacion)
+values
+(32, 3, 9, curdate());

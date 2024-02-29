@@ -47,6 +47,44 @@ const eliminarUsuario = (dni, nombre, apellido) => {
     })            
 }
 
+const eliminarUbicacion = (id, nombre) => {
+    console.log(`Eliminar ubicacion con ID.: ${id} ?`);
+    Swal.fire({
+        title: 'Eliminar ubicación.',
+        text: `Confirma la eliminación de la ubicación ${nombre} ? Esta acción no se puede deshacer`,
+        icon: 'warning',                   
+        showDenyButton: true,                               
+        confirmButtonText: 'Eliminar',
+        confirmButtonColor: '#FF0000',
+        denyButtonText: 'Conservar',
+        denyButtonColor: '#28DC25'
+
+    }).then((result) => {
+        // if (result.value) {            
+        //     fetch(`/users/${dni}`, { method: 'DELETE' })
+        //     .then(response => {
+        //         // manejar respuesta exitosa    
+        //         Swal.fire({
+        //             title: 'Usuario eliminado !',
+        //             text: `Se eliminó al usuario ${nombre} ${apellido} con exito.`,
+        //             icon: 'info',
+        //             confirmButtonText: 'Entendido'
+        //         }).then((result) => { 
+        //             if (result.value){
+        //                 //location.reload();    
+        //                 window.location.href = '/users/all' ;    
+        //             }
+        //         }); 
+        //     })
+        //     .catch(error => {
+        //         // manejar error
+        //         console.log("error al borrar el elemento", error);
+        //     });
+        // }
+        window.location.href = '/locations/all' ;
+    })            
+}
+
 //acciones de los botones en cada tarjeta individual
 $d.addEventListener('click', (e) => {    
     let accion = null;
@@ -62,5 +100,13 @@ $d.addEventListener('click', (e) => {
             eliminarUsuario(dni, nombre, apellido)
         }       
         
+        //eliminarUbicacion
+        if (e.target.id == 'eliminarUbicacion'){
+            let id = e.target.dataset.id;
+            let nombre = e.target.dataset.nombre;
+            
+            console.log(`eliminando la ubicacion con id: ${id}`);
+            eliminarUbicacion(id, nombre);
+        }       
     
 });
