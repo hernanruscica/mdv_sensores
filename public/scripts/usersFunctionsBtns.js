@@ -60,27 +60,27 @@ const eliminarUbicacion = (id, nombre) => {
         denyButtonColor: '#28DC25'
 
     }).then((result) => {
-        // if (result.value) {            
-        //     fetch(`/users/${dni}`, { method: 'DELETE' })
-        //     .then(response => {
-        //         // manejar respuesta exitosa    
-        //         Swal.fire({
-        //             title: 'Usuario eliminado !',
-        //             text: `Se eliminó al usuario ${nombre} ${apellido} con exito.`,
-        //             icon: 'info',
-        //             confirmButtonText: 'Entendido'
-        //         }).then((result) => { 
-        //             if (result.value){
+         if (result.value) {            
+             fetch(`/locations/delete/${id}`, { method: 'DELETE' })
+             .then(response => {
+                 // manejar respuesta exitosa    
+                 Swal.fire({
+                     title: 'Ubicacion eliminada !',
+                     text: `Se eliminó la ubicacion ${nombre} con exito.`,
+                     icon: 'info',
+                     confirmButtonText: 'Entendido'
+                 }).then((result) => { 
+                     if (result.value){
         //                 //location.reload();    
-        //                 window.location.href = '/users/all' ;    
-        //             }
-        //         }); 
-        //     })
-        //     .catch(error => {
-        //         // manejar error
-        //         console.log("error al borrar el elemento", error);
-        //     });
-        // }
+                         window.location.href = '/locations/all' ;    
+                     }
+                 }); 
+             })
+             .catch(error => {
+                 // manejar error
+         console.log("error al borrar el elemento", error);
+     });
+ }
         window.location.href = '/locations/all' ;
     })            
 }

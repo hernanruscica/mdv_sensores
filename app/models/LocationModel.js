@@ -104,7 +104,7 @@ module.exports = {
             const [rows, fields] = await connection.execute(`DELETE FROM ubicaciones  WHERE id = '${id}'`);
             return rows;
         } catch (error){
-            //console.error(error);
+            console.error(error);
             throw error;
         } finally {
             connection.release(); // Liberar la conexión de vuelta al pool cuando hayas terminado

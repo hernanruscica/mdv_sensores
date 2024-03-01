@@ -134,5 +134,17 @@ module.exports = {
     }  ,
     registerForm: (req, res)   => {
         res.render('registerLocationForm', {user: req.session.user});
+    },
+    deleteById: async (req, res) => {        
+        const id = parseInt(req.params.id);
+        console.log(`borrando la ubicacion con id : ${id} desde el LocationController`);
+        //deleteById
+         const results = await LocationModel.deleteById(id);
+         console.log(results);
+         if (results.affectedRows > 0){
+            res.status(200).json({message: 'OK', results: results});
+         }else{
+            res.status(500).json({message: 'ERROR', results: results});
+         }
     }
 }
