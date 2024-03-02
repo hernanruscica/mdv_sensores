@@ -18,6 +18,7 @@ router.get('/all', LocationController.getAll);
 router.get('/register',  LocationController.registerForm );
 router.post('/add', upload.single("image"), LocationController.add);
 router.get('/editform/:id',  LocationController.editForm );
+router.post('/update', upload.single("image"),   LocationController.update);
 router.delete('/delete/:id', LocationController.deleteById);
 router.get('/view/:id', LocationController.viewLocation);
 

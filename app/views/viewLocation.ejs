@@ -29,7 +29,7 @@
           <img src="/images/<%= location[0].foto %>" class="card-img-top"  style="width: 200px; height:auto;"
             alt="Foto de la ubicacion <%= location[0].nombre %> ">
 
-          <!-- Nombre y Apellido -->
+          <!-- Nombre de la ubicacion -->
           <h3 class="card-title my-3">
                <%= location[0].nombre %>  
           </h3>
@@ -37,9 +37,14 @@
           <!-- Direccion -->
           <p class="card-text"><strong>Direccion:</strong> <%= location[0].calle %> <%= location[0].numero %> <%= location[0].localidad %></p>          
 
+          <!-- Teléfono -->
+          <p class="card-text"><%= location[0].descripcion %></p>
           
           <!-- Teléfono -->
           <p class="card-text"><strong>Teléfono:</strong> <%= location[0].telefono %></p>
+
+          <!-- Email -->
+          <p class="card-text"><strong>Correo electronico: </strong> <%= location[0].email %></p>
 
         </div>
         

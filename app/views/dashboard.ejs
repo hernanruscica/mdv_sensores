@@ -43,8 +43,7 @@
                   confirmButtonText: 'Entendido'})
       </script>
     <%
-    } 
-   
+    }    
 %>
 
 <%    
@@ -56,10 +55,9 @@
                   icon: 'error',
                   confirmButtonText: 'Entendido'})
       </script>
-    <%
-    } 
-   
-   if (typeof results !== 'undefined' && results === 'correoenviado'){ %>
+    <%     }      %>
+
+    <%  if (typeof results !== 'undefined' && results === 'correoenviado'){ %>
     <script>
         Swal.fire({
                 title: 'Correo enviado !',
@@ -73,12 +71,9 @@
                 })
                  
     </script>
-  <%
-  } 
-%>
+  <%   }  %>
 
-<%    
-    if (typeof results !== 'undefined' && results === 'edicioncorrecta'){ %>
+<%  if (typeof results !== 'undefined' && results === 'edicioncorrecta'){ %>
       <script>
           Swal.fire({
                   title: 'Edicion exitosa !',
@@ -86,10 +81,18 @@
                   icon: 'success',
                   confirmButtonText: 'Entendido'})
       </script>
-    <%
-    } 
-   
-%>
+    <% }  %>
+
+<%  if (typeof results !== 'undefined' && results === 'edicionerronea'){ %>
+  <script>
+      Swal.fire({
+              title: 'Edicion exitosa !',
+              text: '<%= message %>',
+              icon: 'error',
+              confirmButtonText: 'Entendido'})
+  </script>
+<% }     %>
+
 </body>
 </html>
 

@@ -398,7 +398,7 @@ module.exports = {
         };
         console.log(`editando al usuario con dni ${data.dni}`, data);
 
-        const results = await UserModel.updateUser(data);
+        const updateOk = await UserModel.updateUser(data);
         console.log(results);
 
 

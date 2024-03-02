@@ -35,6 +35,7 @@ module.exports = {
                     descripcion: req.body.descripcion,
                     foto: imageName,
                     telefono: req.body.telefono,
+                    email: req.body.email,
                     direcciones_id: insertId
                 };                
 
@@ -153,5 +154,35 @@ module.exports = {
         const results = await LocationModel.getById(id);
         const location = results[0];
         res.render('editLocationForm', {user: req.session.user, location: location});
+    },
+    update: async (req, res) => {
+
+        const imageName = (req.file != undefined) ? req.file.filename : req.body.foto;                          
+        
+        const dataUbicacion = {
+            id: req.body.id,
+            nombre: req.body.nombre,
+            descripcion: req.body.descripcion,
+            foto: imageName,
+            telefono: req.body.telefono,
+            email: req.body.email,
+            direcciones_id: req.body.direcciones_id,
+            calle: req.body.calle,
+            numero: parseInt(req.body.numero),  
+            provincia: req.body.provincia,
+            partido: req.body.partido,
+            localidad: req.body.localidad 
+        };  
+        console.log(`Actualizando la ubicacion con id: ${dataUbicacion.id}`, dataUbicacion);
+        const updateOk = await LocationModel.updateLocation(dataUbicacion);
+        
+        if (updateOk !== null && updateOk == true){
+            return res.render('dashboard', {user: req.session.user,  results : 'edicioncorrecta', message: `La ubicacion ${dataUbicacion.nombre} fue editada correctamente!`})
+        }else{
+            return res.render('dashboard', {user: req.session.user,  results : 'edicionerronea', message: `Error al querer editar la ubicacion  ${dataUbicacion.nombre}!`})
+        }
+        
+        
+
     }
 }

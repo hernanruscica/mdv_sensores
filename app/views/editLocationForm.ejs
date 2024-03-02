@@ -20,7 +20,7 @@
     <div class="card m-3 col-12 col-lg-6">
       <div class="card-body">   
         <form action="/locations/update" method="post"  enctype="multipart/form-data">          
-
+          <input type="hidden" name="id" id="id" value="<%= location.id %>">          
           
           <!--vista previa de la Foto -->
           <img src="/images/<%= location.foto %>" class="card-img-top" style="width: 200px; height:auto;  margin-top: 10px;"
@@ -78,10 +78,11 @@
           
           <h3 class="display-3 fs-2 ">Domicilio</h3>     
           
-          <input type="hidden" name="direcciones_id" value="<%= location.direcciones_id %>">
-          <input type="hidden" id="provincia_id" value="<%= location.provincia %>">
-          <input type="hidden" id="partido_id" value="<%= location.partido %>">
-          <input type="hidden" id="localidad_id" value="<%= location.localidad %>">
+          
+          <input type="hidden" name="direcciones_id" id="direcciones_id" value="<%= location.direcciones_id %>">
+          <input type="hidden" id="provincia_id" name="provincia_id" value="<%= location.provincia %>">
+          <input type="hidden" id="partido_id" name="partido_id" value="<%= location.partido %>">
+          <input type="hidden" id="localidad_id" name="localidad_id" value="<%= location.localidad %>">
 
 
           <!-- calle -->
@@ -103,9 +104,7 @@
               value="<%= location.numero  %>"            
                 inputmode="numeric" pattern="[0-9]{1,8}" title="Puede sólo números, hasta 8 dígitos numéricos" maxlength="8" required>     
             </div>
-          </div>     
-
-
+          </div>            
           <!-- Provincia -->         
           <div class="mb-3 row">
             <label for="provincia" class="col-sm-2 col-md-3 col-form-label">provincia</label>
