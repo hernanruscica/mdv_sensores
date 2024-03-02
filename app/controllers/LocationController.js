@@ -20,7 +20,7 @@ module.exports = {
             longitud: 0
           }
         
-          //console.log(dataDireccion)
+          console.log(dataDireccion)
         try {
             const results = await AddressModel.add(dataDireccion);
             if (results.affectedRows > 0){
@@ -36,7 +36,7 @@ module.exports = {
                     foto: imageName,
                     telefono: req.body.telefono,
                     direcciones_id: insertId
-                };
+                };                
 
                 const resultsLocationAdd = await LocationModel.add(dataUbicacion);
                 console.log(resultsLocationAdd.insertId);
@@ -146,5 +146,12 @@ module.exports = {
          }else{
             res.status(500).json({message: 'ERROR', results: results});
          }
+    },
+    editForm: async (req, res) => {
+        console.log("Editando la ubicacion con id: ", req.params.id);
+        const id = req.params.id;
+        const results = await LocationModel.getById(id);
+        const location = results[0];
+        res.render('editLocationForm', {user: req.session.user, location: location});
     }
 }
