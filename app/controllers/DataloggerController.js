@@ -8,41 +8,40 @@ module.exports = {
     getAll: async (req, res) => {
         try {
             //const userId = req.params.userid;
+            let  allDataloggers = [];
 
             if (req.session.user == undefined){
                 console.log('usuario no logueado o no encontrado');
                 return res.status(200).send('usuario no logueado o no encontrado');                
             }
-            const userId = req.session.user.id;
-            console.log(`Obteniendo todos los dataloggers para el usuario con ID ${req.session.user.id}`);
-    
-            // Obtener la lista de ubicaciones y roles por ID de usuario
-            const locationsRolesList = await UserModel.getLocationRolesById(userId);
-            
-            // Inicializar un array para almacenar todos los dataloggers
-            const allDataloggers = [];
-    
-            // Iterar sobre cada ubicación y obtener los dataloggers asociados
-            for (const locationRole of locationsRolesList) {
-                const locationId = locationRole.id;
-                console.log(`Buscando dataloggers para la ubicación con ID ${locationId}`);
-                
-                // Obtener los dataloggers para la ubicación actual
-                const dataloggers = await DataloggerModel.getByLocationId(locationId);
 
-                // Agregar el atributo 'nombre' de locationRole a cada datalogger
-                dataloggers.forEach(datalogger => {
-                    datalogger.ubicacion_nombre = locationRole.nombre;
-                });
-                
-                // Agregar los dataloggers al array general
-                allDataloggers.push(...dataloggers);
+            if (req.session.user.espropietario === 1){
+                console.log("Usuario propietario");
+                allDataloggers = await DataloggerModel.getAll();                
+            }else{
+                //caso que el usuario no sea propietario
+                const userId = req.session.user.id;            
+                const locationsRolesList = await UserModel.getLocationRolesById(userId);    
+                // Iterar sobre cada ubicación y obtener los dataloggers asociados
+                for (const locationRole of locationsRolesList) {
+                    const locationId = locationRole.id;
+                    console.log(`Buscando dataloggers para la ubicación con ID ${locationId}`);
+                    
+                    // Obtener los dataloggers para la ubicación actual
+                    const dataloggers = await DataloggerModel.getByLocationId(locationId);
 
-                return res.render('dataloggers',{user: req.session.user, dataloggersList: allDataloggers})
+                    // Agregar el atributo 'nombre' de locationRole a cada datalogger
+                    dataloggers.forEach(datalogger => {
+                        datalogger.ubicacion_nombre = locationRole.nombre;
+                    });
+                    
+                    // Agregar los dataloggers al array general
+                    allDataloggers.push(...dataloggers);                
+                }
             }
-    
-            // Enviar todos los dataloggers al cliente como respuesta
-            return res.status(200).json({ allDataloggers: allDataloggers });
+
+            return res.render('dataloggers',{user: req.session.user, dataloggersList: allDataloggers})    
+            
         } catch (error) {
             console.error('Error al obtener los dataloggers:', error);
             return res.status(500).json({ error: 'Ocurrió un error al obtener los dataloggers.' });

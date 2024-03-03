@@ -54,7 +54,7 @@ module.exports = {
         const connection = await pool.getConnection();
         console.log("abierta la conexion con el pool de datos - getById");
         try {            
-            const [rows, fields] = await connection.execute(`SELECT id, nombre_1, apellido_1, dni, foto, password, email, estado FROM usuarios WHERE dni = '${dni}'`);
+            const [rows, fields] = await connection.execute(`SELECT id, nombre_1, apellido_1, dni, foto, password, email, estado, espropietario FROM usuarios WHERE dni = '${dni}'`);
             return rows;
         } catch (error){
             //console.error(error);

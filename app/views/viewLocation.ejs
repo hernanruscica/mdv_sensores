@@ -35,7 +35,18 @@
           </h3>
 
           <!-- Direccion -->
-          <p class="card-text"><strong>Direccion:</strong> <%= location[0].calle %> <%= location[0].numero %> <%= location[0].localidad %></p>          
+          <h4 class="card-title my-3">
+            Direccion  
+          </h4>
+
+          <input type="hidden" id="provincia_id" name="provincia_id" value="<%= location[0].provincia %>">
+          <input type="hidden" id="partido_id" name="partido_id" value="<%= location[0].partido %>">
+          <input type="hidden" id="localidad_id" name="localidad_id" value="<%= location[0].localidad %>">
+
+          <p class="card-text"><%= location[0].calle %> <%= location[0].numero %> </p>          
+          <p class="card-text" id="partido_localidad"><strong>Localidad:</strong> <%= location[0].localidad %></p>   
+          <p class="card-text" id="partido_nombre"><strong>Partido:</strong> <%= location[0].partido %></p>   
+          <p class="card-text" id="provincia_nombre"><strong>Provincia:</strong> <%= location[0].provincia %></p>   
 
           <!-- Teléfono -->
           <p class="card-text"><%= location[0].descripcion %></p>
@@ -96,50 +107,12 @@
  
     
 <%- include('partials/piedepagina') %>        
+
+<script src="/scripts/mostrarNombresDireccion.mjs" type="module"></script> 
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<script>
 
-  // console.log("mychart")
-  // const ctx = document.getElementById('myChart');
-
-  // new Chart(ctx, {
-  //       type: 'line',
-  //       data: {
-  //         labels: [
-  //           "2023-10-10 11:11:18", "2023-10-10 11:06:10", "2023-10-10 11:01:03", "2023-10-10 10:55:54", "2023-10-10 10:50:46",
-  //           "2023-10-10 10:45:38", "2023-10-10 10:40:30", "2023-10-10 10:35:23", "2023-10-10 10:30:14", "2023-10-10 10:25:06",
-  //           "2023-10-10 10:19:59", "2023-10-10 10:14:50", "2023-10-10 10:09:42", "2023-10-10 10:04:36", "2023-10-10 09:59:28",
-  //           "2023-10-10 09:54:21", "2023-10-10 09:49:11", "2023-10-10 09:44:04", "2023-10-10 09:38:56", "2023-10-10 09:33:47",
-  //           "2023-10-10 09:28:40", "2023-10-10 09:23:29", "2023-10-10 09:18:21", "2023-10-10 09:13:12", "2023-10-10 09:08:04",
-  //           "2023-10-10 09:02:57", "2023-10-10 08:57:49", "2023-10-10 08:52:42", "2023-10-10 08:47:34", "2023-10-10 08:42:26",
-  //           "2023-10-10 08:37:18", "2023-10-10 08:32:11", "2023-10-10 08:27:02", "2023-10-10 08:21:55", "2023-10-10 08:16:47",
-  //           "2023-10-10 08:11:38", "2023-10-10 08:06:30", "2023-10-10 08:01:23", "2023-10-10 07:56:15", "2023-10-10 07:45:54"
-  //         ],
-  //         datasets: [{
-  //           label: 'Mediciones',
-  //           data: [
-  //             329, 325, 323, 322, 321, 321, 321, 331, 318, 318,
-  //             318, 317, 319, 319, 318, 320, 315, 314, 313, 314,
-  //             316, 314, 310, 311, 310, 315, 312, 304, 312, 311,
-  //             307, 310, 309, 307, 307, 307, 307, 314, 314, 316
-  //           ],
-  //           borderWidth: 1
-  //         }]
-  //       },
-  //       options: {
-  //         scales: {
-  //           y: {
-  //             beginAtZero: true
-  //           }
-            
-  //         }
-  //       }
-        
-  //     });
-
-
-</script>
     
 </body>
 </html>

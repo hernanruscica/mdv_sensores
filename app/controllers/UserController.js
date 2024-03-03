@@ -268,10 +268,11 @@ module.exports = {
                         nombre_1: userDataBD.nombre_1,
                         apellido_1: userDataBD.apellido_1,
                         email: userDataBD.email,
-                        estado: userDataBD.estado
+                        estado: userDataBD.estado,
+                        espropietario: userDataBD.espropietario
                     };
                     // En tu controlador o middleware después de establecer req.session.user y req.session.arrayDatos
-                    console.log(req.session.user, req.session.a1_inst, req.session.fecha);
+                    console.log(req.session.user);
 
                     res.redirect('/users/dashboard');
                 }else{

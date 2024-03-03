@@ -73,23 +73,27 @@ module.exports = {
     getAll: async (req, res) => {
         console.log("getAll Locations for one particular user");
 
+        //una especie de seguridad para ver si esta logueado
         if (req.session.user == undefined){
             console.log('usuario no logueado o no encontrado');
             return res.status(200).send('usuario no logueado o no encontrado');                
         }
-        const userId = req.session.user.id;
-        //consigo las ubicaciones y los roles en cada una de ellas, para un determinado usuario
-        const locationRoles = await UserModel.getLocationRolesById(userId);   
-        const locationsList = [];
-        //console.log("datos de la ubicacion y roles del usuario:", locationRoles);     
         
-        for (const locationRole of locationRoles){            
-            const location = await LocationModel.getById(locationRole.id);            
-            locationsList.push(...location);
+        let locationsList = [];
+        if (req.session.user.espropietario === 1){
+            console.log("Usuario propietario");
+            locationsList = await LocationModel.getAll();     
+        }else{
+            //caso que el usuario no sea propietario
+            const userId = req.session.user.id;
+            //consigo las ubicaciones y los roles en cada una de ellas, para un determinado usuario
+            const locationRoles = await UserModel.getLocationRolesById(userId);   
+            
+            for (const locationRole of locationRoles){            
+                const location = await LocationModel.getById(locationRole.id);            
+                locationsList.push(...location);
+            }
         }
-        console.log(locationsList);
-        
-        //const locationsList = await LocationModel.getAll();        
         
         res.render('locations',{user: req.session.user, locationsList: locationsList});
     },
