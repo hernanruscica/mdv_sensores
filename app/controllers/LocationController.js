@@ -80,20 +80,20 @@ module.exports = {
         }
         
         let locationsList = [];
-        if (req.session.user.espropietario === 1){
-            console.log("Usuario propietario");
-            locationsList = await LocationModel.getAll();     
-        }else{
+        // if (req.session.user.espropietario === 1){
+        //     console.log("Usuario propietario");
+        //     locationsList = await LocationModel.getAll();     
+        // }else{
             //caso que el usuario no sea propietario
-            const userId = req.session.user.id;
-            //consigo las ubicaciones y los roles en cada una de ellas, para un determinado usuario
-            const locationRoles = await UserModel.getLocationRolesById(userId);   
-            
-            for (const locationRole of locationRoles){            
-                const location = await LocationModel.getById(locationRole.id);            
-                locationsList.push(...location);
-            }
+        const userId = req.session.user.id;
+        //consigo las ubicaciones y los roles en cada una de ellas, para un determinado usuario
+        const locationRoles = await UserModel.getLocationRolesById(userId);   
+        
+        for (const locationRole of locationRoles){            
+            const location = await LocationModel.getById(locationRole.id);            
+            locationsList.push(...location);
         }
+        // }
         
         res.render('locations',{user: req.session.user, locationsList: locationsList});
     },

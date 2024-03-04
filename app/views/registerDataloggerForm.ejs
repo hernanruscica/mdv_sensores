@@ -1,0 +1,106 @@
+<%- include('partials/cabecera', {titulo: "MDV Sensores - Registro de un nuevo datalogger"}) %>   
+
+<div class="container-md my-5 py-3">
+  <h1>Registro de un nuevo datalogger</h1> 
+  
+  <!-- Breadcrumb -->
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="/">Inicio</a></li>
+      <li class="breadcrumb-item"><a href="/users/dashboard">Panel de control</a></li>
+      <li class="breadcrumb-item"><a href="/dataloggers/all">Dataloggers</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Nuevo datalogger</li>
+    </ol>
+  </nav>  
+
+  <p>
+    En esta página puede <b>registrar</b> un nuevo datalogger.
+  </p>
+
+  <div class="row">
+    <!-- Columna de Nombre de la datalogger -->
+    <div class="col-lg-8 col-md-12 mb-6">
+      <div class="card">
+        <div class="card-body">          
+          <form action="/dataloggers/add" method="post"   enctype="multipart/form-data">       
+            <div class="mb-3 row">
+
+              <!-- Vista previa de la Foto -->
+              <img src="/images/default_datalogger.webp" class="card-img-top" style="width: 200px; height:auto; margin-top: 10px;" 
+                alt="Foto del datalogger" id="imagePreview">
+              <input type="hidden" name="foto" id="foto" value="default_datalogger.webp">
+              <label for="image" class="col-sm-2 col-md-3 col-form-label">Cambiar imagen</label>
+              <div class="col-sm-10 col-md-9">                         
+                <input type="file" class="form-control" id="image" name="image" accept="image/*">         
+              </div>
+            </div>
+            <!-- nombre -->
+            <div class="mb-3">      
+              <label for="nombre" class="form-label">Nombre</label>
+              <input type="text" class="form-control" id="nombre" name="nombre" aria-describedby="nombreHelp" 
+                  pattern="[A-Za-z0-9\s]{1,45}" title="Debe contener solo letras y tener como máximo 45 caracteres" maxlength="45" required>   
+              <div id="nombreHelp" class="form-text">[CAMPO OBLIGATORIO]</div>        
+            </div>  
+            <!-- descripción -->
+            <div class="mb-3">      
+              <label for="descripcion" class="form-label">Descripción</label>
+              <input type="text" class="form-control" id="descripcion" name="descripcion" aria-describedby="descripcionHelp" 
+                  pattern="[A-Za-z\s]{1,45}" title="Debe contener solo letras y tener como máximo 100 caracteres" maxlength="100" required>  
+              <div id="nombreHelp" class="form-text">[CAMPO OBLIGATORIO]</div>       
+            </div>   
+            <!-- direccion_mac -->
+            <div class="mb-3">      
+              <label for="direccion_mac" class="form-label">Direccion MAC.</label>
+              <input type="text" class="form-control" id="direccion_mac" name="direccion_mac" aria-describedby="direccion_macHelp" 
+                  pattern="[A-Z0-9:\s]{1,17}" title="Debe contener solo letras mayusculas y tener como máximo 14 caracteres" maxlength="17" required>         
+              <div id="nombreHelp" class="form-text">[CAMPO OBLIGATORIO]</div>
+            </div>        
+        </div>
+      </div>
+      <div class="col">      
+        <button type="submit" class="btn btn-primary w-100">Registrar datalogger</button>      
+    </div> 
+  </form>
+    </div>       
+
+     
+  </div>
+
+  <!-- Botón Enviar 
+  <div class="row">
+   
+  </div>
+ -->
+</div>
+    
+<%- include('partials/piedepagina') %>
+
+<script>
+  document.getElementById('image').addEventListener('change', function(event) {
+        var file = event.target.files[0];
+        var imgPreview = document.getElementById('imagePreview');
+
+        // Verifica si se seleccionó una imagen
+        if (file) {
+            var reader = new FileReader();
+
+            // Cuando se cargue el archivo, muestra la vista previa de la imagen
+            reader.onload = function(e) {
+                imgPreview.src = e.target.result;
+                imgPreview.style.display = 'block';                                         
+            };
+            
+            // Lee el archivo como una URL de datos
+            reader.readAsDataURL(file);
+        } else {
+            // Si no se seleccionó ninguna imagen, oculta la vista previa
+            imgPreview.src = '';
+            imgPreview.style.display = 'none';
+        }
+        
+    });
+</script>
+
+
+</body>
+</html>

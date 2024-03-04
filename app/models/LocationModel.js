@@ -96,8 +96,7 @@ module.exports = {
             connection.release(); // Liberar la conexión de vuelta al pool cuando hayas terminado
             console.log("cerrada la conexion con el pool de datos");
         }
-    },
-    //Estas no la puedo hacer porque la consulta dice que tiene un constraint con usuarios_ubicaciones_roles
+    },   
     deleteById: async (id) => {        
         const connection = await pool.getConnection();
         console.log("abierta la conexion con el pool de datos - deleteById - location");

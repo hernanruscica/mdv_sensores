@@ -15,13 +15,14 @@ module.exports = {
                 return res.status(200).send('usuario no logueado o no encontrado');                
             }
 
-            if (req.session.user.espropietario === 1){
-                console.log("Usuario propietario");
-                allDataloggers = await DataloggerModel.getAll();                
-            }else{
+             if (req.session.user.espropietario === 1){
+                 console.log("Usuario propietario");
+                 allDataloggers = await DataloggerModel.getAll();                
+             }else{
                 //caso que el usuario no sea propietario
                 const userId = req.session.user.id;            
                 const locationsRolesList = await UserModel.getLocationRolesById(userId);    
+                console.log(locationsRolesList)
                 // Iterar sobre cada ubicación y obtener los dataloggers asociados
                 for (const locationRole of locationsRolesList) {
                     const locationId = locationRole.id;
@@ -92,5 +93,46 @@ module.exports = {
                                    datalogger: req.session.datalogger,
                                    id: id, idChannel: idChannel, dataChannel: currentData || []});
         
+    },
+    deleteById: async (req, res) => {
+        const id = parseInt(req.params.id);
+        console.log(`Eliminando el datalogger con id ${id}`);
+        const results = await DataloggerModel.deleteById(id);
+         console.log(results);
+         if (results.affectedRows > 0){
+            res.status(200).json({message: 'OK', results: results});
+         }else{
+            res.status(500).json({message: 'ERROR', results: results});
+         }
+    },
+    registerForm: async (req, res) => {
+        console.log("Mostrando el formulario de registro de un nuevo datalogger.");
+        res.render('registerDataloggerForm', {user: req.session.user});
+    },
+    add: async (req, res) => {
+        const imageName = (req.file != undefined) ? req.file.filename : req.body.foto;
+        const dataloggerData = {
+            nombre: req.body.nombre,
+            direccion_mac: req.body.direccion_mac,
+            descripcion: req.body.descripcion,
+            foto: imageName
+        }
+        console.log(`insertando un nuevo datalogger a la BD con nombre: ${dataloggerData.nombre}`);
+
+        results = await DataloggerModel.add(dataloggerData);
+        if (results.affectedRows > 0){
+            console.log("Datalogger insertado correctamente");
+            res.render('dashboard', {results: 'registrocorrecto', message: `El datalogger ${dataloggerData.nombre} se registro correctamente`, user: req.session.user});
+        }else{
+            console.log("Error al insertar el datalogger");
+            res.render('dashboard', {results: 'registrofallido', message: `Error al registrar el datalogger ${dataloggerData.nombre} !`, user: req.session.user});
+        }
+    },
+    editForm: async (req, res) => {
+        const dataloggerId = req.params.id;
+        console.log(`Viendo el formulario de edicion de datalogger con id ${dataloggerId}`);
+        const dataloggerBd = await DataloggerModel.getById(dataloggerId);
+        console.log(dataloggerBd)
+        res.render('editDataloggerForm', {user: req.session.user, datalogger: dataloggerBd});
     }
 }

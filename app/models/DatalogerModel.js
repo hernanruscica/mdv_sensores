@@ -76,6 +76,37 @@ module.exports = {
             connection.release(); // Liberar la conexión de vuelta al pool cuando hayas terminado
             console.log("cerrada la conexion con el pool de datos");
         }
+    },
+    deleteById: async (id) => {        
+        const connection = await pool.getConnection();
+        console.log("abierta la conexion con el pool de datos - deleteById - datalogger");
+        try {
+            const [rows, fields] = await connection.execute(`DELETE FROM dataloggers  WHERE id = '${id}'`);
+            return rows;
+        } catch (error){
+            console.error(error);
+            throw error;
+        } finally {
+            connection.release(); // Liberar la conexión de vuelta al pool cuando hayas terminado
+            console.log("cerrada la conexion con el pool de datos");
+        }
+    },
+    add: async (data) => {        
+        const connection = await pool.getConnection();
+        console.log("abierta la conexion con el pool de datos - add - datalogger");
+        try {
+            const [rows, fields] = await connection.execute(`insert into dataloggers
+                                    (direccion_mac, nombre, descripcion, foto, nombre_tabla, fecha_creacion)
+                                    values
+                                    ('${data.direccion_mac}', 'n${data.nombre}', '${data.descripcion}', '${data.foto}', 'guemes', CURRENT_TIMESTAMP());`);
+            return rows;
+        } catch (error){
+            console.error(error);
+            throw error;
+        } finally {
+            connection.release(); // Liberar la conexión de vuelta al pool cuando hayas terminado
+            console.log("cerrada la conexion con el pool de datos");
+        }
     }
 
 }

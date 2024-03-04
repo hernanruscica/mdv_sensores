@@ -13,9 +13,9 @@
     </ol>
   </nav>
 
-  <p class="fs-5 mt-5">En esta sección usted puede realizar ALTAS, BAJAS, ACTUALIZACIONES y ELIMINACIONES de dataloggers, segun su rol definido por el administrador.</p>
+  <p class="fs-5 mt-5">En esta sección usted puede realizar ALTAS, BAJAS, ACTUALIZACIONES y ELIMINACIONES de dataloggers.</p>
   <div class="container row justify-content-start">
-    <a href="/dataloggers/register" class="btn btn-success col-5 col-lg-2">Nuevo datalogger</a>
+    <a href="/dataloggers/registerForm" class="btn btn-success col-5 col-lg-2">Nuevo datalogger</a>
   </div>
 
   <div class="table-responsive">
@@ -40,8 +40,8 @@
           <td>
             <a href="/dataloggers/view/<%= datalogger.id %>" class="btn btn-primary btn-sm mb-1">Ver</a>
             <a href="/dataloggers/editform/<%= datalogger.id %>" class="btn btn-secondary btn-sm mb-1">Editar</a>
-            <button type="button" class="btn btn-danger btn-sm mb-1 eliminarUsuario" id="eliminarUsuario"
-              data-dni="<%= datalogger.id %>" 
+            <button type="button" class="btn btn-danger btn-sm mb-1 eliminarDatalogger" id="eliminarDatalogger"
+              data-id="<%= datalogger.id %>" 
               data-nombre="<%= datalogger.nombre %>" 
               data-ubicacion="<%= datalogger.ubicacion_nombre %>">Eliminar</button>
           </td>
