@@ -235,7 +235,7 @@ module.exports = {
             const userId = userDataBD.id;
             let locationRoles = await UserModel.getLocationRolesById(userId);   
             console.log(locationRoles);
-            locationRoles = locationRoles.length > 0 ? locationRoles :  {nombre: null, roles_id: null} ;                                      
+            locationRoles = locationRoles.length > 0 ? locationRoles :  null ;                                      
             //console.log("datos de la ubicacion y roles del usuario:", locationRoles);                  
             return res.render('editUserForm', { user: req.session.user, userRequired: userDataBD, userLocationRoles: locationRoles, locations: locations, roles: roles});
         }else{
@@ -400,7 +400,7 @@ module.exports = {
         console.log(`editando al usuario con dni ${data.dni}`, data);
 
         const updateOk = await UserModel.updateUser(data);
-        console.log(results);
+        //console.log(results);
 
 
         //res.redirect('/users/all');
