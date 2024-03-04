@@ -134,5 +134,25 @@ module.exports = {
         const dataloggerBd = await DataloggerModel.getById(dataloggerId);
         console.log(dataloggerBd)
         res.render('editDataloggerForm', {user: req.session.user, datalogger: dataloggerBd});
+    },
+    update: async (req, res) => {
+
+        const imageName = (req.file != undefined) ? req.file.filename : req.body.foto;                          
+        
+        const dataDatalogger = {
+            id: req.body.id,
+            nombre: req.body.nombre,
+            descripcion: req.body.descripcion,
+            foto: imageName,                      
+            direccion_mac: req.body.direccion_mac 
+        };  
+        console.log(`Actualizando el datalogger con id: ${dataDatalogger.id}`, dataDatalogger);
+        const updateOk = await DataloggerModel.update(dataDatalogger);
+        
+        if (updateOk !== null && updateOk == true){
+            return res.render('dashboard', {user: req.session.user,  results : 'edicioncorrecta', message: `El datalogger ${dataDatalogger.nombre} fue editado correctamente!`})
+        }else{
+            return res.render('dashboard', {user: req.session.user,  results : 'edicionerronea', message: `Error al querer editar el datalogger  ${dataDatalogger.nombre}!`})
+        }
     }
 }

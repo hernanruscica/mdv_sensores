@@ -18,6 +18,7 @@ router.get('/all/', DataloggerController.getAll);
 router.get('/registerform',  DataloggerController.registerForm );
 router.post('/add', upload.single("image"), DataloggerController.add);
 router.get('/editform/:id', DataloggerController.editForm);
+router.post('/update/', upload.single("image"), DataloggerController.update);
 router.delete('/delete/:id', DataloggerController.deleteById);
 router.get('/view/:id', DataloggerController.viewDatalogger);
 router.get('/view/:id/channels/:idchannel', DataloggerController.viewChannel);

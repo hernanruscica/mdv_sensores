@@ -107,6 +107,33 @@ module.exports = {
             connection.release(); // Liberar la conexión de vuelta al pool cuando hayas terminado
             console.log("cerrada la conexion con el pool de datos");
         }
+    },
+    update: async (data) => {
+        const connection = await pool.getConnection();
+        console.log("abierta la conexion con el pool de datos - updateDatalogger");
+        
+        try {        
+            
+            // Actualiza la tabla 'usuarios'
+            const [rows, fields  ] = await connection.execute(`UPDATE dataloggers                
+                SET
+                    nombre = ?,
+                    descripcion = ?,
+                    direccion_mac = ?,
+                    foto = ?                                       
+                WHERE id = ?`, [data.nombre, data.descripcion, data.direccion_mac, data.foto, data.id]);
+            
+           
+            console.log("Ubicacion y direccion actualizadas con exito.");
+            return true;
+        } catch (error) {
+            await connection.rollback(); // Revierte la transacción en caso de error
+            console.error("Error en la transacción:", error);
+            throw error;
+        } finally {
+            connection.release(); // Liberar la conexión de vuelta al pool
+            console.log("cerrada la conexion con el pool de datos");
+        }
     }
 
 }
