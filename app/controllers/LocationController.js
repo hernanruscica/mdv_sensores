@@ -185,8 +185,15 @@ module.exports = {
         }else{
             return res.render('dashboard', {user: req.session.user,  results : 'edicionerronea', message: `Error al querer editar la ubicacion  ${dataUbicacion.nombre}!`})
         }
-        
-        
+    },
+    addLocationUserRole: async (req, res) => {
 
+        const data = {
+            usuarios_id: req.body.usuarios_id,
+            roles_id: req.body.roles_id,
+            ubicaciones_id: req.body.ubicaciones_id
+
+        }
+        console.log(`agregando un nuevo rol en una ubicacion para el usuario con id ${data.usuarios_id}`, data);
     }
 }

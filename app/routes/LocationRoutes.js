@@ -21,6 +21,7 @@ router.get('/editform/:id',  LocationController.editForm );
 router.post('/update', upload.single("image"),   LocationController.update);
 router.delete('/delete/:id', LocationController.deleteById);
 router.get('/view/:id', LocationController.viewLocation);
+router.post('/role/add', LocationController.addLocationUserRole);
 
 
 

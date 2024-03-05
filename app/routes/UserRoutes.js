@@ -16,10 +16,11 @@ const upload = multer({ storage: storage });
 var router = express.Router();
 
 // podria ser util para update, upload.fields([{name: 'image', maxCount: 1}, {name: 'nombre_1'}, {name: 'nombre_2'}, {name: 'apellido_1'}, {name: 'apellido_2'}, {name: 'dni'}, {name: 'email'}, {name: 'telefono'}])
-router.post('/update', upload.single("image"),   UserController.update);
+
 router.get('/register',  UserController.registerForm );
-router.get('/editform/:dni',  UserController.editForm );
 router.post('/add', UserController.add);
+router.get('/editform/:dni',  UserController.editForm );
+router.post('/update', upload.single("image"),   UserController.update);
 router.get('/activate/:userToken', UserController.activate);
 router.post('/setPassword/:userToken', UserController.setPassword);
 router.post('/authenticate', UserController.authenticate);

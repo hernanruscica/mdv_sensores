@@ -16,10 +16,15 @@
       </ol>
     </nav>
 
-    <p class="fs-5 mt-5">En esta sección usted puede ver la información de la cuenta de un usuario.</p>
-    <div class="container row justify-content-start">
-      <a href="/users/editform/<%= userRequired.dni %>" class="btn btn-secondary col-5 col-lg-2">Editar usuario</a>       
-  </div>
+    <p class="fs-5 mt-5" >En esta sección usted puede ver la información de la cuenta de un usuario.</p>
+    <div class="container row justify-content-center">
+      <a href="/users/editform/<%= userRequired.dni %>" class="btn btn-secondary col-sm-12 col-md-5 col-lg-3 m-2">Editar usuario</a>    
+      <a href="/users/sendactivation/<%= userRequired.dni %>" class="btn btn-success col-sm-12 col-md-5  col-lg-3 m-2">Enviar correo activacion</a>
+      <button type="button" class="btn btn-danger btn-sm col-sm-12 col-md-5  col-lg-3 m-2 eliminarUsuario" id="eliminarUsuario"
+              data-dni="<%= userRequired.dni %>" 
+              data-nombre_1="<%= userRequired.nombre_1 %>" 
+              data-apellido_1="<%= userRequired.apellido_1 %>">Eliminar</button>
+    </div>
 
   <div class="d-flex flex-column flex-lg-row ">
     <div class="card m-3 col-12 col-lg-6">
@@ -48,10 +53,7 @@
             <p class="card-text"><strong>Email:</strong> <%= userRequired.email %></p>
 
             <!-- Teléfono -->
-            <p class="card-text"><strong>Teléfono:</strong> <%= userRequired.telefono %></p>
-
-            <!-- Dirección -->
-            <!-- <p class="card-text"><strong>Dirección:</strong> <%= userRequired.calle %>, <%= userRequired.numero %>, <%= userRequired.localidad %></p> -->
+            <p class="card-text"><strong>Teléfono:</strong> <%= userRequired.telefono %></p>           
 
                         
         </div>
@@ -65,23 +67,32 @@
         <h5 class="card-title">
           Ubicaciones y roles
         </h5>
-        <!-- userLocationRoles -->        
-        <p class="card-text">
-          <strong>Ubicación:</strong> <%= (userLocationRoles) ? userLocationRoles.nombre : '' %>           
-        </p>
-
-        <p class="card-text">
-          <strong>Rol:</strong> <%= (userLocationRoles) ? userLocationRoles.nombre_rol : '' %>
-        </p>
-
-        <!-- Estado -->
-        <p class="card-text"><strong>Estado:</strong> <%= userRequired.estado === 1 ? 'Alta' : 'Baja' %></p>
-        <% if (userRequired.estado === 0) { %>
-          <div class="alert alert-warning mt-3" role="alert">
-              El usuario <strong> debe activar la cuenta </strong>, haciendo Click en el <strong>enlace enviado</strong> por correo electrónico. Sí es necesario, puede <strong> enviar el correo</strong> de activación <strong>nuevamente</strong>.
-              <a href="/users/sendactivation/<%= userRequired.dni %>" class="btn btn-success  mb-1">Enviar correo</a>
-          </div>
-      <% } %>    
+        <!-- userLocationRoles userLocationRoles.nombre userLocationRoles.nombre_rol  userRequired.estado === 1 ? 'Alta' : 'Baja'-->        
+        <% if (userLocationRoles.length > 0) { %>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Ubicación</th>
+                <th>Rol</th>                
+                <th>Acciones</th>  
+              </tr>
+            </thead>
+            <tbody>
+              <% userLocationRoles.forEach(function(item) { %>
+                <tr>
+                  <td><a href="/locations/view/<%= item.id %>" class="btn-sm mb-1"><%= item.nombre %></a></td>
+                  <td><%= item.nombre_rol %></td>      
+                  <td><a href="/locations/view/<%= item.id %>" class="btn btn-primary btn-sm mb-1">Ver</a></td>            
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        <% } else { %>
+          <p>No hay elementos para mostrar.</p>
+        <% } %>        
+        <div class="container row justify-content-start">
+          <a href="#" id="agregarRolesBtn" class="btn btn-success col-12">Agregar roles</a>
+        </div>
       </div>
     </div>
   <!-- Fin  de la Card de ubicaciones y roles-->
@@ -92,12 +103,83 @@
     <h1>Error: Usuario no encontrado</h1>
   <% } %>
 </div>
- 
+
+<!--Empieza modal de nuevo rol-->
+    <div class="container">
+      <!-- Aquí colocamos el enlace y el modal -->
+      
+
+      <div class="modal fade" id="agregarRolesModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <form action="/locations/role/add" method="POST">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Agregar Nuevo Rol</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <!-- Aquí coloca el contenido del formulario para agregar un nuevo rol -->
+                <div class="card mb-3">
+                  <div class="card-body">
+                    <div class="mb-3 row">
+                      <label for="ubicacion" class="col-sm-3 col-md-5 col-form-label">Ubicación</label>
+                      <div class="col-sm-9 col-md-7 my-2">
+                        <input type="hidden" value="<%= userRequired.id %>" id="usuarios_id" name="usuarios_id">
+                        <select class="form-select" id="ubicaciones_id" name="ubicaciones_id">
+                          <option value="" disabled selected>Seleccione una ...</option>
+                          <% userLocationRoles.forEach(function(location, index) { %>
+                            <option value="<%= location.id %>">
+                              <%= location.nombre %>
+                            </option>
+                          <% }); %>
+                        </select>
+                      </div>
+                    </div>
+                    <div class="mb-3 row">
+                      <label for="rol" class="col-sm-3 col-md-5 col-form-label">Rol</label>
+                      <div class="col-sm-9 col-md-7 my-2">
+                        <select class="form-select"  id="roles_id" name="roles_id">
+                          <option value="" disabled selected>Seleccione una ...</option>
+                          <% roles.forEach(function(rol, index) { %>
+                            <option value="<%= rol.id %>">
+                              <%= rol.nombre %>
+                            </option>
+                          <% }); %>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="submit" class="btn btn-primary" id="guardarRolBtn">Guardar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<!--Termina modal de nuevo rol-->
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
 <%- include('partials/piedepagina') %>     
 
+<script src="/scripts/usersFunctionsBtns.js"></script>
 
-
+<!-- Script para abrir el modal -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var myModal = new bootstrap.Modal(document.getElementById('agregarRolesModal'));
+    document.getElementById('agregarRolesBtn').addEventListener('click', function () {
+      myModal.show();
+    });
+  });
+</script>
     
 </body>
 </html>

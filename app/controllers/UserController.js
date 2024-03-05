@@ -7,6 +7,23 @@ const jwt = require('jsonwebtoken');
 const AddressController = require('./AddressController.js');
 const saltRounds = 10; // Número de rondas de sal para bcrypt
 
+const roles = [
+    {
+      id: 7,
+      nombre: "operario",
+      descripcion: "Operario de una ubicación",
+    },
+    {
+      id: 8,
+      nombre: "administrador",
+      descripcion: "Admin de una ubicacion, controla operarios",
+     },
+     {
+        id: 9,
+        nombre: "propietario",
+        descripcion: "Admin de todas las ubicaciones, todos los usuarios y todos los dataloggers",
+        }             
+  ];
 
 
 
@@ -175,26 +192,6 @@ module.exports = {
 
       const  locations = await LocationModel.getAll();
 
-      
-      
-
-      const roles = [
-        {
-          id: 7,
-          nombre: "operario",
-          descripcion: "Operario de una ubicación",
-        },
-        {
-          id: 8,
-          nombre: "administrador",
-          descripcion: "Admin de una ubicacion, controla operarios",
-         }
-        // {
-        //   id: 9,
-        //   nombre: "propietario",
-        //   descripcion: "'Todos los permisos, sobre las demas tablas'",
-        // }
-      ];
 
       res.render('registerUserForm', {user: req.session.user, locations: locations, roles: roles});      
     },
@@ -217,18 +214,7 @@ module.exports = {
         console.log("viewUser controller", userDataBD);
 
         const  locations = await LocationModel.getAll();
-        const roles = [
-            {
-              id: 7,
-              nombre: "operario",
-              descripcion: "Operario de una ubicación",
-            },
-            {
-              id: 8,
-              nombre: "administrador",
-              descripcion: "Admin de una ubicacion, controla operarios",
-             }            
-          ];
+         
 
         if (userExists === true){
             console.log("usuario encontrado para editar!", userDataBD.nombre_1, userDataBD.dni, userDataBD.password, userDataBD.calle, userDataBD.id);    
@@ -327,7 +313,7 @@ module.exports = {
             const userId = userDataBD.id;
             const locationRoles = await UserModel.getLocationRolesById(userId);                                                
             console.log("datos de la ubicacion y roles del usuario:", locationRoles);                  
-            return res.render('profile', { user: req.session.user, userRequired: userDataBD, userLocationRoles: locationRoles[0]});
+            return res.render('profile', { user: req.session.user, userRequired: userDataBD, userLocationRoles: locationRoles, roles: roles});
         }else{
             console.log(`Usuario con dni: ${userDni} No encontrado`);
             return res.redirect('/users/all');

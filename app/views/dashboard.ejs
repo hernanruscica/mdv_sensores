@@ -17,11 +17,21 @@
 
     <p class="fs-5 mt-5">En esta sección usted puede ver las acciones que puede realizar, segun su rol definido por el administrador.</p>
     <div class="card p-3">
-      <h2 class="display-5">Tablas</h2>
-   
-      <a href="/users/all" >Usuarios</a>
-      <a href="/locations/all" >Ubicaciones</a>
-      <a href="/dataloggers/all">Dataloggers</a>
+      <h3 class="display-6">Usted puede administrar:</h3>
+      <div class="row">
+        <a href="/users/all" class="btn btn-outline-primary text-uppercase col-lg-3 m-lg-1 m-0 my-2">
+          <i class="far fa-user mr-1 " style="font-size: 1.25em;"></i> Usuarios
+        </a>
+        <a href="/locations/all" class="btn btn-outline-primary text-uppercase col-lg-3  m-lg-1 m-0  my-2">
+          <i class="fa-solid fa-location-crosshairs " style="font-size: 1.25em;"></i> Ubicaciones
+          
+        </a>
+        <a href="/dataloggers/all" class="btn btn-outline-primary text-uppercase col-lg-3  m-lg-1 m-0  my-2">
+          <i class="fa-solid fa-microchip " style="font-size: 1.25em;"></i> Dataloggers
+          
+        </a>
+      </div>
+     
     </div>
     
   <% } else { %>
