@@ -188,12 +188,25 @@ module.exports = {
     },
     addLocationUserRole: async (req, res) => {
 
-        const data = {
+        const dataLocationUserRole = {
             usuarios_id: req.body.usuarios_id,
-            roles_id: req.body.roles_id,
+            roles_id: req.body.roles_id,            
             ubicaciones_id: req.body.ubicaciones_id
 
         }
-        console.log(`agregando un nuevo rol en una ubicacion para el usuario con id ${data.usuarios_id}`, data);
+        console.log(`agregando un nuevo rol en una ubicacion para el usuario con id ${dataLocationUserRole.usuarios_id}`, dataLocationUserRole);
+
+        const locationUserRoleAdded = await LocationModel.addLocationUserRole(dataLocationUserRole);
+        
+        console.log(locationUserRoleAdded);
+
+        //deberia poder hacer un rollback aunque en el metodo de agregar una ubicacion, el usuario y la ubicacion son nuevas y el rol es propietario
+        if (locationUserRoleAdded.affectedRows > 0){
+            res.render('dashboard', {results: 'registrocorrecto', message: `El rol  se registro correctamente`, user: req.session.user});
+        }else{
+            res.render('dashboard', {results: 'registrofallido', message: `Fallo en el registro del rol`, user: req.session.user})
+        }
+
+             
     }
 }

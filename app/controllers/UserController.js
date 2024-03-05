@@ -293,6 +293,9 @@ module.exports = {
     viewUser: async (req, res) => {
         //prueba con 40159357
         const userDni = (req.params.dni) ?  parseInt(req.params.dni) : 0;
+
+
+        const allLocations = await LocationModel.getAll();
         
         if (req.session.user === undefined){
             console.log("Usuario que hace la consulta no esta logueado en la aplicacion.", req.session.user);
@@ -313,7 +316,7 @@ module.exports = {
             const userId = userDataBD.id;
             const locationRoles = await UserModel.getLocationRolesById(userId);                                                
             console.log("datos de la ubicacion y roles del usuario:", locationRoles);                  
-            return res.render('profile', { user: req.session.user, userRequired: userDataBD, userLocationRoles: locationRoles, roles: roles});
+            return res.render('profile', { user: req.session.user, userRequired: userDataBD, userLocationRoles: locationRoles, roles: roles, allLocations: allLocations});
         }else{
             console.log(`Usuario con dni: ${userDni} No encontrado`);
             return res.redirect('/users/all');

@@ -127,7 +127,7 @@
                         <input type="hidden" value="<%= userRequired.id %>" id="usuarios_id" name="usuarios_id">
                         <select class="form-select" id="ubicaciones_id" name="ubicaciones_id">
                           <option value="" disabled selected>Seleccione una ...</option>
-                          <% userLocationRoles.forEach(function(location, index) { %>
+                          <% allLocations.forEach(function(location, index) { %>
                             <option value="<%= location.id %>">
                               <%= location.nombre %>
                             </option>
@@ -141,7 +141,7 @@
                         <select class="form-select"  id="roles_id" name="roles_id">
                           <option value="" disabled selected>Seleccione una ...</option>
                           <% roles.forEach(function(rol, index) { %>
-                            <option value="<%= rol.id %>">
+                            <option value="<%= rol.id %>"  data-nombrerol="<%= rol.nombre %>">
                               <%= rol.nombre %>
                             </option>
                           <% }); %>
