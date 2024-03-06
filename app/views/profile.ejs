@@ -82,7 +82,17 @@
                 <tr>
                   <td><a href="/locations/view/<%= item.id %>" class="btn-sm mb-1"><%= item.nombre %></a></td>
                   <td><%= item.nombre_rol %></td>      
-                  <td><a href="/locations/view/<%= item.id %>" class="btn btn-primary btn-sm mb-1">Ver</a></td>            
+                  <td>
+                      <a href="/locations/view/<%= item.id %>" class="btn btn-primary btn-sm mb-1">Ver</a>
+                      <a href="#" id="editarRolesBtn"  class="btn btn-secondary btn-sm mb-1" 
+                        data-id_usuario = "<%= item.usuarios_id %>"
+                        data-id_ubicacion="<%= item.id %>" 
+                        data-id_rol="<%= item.roles_id %>" 
+                        data-nombre_ubicacion="<%= item.nombre %>" 
+                        data-nombre_rol="<%= item.nombre_rol %>"
+                        data-usuarios_x_ubicaciones_x_roles_id="<%= item.usuarios_x_ubicaciones_x_roles_id %>"
+                        >Editar</a>
+                  </td>            
                 </tr>
               <% }); %>
             </tbody>
@@ -104,7 +114,7 @@
   <% } %>
 </div>
 
-<!--Empieza modal de nuevo rol-->
+<!--Empieza modal de NUEVO rol-->
     <div class="container">
       <!-- Aquí colocamos el enlace y el modal -->
       
@@ -163,7 +173,72 @@
 
 <!--Termina modal de nuevo rol-->
 
+<!--Empieza modal de EDITAR rol-->
+<div class="container">
+  <!-- Aquí colocamos el enlace y el modal -->  
 
+  <div class="modal fade" id="editarRolesModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form action="/locations/role/update" method="POST">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Editar Rol</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <!-- Aquí coloca el contenido del formulario para editar un rol 
+            atributos personaliados del boton "editar": 
+                        data-id_usuario 
+                        data-id_ubicacion
+                        data-id_rol 
+                        data-nombre_ubicacion 
+                        data-nombre_rol
+                        usuarios_x_ubicaciones_x_roles_id -->
+            <input type="hidden" name="usuarios_x_ubicaciones_x_roles_id_edit" id="usuarios_x_ubicaciones_x_roles_id_edit" 
+              value = "<%= userLocationRoles.usuarios_x_ubicaciones_x_roles_id %>">
+            <div class="card mb-3">
+              <div class="card-body">
+                <div class="mb-3 row">
+                  <label for="ubicaciones_id_edit" class="col-sm-3 col-md-5 col-form-label">Ubicación</label>
+                  <div class="col-sm-9 col-md-7 my-2">
+                    <input type="hidden" value="<%= userRequired.id %>" id="usuarios_id_edit" name="usuarios_id_edit">
+                    <select class="form-select" id="ubicaciones_id_edit" name="ubicaciones_id_edit">
+                      <option value="" disabled selected>Seleccione una ...</option>
+                      <% allLocations.forEach(function(location, index) { %>
+                        <option value="<%= location.id %>">
+                          <%= location.nombre %>
+                        </option>
+                      <% }); %>
+                    </select>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label for="roles_id_edit" class="col-sm-3 col-md-5 col-form-label">Rol</label>
+                  <div class="col-sm-9 col-md-7 my-2">
+                    <select class="form-select"  id="roles_id_edit" name="roles_id_edit">
+                      <option value="" disabled selected>Seleccione una ...</option>
+                      <% roles.forEach(function(rol, index) { %>
+                        <option value="<%= rol.id %>"  data-nombrerol="<%= rol.nombre %>">
+                          <%= rol.nombre %>
+                        </option>
+                      <% }); %>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary" id="guardarRolBtn">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Termina modal de editar rol-->
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
@@ -178,6 +253,30 @@
     document.getElementById('agregarRolesBtn').addEventListener('click', function () {
       myModal.show();
     });
+    var myModal2 = new bootstrap.Modal(document.getElementById('editarRolesModal'));
+    document.querySelectorAll('#editarRolesBtn').forEach(button => {
+    button.addEventListener('click', function (e) {
+      // Extraemos los datos personalizados del botón "Editar"
+      const idUsuario = button.getAttribute('data-id_usuario');
+      const idUbicacion = button.getAttribute('data-id_ubicacion');
+      const idRol = button.getAttribute('data-id_rol');
+      const nombreUbicacion = button.getAttribute('data-nombre_ubicacion');
+      const nombreRol = button.getAttribute('data-nombre_rol');
+      const idUsuariosXubicacionesXroles = button.getAttribute('data-usuarios_x_ubicaciones_x_roles_id');
+          
+      console.log(idUsuario, idUbicacion, idRol, nombreUbicacion, nombreRol, idUsuariosXubicacionesXroles);      
+      myModal2.show();
+      
+      document.getElementById("usuarios_id").value = idUsuario;
+      document.getElementById("usuarios_x_ubicaciones_x_roles_id_edit").value = idUsuariosXubicacionesXroles;
+
+      const ubicacionesSelect = document.getElementById("ubicaciones_id_edit");
+      ubicacionesSelect.value = idUbicacion;
+      const rolesSelect = document.getElementById("roles_id_edit");
+      rolesSelect.value = idRol;
+    });
+  });
+
   });
 </script>
     

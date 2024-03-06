@@ -187,17 +187,14 @@ module.exports = {
         }
     },
     addLocationUserRole: async (req, res) => {
-
         const dataLocationUserRole = {
             usuarios_id: req.body.usuarios_id,
             roles_id: req.body.roles_id,            
             ubicaciones_id: req.body.ubicaciones_id
-
         }
         console.log(`agregando un nuevo rol en una ubicacion para el usuario con id ${dataLocationUserRole.usuarios_id}`, dataLocationUserRole);
 
-        const locationUserRoleAdded = await LocationModel.addLocationUserRole(dataLocationUserRole);
-        
+        const locationUserRoleAdded = await LocationModel.addLocationUserRole(dataLocationUserRole);        
         console.log(locationUserRoleAdded);
 
         //deberia poder hacer un rollback aunque en el metodo de agregar una ubicacion, el usuario y la ubicacion son nuevas y el rol es propietario
@@ -205,8 +202,25 @@ module.exports = {
             res.render('dashboard', {results: 'registrocorrecto', message: `El rol  se registro correctamente`, user: req.session.user});
         }else{
             res.render('dashboard', {results: 'registrofallido', message: `Fallo en el registro del rol`, user: req.session.user})
+        }             
+    },
+    updateLocationUserRole: async (req, res) => {
+        const dataLocationUserRole = {
+            id: req.body.usuarios_x_ubicaciones_x_roles_id_edit,
+            usuarios_id: req.body.usuarios_id_edit,
+            roles_id: req.body.roles_id_edit,            
+            ubicaciones_id: req.body.ubicaciones_id_edit
         }
+        console.log(`editando un rol en una ubicacion para el usuario con id ${dataLocationUserRole.usuarios_id}`, dataLocationUserRole);
 
-             
+        const locationUserRoleAdded = await LocationModel.updateLocationUserRole(dataLocationUserRole);        
+        console.log(locationUserRoleAdded);
+
+        //deberia poder hacer un rollback aunque en el metodo de agregar una ubicacion, el usuario y la ubicacion son nuevas y el rol es propietario
+        if (locationUserRoleAdded.affectedRows > 0){
+            res.render('dashboard', {results: 'edicioncorrecta', message: `El rol  se edito correctamente`, user: req.session.user});
+        }else{
+            res.render('dashboard', {results: 'edicionerronea', message: `Fallo en la edicion del rol`, user: req.session.user})
+        }             
     }
 }

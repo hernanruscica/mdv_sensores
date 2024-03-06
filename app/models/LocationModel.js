@@ -45,6 +45,35 @@ module.exports = {
              console.log("cerrada la conexion con el pool de datos");
          }
     },
+    updateLocationUserRole: async (data) => {        
+        const connection = await pool.getConnection();
+        console.log("Abierta la conexión con el pool de datos - insert de updateLocationUserRole");
+    
+        try {
+            // Ejecuta la consulta de actualización
+            const [rows, fields] = await connection.execute(`
+                UPDATE usuarios_x_ubicaciones_x_roles
+                SET
+                    usuarios_id = ?,
+                    ubicaciones_id = ?,
+                    roles_id = ?
+                WHERE id = ?`, [data.usuarios_id, data.ubicaciones_id, data.roles_id, data.id]);
+    
+            console.log(`Filas afectadas: ${rows.affectedRows}`);
+            
+            return rows;  
+        } catch (error) {
+            // Captura y maneja cualquier error
+            throw error;
+        } finally {
+            // Siempre libera la conexión después de su uso
+            if (connection) {
+                connection.release(); 
+                console.log("Cerrada la conexión con el pool de datos");
+            }
+        }
+    },
+    
     getAll: async () => {
         //conn.query(`SELECT * FROM users`, myFunction);
         const connection = await pool.getConnection();

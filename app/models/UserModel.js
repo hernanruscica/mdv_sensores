@@ -87,7 +87,7 @@ module.exports = {
         try {                        
             const [rows, fields] = await connection.execute(`SELECT ubicaciones.id, ubicaciones.nombre, ubicaciones.descripcion, ubicaciones.foto, ubicaciones.telefono,
                      usuarios_x_ubicaciones_x_roles.usuarios_id AS usuarios_id, usuarios_x_ubicaciones_x_roles.roles_id AS roles_id,
-                     roles.nombre AS nombre_rol
+                     roles.nombre AS nombre_rol, usuarios_x_ubicaciones_x_roles.id AS usuarios_x_ubicaciones_x_roles_id
              FROM ubicaciones 
              INNER JOIN usuarios_x_ubicaciones_x_roles ON ubicaciones.id = usuarios_x_ubicaciones_x_roles.ubicaciones_id
              INNER JOIN roles ON roles_id = roles.id
