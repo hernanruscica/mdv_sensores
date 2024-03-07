@@ -155,5 +155,16 @@ $d.addEventListener('click', (e) => {
             console.log(`eliminando el datalogger con id: ${id}`);
             eliminarDatalogger(id, nombre);
         } 
-    
+
+        //desasociar_datalogger
+        if (e.target.id == 'desasociar_datalogger'){
+            let idDatalogger = e.target.dataset.id_datalogger;
+            let nombredatalogger = e.target.dataset.nombre_datalogger;
+            let nombreUbicacion = e.target.dataset.nombre_ubicacion;
+            let idUbicacion = e.target.dataset.id_ubicacion;
+            
+            console.log(`Desasociando el datalogger ${nombredatalogger} con id ${idDatalogger}\nde la ubicación ${nombreUbicacion} con id: ${idUbicacion}`);
+            //eliminarDatalogger(id, nombre);
+        } 
+
 });

@@ -45,6 +45,22 @@ module.exports = {
              console.log("cerrada la conexion con el pool de datos");
          }
     },
+    addDataloggerLocation: async (data) => {        
+        const connection = await pool.getConnection();
+        console.log("abierta la conexion con el pool de datos - insert de addLocationUserRole");
+        
+         try {
+             const [rows, fields] = await connection.execute(`INSERT INTO dataloggers_x_ubicacion (ubicaciones_id, datalogger_id, fecha_creacion)         
+             VALUES ('${data.ubicacion_id}', '${data.datalogger_id}', CURDATE())`);
+             //console.log(`Rows affeted: ${rows.affectedRows}`);
+             return rows;
+         } catch (error){                       
+             throw error;
+         } finally {
+             connection.release(); 
+             console.log("cerrada la conexion con el pool de datos");
+         }
+    },
     updateLocationUserRole: async (data) => {        
         const connection = await pool.getConnection();
         console.log("Abierta la conexión con el pool de datos - insert de updateLocationUserRole");

@@ -102,6 +102,7 @@ module.exports = {
         try {
             const id = parseInt(req.params.id);
             const results = await LocationModel.getById(id);
+            const allDataloggers = await DataloggerModel.getAll();
 
             //saco el id y el nombre y lo pongo en session cookie para armar el breadcrumb
             console.log(results[0]);            
@@ -109,6 +110,8 @@ module.exports = {
                 id: results[0].id,
                 nombre: results[0].nombre
             }
+
+
 
             const results02 = await LocationModel.getDataloggersByLocationId(id);
             
@@ -128,10 +131,10 @@ module.exports = {
             };
             
             const dataloggers = await GetDataloggersInfo(dataloggersIds);
-            //console.log(dataloggers);
+            console.log(dataloggers, results);
             
             
-            res.render('viewLocation', { user: req.session.user, location: results, dataloggersInfo: dataloggers});
+            res.render('viewLocation', { user: req.session.user, location: results, dataloggersInfo: dataloggers, allDataloggers: allDataloggers});
         } catch (error) {
             console.error(error);
             res.status(500).send('Error interno del servidor');
@@ -222,5 +225,23 @@ module.exports = {
         }else{
             res.render('dashboard', {results: 'edicionerronea', message: `Fallo en la edicion del rol`, user: req.session.user})
         }             
-    }
+    },
+    addDataloggerLocation: async (req, res) => {
+        const dataDataloggerLocation = {
+            usuario_id: req.body.usuario_id,                     
+            ubicacion_id: req.body.ubicacion_id,
+            datalogger_id: req.body.datalogger_id
+        }
+        //res.send(`agregando un nuevo datalogger en una ubicacion ${dataDataloggerLocation.usuario_id} ${dataDataloggerLocation.ubicacion_id} dataloggerid: ${dataDataloggerLocation.datalogger_id}`);
+
+         const dataloggerLocationAdded = await LocationModel.addDataloggerLocation(dataDataloggerLocation);        
+         console.log(dataloggerLocationAdded);
+
+        //deberia poder hacer un rollback aunque en el metodo de agregar una ubicacion, el usuario y la ubicacion son nuevas y el rol es propietario
+        if (dataloggerLocationAdded.affectedRows > 0){
+            return res.render('dashboard', {results: 'registrocorrecto', message: `El datalogger  se registro correctamente`, user: req.session.user});
+        }else{
+            return res.render('dashboard', {results: 'registrofallido', message: `Fallo en el registro del datalogger`, user: req.session.user})
+        }             
+    },
 }

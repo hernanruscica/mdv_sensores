@@ -8,6 +8,11 @@
       <!--Breadcrumb-->
       <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="#" onclick="goBack()" >
+              <i class="fas fa-arrow-left"></i> Volver
+            </a>
+          </li>   
           <li class="breadcrumb-item"><a href="/">Inicio</a></li>        
           <li class="breadcrumb-item"><a href="/users/dashboard">Panel de control</a></li> 
           <li class="breadcrumb-item"><a href="/dataloggers/all">Dataloggers</a></li>   
@@ -86,7 +91,7 @@
 <%- include('partials/piedepagina') %>        
 
 
-<script src="/scripts/loadComboLocation.mjs" type="module"></script> 
+
 
 <script>
   document.getElementById('image').addEventListener('change', function(event) {
@@ -111,6 +116,12 @@
             imgPreview.style.display = 'none';
         }
     });
+</script>
+<script>
+  // Función para ir a la página anterior
+  function goBack() {
+    window.history.back();
+  }
 </script>
 
    </body>

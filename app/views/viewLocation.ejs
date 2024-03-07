@@ -9,6 +9,11 @@
     <!--Breadcrumb-->
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="#" onclick="goBack()" >
+            <i class="fas fa-arrow-left"></i> Volver
+          </a>
+        </li>   
         <li class="breadcrumb-item"><a href="/">Inicio</a></li>        
         <li class="breadcrumb-item"><a href="/users/dashboard">Panel de control</a></li> 
         <li class="breadcrumb-item"><a href="/locations/all">Ubicaciones</a></li>   
@@ -66,30 +71,48 @@
     <div class="card m-3 col-12 col-lg-6">    
       <div class="card-body">
         <h5 class="card-title">
-          Dataloggers
+          Dataloggers asociados
         </h5>
-        <!-- userLocationRoles -->        
-        <p class="card-text">
-          Informacion y enlaces a los dataloggers instalados en esta ubicacion.
-        </p>
-        <% if (dataloggersInfo !== null) { %>
-          <ul>
-            <% dataloggersInfo.forEach(datalogger => { %>
-              <li>
-                <a href="/dataloggers/view/<%= datalogger.id %>">
-                  <%= datalogger.nombre %>
-                </a>
-                <p>
-                  <%= datalogger.descripcion %>
-                </p>
-              </li>
-            <% }); %>
-          </ul>
+           
+        <% if (Array.isArray(dataloggersInfo) && dataloggersInfo.length > 0) { %>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Nombre</th>                          
+                <th>Acciones</th>  
+              </tr>
+            </thead>
+            <tbody>
+              <% dataloggersInfo.forEach(function(item) { %>
+                <tr>
+                  <td><a href="/dataloggers/view/<%= item.id %>" class="btn-sm mb-1"><%= item.nombre %></a></td>                      
+                  <td>
+                      <a href="/dataloggers/view/<%= item.id %>" class="btn btn-primary btn-sm mb-1">Ver</a>
+                      
+                      <button type="button" class="btn btn-danger btn-sm mb-1" 
+                      id="desasociar_datalogger" 
+                      data-id_datalogger="<%= item.id %>" 
+                      data-nombre_datalogger="<%= item.nombre %>"
+                      data-id_ubicacion="<%= location[0].id %>"     
+                      data-nombre_ubicacion="<%= location[0].nombre %>"                      
+                      >Desasociar</button>
+                  </td>            
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
         <% } else { %>
-          <p>No tiene dataloggers asociados.</p>
-        <% } %>
-        
-        
+          <p>No hay elementos para mostrar.</p>
+          <input type="hidden" class="btn btn-danger btn-sm mb-1" 
+                      id="desasociar_datalogger" 
+                      
+                      data-id_ubicacion="<%= location[0].id %>"     
+                      data-nombre_ubicacion="<%= location[0].nombre %>"                      
+                      />
+        <% } %>        
+        <div class="container row justify-content-start">
+          <a href="#" id="agregarDataloggerBtn" class="btn btn-success col-12">Asociar datalogger</a>
+        </div>
       </div>
     </div>
   <!-- Fin  de la Card de dataloggers-->
@@ -105,14 +128,90 @@
   <% } %>
 </div>
  
+<!--Empieza modal de NUEVO asociacion ubicacion / datalogger-->
+<div class="container">
+  <div class="modal fade" id="agregarDataloggerModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form action="/dataloggers/location/add" method="POST">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Asociar nuevo datalogger</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <!-- Aquí coloca el contenido del formulario para agregar un nuevo datalogger -->
+            <div class="card mb-3">
+              <div class="card-body">
+                <div class="mb-3 row">
+                  <p>Seleccione un datalogger disponible para asociar con la ubicacion <strong><%= location[0].nombre %></strong></p>
+                  <label for="ubicacion" class="col-sm-3 col-md-5 col-form-label">Datalogger</label>
+                  <div class="col-sm-9 col-md-7 my-2">
+                    <input type="hidden" value="<%= user.id %>" id="usuario_id" name="usuario_id">
+                    <input type="hidden" value="<%= location[0].id %>" id="ubicacion_id" name="ubicacion_id">
+
+                    <select class="form-select" id="datalogger_id" name="datalogger_id" required>
+                      <option value="" disabled selected>Seleccione una ...</option>
+                      <% allDataloggers.forEach(function(datalogger, index) { %>
+                        <option value="<%= datalogger.id %>">
+                          <%= datalogger.nombre %>
+                        </option>
+                      <% }); %>
+                    </select>
+                  </div>
+                </div>                
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary" id="guardarRolBtn">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Termina modal de nuevo rol-->
     
 <%- include('partials/piedepagina') %>        
+
+<script src="/scripts/usersFunctionsBtns.js"></script>
 
 <script src="/scripts/mostrarNombresDireccion.mjs" type="module"></script> 
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+<script>
+  // Función para ir a la página anterior
+  function goBack() {
+    window.history.back();
+  }
+</script>
 
+<!-- Script para abrir el modal -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById("agregarDataloggerBtn").addEventListener('click', function (e) {
+        var myModal = new bootstrap.Modal(document.getElementById('agregarDataloggerModal'));
+      
+        let $desasociarBtn = document.getElementById("desasociar_datalogger");
+        // Acceder a los atributos personalizados del botón que desencadenó el evento de clic 
+        const idUsuario = document.getElementById("usuario_id").value;
+        const idDatalogger = $desasociarBtn.getAttribute('data-id_datalogger');      
+        const nombreUbicacion = $desasociarBtn.getAttribute('data-nombre_ubicacion'); 
+        const nombreDatalogger = $desasociarBtn.getAttribute('data-nombre_datalogger');        
+        const idUbicacion = $desasociarBtn.getAttribute('data-id_ubicacion');
+      
+        console.log(idUsuario, idDatalogger, nombreUbicacion, nombreDatalogger, idUbicacion);      
+        myModal.show();
+      
+        document.getElementById("usuario_id").value = idUsuario;
+    });
+});
+
+
+ 
+</script>
     
 </body>
 </html>

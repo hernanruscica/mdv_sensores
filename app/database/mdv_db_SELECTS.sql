@@ -27,6 +27,9 @@ SELECT * FROM `roles`;
 SELECT * FROM `ubicaciones`;
 SELECT * FROM `direciones`;
 SELECT * FROM `ubicaciones` WHERE `id` = 8;
+SELECT * FROM `dataloggers`;
+SELECT * FROM `dataloggers_x_ubicacion`;
+
 
 
 
@@ -151,6 +154,10 @@ from dataloggers
 inner join dataloggers_x_ubicacion on dataloggers.id = dataloggers_x_ubicacion.datalogger_id
 where dataloggers_x_ubicacion.ubicaciones_id = 2;
 
+select * 
+from dataloggers
+inner join dataloggers_x_ubicacion on dataloggers.id = dataloggers_x_ubicacion.datalogger_id;
+
 select ubicaciones_id from dataloggers_x_ubicacion where datalogger_id = 1;
 
 select *
@@ -182,3 +189,32 @@ insert into usuarios_x_ubicaciones_x_roles
 (usuarios_id, ubicaciones_id, roles_id, fecha_creacion)
 values
 (32, 3, 9, curdate());
+
+ALTER TABLE `ubicaciones`
+ADD COLUMN `email` VARCHAR(45) NULL AFTER `telefono`;
+
+UPDATE `ubicaciones`
+SET `email` = 'info@ruscica-code.ar';
+
+ALTER TABLE usuarios
+ADD COLUMN espropietario BOOLEAN AFTER estado;
+
+UPDATE usuarios
+SET espropietario = CASE 
+                        WHEN dni = 28470359 THEN true
+                        ELSE false
+                    END;
+
+insert into dataloggers
+(direccion_mac, nombre, descripcion, foto, nombre_tabla, fecha_creacion)
+values
+('23:45:67:89:AB:CD', 'node03Grido', 'insertado con mysql workbench', 'fotodatalogger.png', 'guemes', CURRENT_TIMESTAMP());
+
+SELECT * FROM `dataloggers_x_ubicacion`;
+select * from ubicaciones;
+select * from dataloggers;
+
+INSERT INTO `dataloggers_x_ubicacion`
+	(ubicaciones_id, datalogger_id, fecha_creacion)
+VALUES
+	('36', '1', CURRENT_TIMESTAMP());

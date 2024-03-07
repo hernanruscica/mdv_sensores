@@ -2,6 +2,7 @@ const express = require('express');
 const DataloggerController = require('../controllers/DataloggerController.js');
 
 const multer = require('multer');
+const LocationController = require('../controllers/LocationController.js');
 const storage = multer.diskStorage({
 destination: (req, file, cb) => {
     cb(null, 'public/images/');
@@ -22,7 +23,8 @@ router.post('/update/', upload.single("image"), DataloggerController.update);
 router.delete('/delete/:id', DataloggerController.deleteById);
 router.get('/view/:id', DataloggerController.viewDatalogger);
 router.get('/view/:id/channels/:idchannel', DataloggerController.viewChannel);
-
+router.post('/location/add', LocationController.addDataloggerLocation);
+// /location/add
 
 
 module.exports = router;
