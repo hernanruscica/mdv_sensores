@@ -105,33 +105,41 @@ module.exports = {
             const allDataloggers = await DataloggerModel.getAll();
 
             //saco el id y el nombre y lo pongo en session cookie para armar el breadcrumb
-            console.log(results[0]);            
+            //console.log(results[0]);            
             req.session.location = {
                 id: results[0].id,
                 nombre: results[0].nombre
             }
 
 
-
+            /** */
             const results02 = await LocationModel.getDataloggersByLocationId(id);
+            //console.log('results02', results02);
+            const dataloggersInfo = results02.map(result => {
+                return {
+                    datalogger_id: result.datalogger_id,
+                    id: result.id // Agregamos el id proveniente de LocationModel
+                };
+            });
+            //console.log(dataloggersdataloggersInfo, dataloggersIds.length);     
             
-            const dataloggersIds = results02.map(result => result.datalogger_id) ;
-            //console.log(dataloggersIds, dataloggersIds.length);     
-
-            const GetDataloggersInfo = async (ids) => {
-                if (ids.length === 0) return null;
-            
-                const dataloggersPromises = ids.map(async (id) => {
-                    const results03 = await DataloggerModel.getById(id);
-                    return results03[0];
+            const GetDataloggersInfo = async (dataloggersInfo) => {
+                if (dataloggersInfo.length === 0) return null;
+                console.log(dataloggersInfo)
+                const dataloggersPromises = dataloggersInfo.map(async (dataloggerInfo) => {
+                    const results03 = await DataloggerModel.getById(dataloggerInfo.datalogger_id);                    
+                    const info = { ...results03[0], idDataloggerUbicacion: dataloggerInfo.id }; // Añadir la propiedad "id"
+                    return info;
                 });
             
                 const dataloggers = await Promise.all(dataloggersPromises);
                 return dataloggers;
             };
             
-            const dataloggers = await GetDataloggersInfo(dataloggersIds);
-            console.log(dataloggers, results);
+            const dataloggers = await GetDataloggersInfo(dataloggersInfo);
+            console.log(dataloggers);
+            
+            /** */
             
             
             res.render('viewLocation', { user: req.session.user, location: results, dataloggersInfo: dataloggers, allDataloggers: allDataloggers});
@@ -244,4 +252,15 @@ module.exports = {
             return res.render('dashboard', {results: 'registrofallido', message: `Fallo en el registro del datalogger`, user: req.session.user})
         }             
     },
+    deleteDataloggerById: async (req, res) => {        
+        const id = parseInt(req.params.id);
+        console.log(`Eliminando la asociacion datalogger en ubicacion con id> ${id} `);
+        const dataloggerLocation = await LocationModel.deleteDataloggerLocation(id); 
+        if (dataloggerLocation.affectedRows > 0){
+            res.status(200).json({message: 'OK', results: dataloggerLocation});
+         }else{
+            res.status(500).json({message: 'ERROR', results: dataloggerLocation});
+         }
+        
+    }
 }

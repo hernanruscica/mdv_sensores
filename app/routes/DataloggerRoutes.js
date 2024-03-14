@@ -24,7 +24,7 @@ router.delete('/delete/:id', DataloggerController.deleteById);
 router.get('/view/:id', DataloggerController.viewDatalogger);
 router.get('/view/:id/channels/:idchannel', DataloggerController.viewChannel);
 router.post('/location/add', LocationController.addDataloggerLocation);
-// /location/add
+router.delete('/location/delete/:id', LocationController.deleteDataloggerById);
 
 
 module.exports = router;

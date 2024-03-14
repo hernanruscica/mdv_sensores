@@ -91,6 +91,7 @@
                       
                       <button type="button" class="btn btn-danger btn-sm mb-1" 
                       id="desasociar_datalogger" 
+                      data-id_datalogger_ubicacion = "<%= item.idDataloggerUbicacion %>"
                       data-id_datalogger="<%= item.id %>" 
                       data-nombre_datalogger="<%= item.nombre %>"
                       data-id_ubicacion="<%= location[0].id %>"     
@@ -181,6 +182,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
   // Función para ir a la página anterior
   function goBack() {
@@ -206,7 +209,7 @@
         myModal.show();
       
         document.getElementById("usuario_id").value = idUsuario;
-    });
+    });    
 });
 
 

@@ -86,42 +86,78 @@ const eliminarUbicacion = (id, nombre) => {
 }
 
 const eliminarDatalogger = (id, nombre) => {
-    console.log(`Eliminar datalogger con ID.: ${id} ?`);
-    Swal.fire({
-        title: 'Eliminar datalogger.',
-        text: `Confirma la eliminación del datalogger ${nombre} ? Esta acción no se puede deshacer`,
-        icon: 'warning',                   
-        showDenyButton: true,                               
-        confirmButtonText: 'Eliminar',
-        confirmButtonColor: '#FF0000',
-        denyButtonText: 'Conservar',
-        denyButtonColor: '#28DC25'
+  console.log(`Eliminar datalogger con ID.: ${id} ?`);
+  Swal.fire({
+    title: "Eliminar datalogger.",
+    text: `Confirma la eliminación del datalogger ${nombre} ? Esta acción no se puede deshacer`,
+    icon: "warning",
+    showDenyButton: true,
+    confirmButtonText: "Eliminar",
+    confirmButtonColor: "#FF0000",
+    denyButtonText: "Conservar",
+    denyButtonColor: "#28DC25",
+  }).then((result) => {
+    if (result.value) {
+      fetch(`/dataloggers/delete/${id}`, { method: "DELETE" })
+        .then((response) => {
+          // manejar respuesta exitosa
+          Swal.fire({
+            title: "Datalogger eliminado !",
+            text: `Se eliminó el datalogger ${nombre} con exito.`,
+            icon: "info",
+            confirmButtonText: "Entendido",
+          }).then((result) => {
+            if (result.value) {
+              window.location.href = "/dataloggers/all";
+            }
+          });
+        })
+        .catch((error) => {
+          // manejar error
+          console.log("error al borrar el elemento", error);
+        });
+    } else if (result.dismiss === Swal.DismissReason.deny) {
+      Swal.close(); // Cerrar SweetAlert
+    }
+  });
+};
 
-    }).then((result) => {
-         if (result.value) {            
-             fetch(`/dataloggers/delete/${id}`, { method: 'DELETE' })
-             .then(response => {
-                 // manejar respuesta exitosa    
-                 Swal.fire({
-                     title: 'Datalogger eliminado !',
-                     text: `Se eliminó el datalogger ${nombre} con exito.`,
-                     icon: 'info',
-                     confirmButtonText: 'Entendido'
-                 }).then((result) => { 
-                     if (result.value){
-        //                 //location.reload();    
-                         window.location.href = '/dataloggers/all' ;    
-                     }
-                 }); 
-             })
-             .catch(error => {
-                 // manejar error
-         console.log("error al borrar el elemento", error);
-     });
- }
-        window.location.href = '/dataloggers/all' ;
-    })            
-}
+const desasociarDatalogger = (idDataloggerUbicacion, nombredatalogger, nombreUbicacion, idUbicacion ) => {
+  console.log(`Desasociar datalogger con ID.: ${idDataloggerUbicacion} ?`);
+  Swal.fire({
+    title: "Desasociar datalogger.",
+    text: `¿Confirma la desasociación del datalogger '${nombredatalogger}'\nNo estará más asociado a ${nombreUbicacion} ?\n Esta acción no se puede deshacer`,
+    icon: "warning",
+    showDenyButton: true,
+    confirmButtonText: "Confirmar",
+    confirmButtonColor: "#FF0000",
+    denyButtonText: "Conservar",
+    denyButtonColor: "#28DC25",
+  }).then((result) => {
+    if (result.value) {
+      fetch(`/dataloggers/location/delete/${idDataloggerUbicacion}`, { method: "DELETE" })
+        .then((response) => {
+          // manejar respuesta exitosa
+          Swal.fire({
+            title: "Datalogger desasociado !",
+            text: `Se desasoció el datalogger ${nombredatalogger} a la ubicacion ${nombreUbicacion} con exito.`,
+            icon: "info",
+            confirmButtonText: "Entendido",
+          }).then((result) => {
+            if (result.value) {
+              window.location.href = `/locations/view/${idUbicacion}`;
+            }
+          });
+        })
+        .catch((error) => {
+          // manejar error
+          console.log("error al borrar el elemento", error);
+        });
+    } else if (result.dismiss === Swal.DismissReason.deny) {
+        Swal.close(); // Cerrar SweetAlert
+    }
+  });
+};
 
 //acciones de los botones en cada tarjeta individual
 $d.addEventListener('click', (e) => {    
@@ -158,13 +194,15 @@ $d.addEventListener('click', (e) => {
 
         //desasociar_datalogger
         if (e.target.id == 'desasociar_datalogger'){
+            let idDataloggerUbicacion = e.target.dataset.id_datalogger_ubicacion;
             let idDatalogger = e.target.dataset.id_datalogger;
             let nombredatalogger = e.target.dataset.nombre_datalogger;
             let nombreUbicacion = e.target.dataset.nombre_ubicacion;
             let idUbicacion = e.target.dataset.id_ubicacion;
             
-            console.log(`Desasociando el datalogger ${nombredatalogger} con id ${idDatalogger}\nde la ubicación ${nombreUbicacion} con id: ${idUbicacion}`);
-            //eliminarDatalogger(id, nombre);
+            
+            console.log(`Desasociando el datalogger ${nombredatalogger} de la ubicación ${nombreUbicacion} con id: ${idDataloggerUbicacion}`);
+            desasociarDatalogger(idDataloggerUbicacion, nombredatalogger, nombreUbicacion, idUbicacion);
         } 
 
 });

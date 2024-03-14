@@ -61,6 +61,21 @@ module.exports = {
              console.log("cerrada la conexion con el pool de datos");
          }
     },
+    deleteDataloggerLocation: async (id) => {        
+        const connection = await pool.getConnection();
+        console.log("abierta la conexion con el pool de datos - delete de datalogger location");        
+         try {
+             const [rows, fields] = await connection.execute(`delete from dataloggers_x_ubicacion
+             where id = '${id}' ;`);
+             //console.log(`Rows affeted: ${rows.affectedRows}`);
+             return rows;
+         } catch (error){                       
+             throw error;
+         } finally {
+             connection.release(); 
+             console.log("cerrada la conexion con el pool de datos");
+         }
+    },
     updateLocationUserRole: async (data) => {        
         const connection = await pool.getConnection();
         console.log("Abierta la conexión con el pool de datos - insert de updateLocationUserRole");
@@ -129,7 +144,7 @@ module.exports = {
         const connection = await pool.getConnection();
         console.log("abierta la conexion con el pool de datos - Location getById");
         try {            
-            const [rows, fields] = await connection.execute(`SELECT mdvsrl.dataloggers_x_ubicacion.datalogger_id 
+            const [rows, fields] = await connection.execute(`SELECT mdvsrl.dataloggers_x_ubicacion.datalogger_id, mdvsrl.dataloggers_x_ubicacion.id 
             FROM mdvsrl.dataloggers_x_ubicacion
             INNER JOIN mdvsrl.ubicaciones ON  mdvsrl.dataloggers_x_ubicacion.ubicaciones_id = mdvsrl.ubicaciones.id
             WHERE mdvsrl.ubicaciones.id = ${locationId};`);              
