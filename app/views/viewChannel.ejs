@@ -34,18 +34,18 @@
         <div class="card-body">
             <!-- Nombre y Apellido -->
             <h5 class="card-title">
-               Nombre del Canal con id: <%= idChannel %>
+               Nombre del Canal : <%= currentChannel.nombre %>
             </h5>
 
             <!-- Descripcion -->
-            <p class="card-text">Descripcion este canal del datalogger con id: <%= id %></p>
+            <p class="card-text">Descripcion : <%= currentChannel.descripcion %></p>
 
             <!-- Foto -->
             <img src="" class="card-img-top" alt="Foto del Canal ">
 
             
             <!-- Teléfono -->
-            <p class="card-text">Fecha de creacion</p>
+            <p class="card-text">Fecha de creacion: <%= currentChannel.fecha_creacion %></p>
 
         </div>
         
@@ -90,13 +90,15 @@
 
 // Accede al array de datos desde la cookie de sesión
 const dataChannel= <%- JSON.stringify(dataChannel || []) %>;  
+//currentChannel
+const currentChannel= <%- JSON.stringify(currentChannel || []) %>;  
   
 
   // Ahora puedes usar el arrayDeDatos en tu código JavaScript
-  //console.log(dataChannel);
+  //console.log(dataChannel, currentChannel);  
 
 /* Preparacion de datos   para mostrar datos analogicos  */
-const myFactor = 0.37;
+const myFactor = parseFloat(currentChannel.multiplicador);
 const myTimeStamps = dataChannel.map(data => data.fecha);
 
     const tensionesInstaneas = dataChannel.map(data => (data.inst * myFactor).toFixed(2));
@@ -104,7 +106,7 @@ const myTimeStamps = dataChannel.map(data => data.fecha);
     // Datos del gráfico
     var options = { 
         title: {
-        text : "Tension instantanea"
+        text : currentChannel.nombre
         },
       chart: {
         type: 'line',
@@ -113,7 +115,7 @@ const myTimeStamps = dataChannel.map(data => data.fecha);
         background: '#f4f4f4'
       },
       series: [{       
-        name: "Tension instantanea",
+        name: currentChannel.nombre,
         data: tensionesInstaneas
       }],
       xaxis: {

@@ -85,14 +85,14 @@ module.exports = {
 
         // El Modelo puede traer la data de un periodo de tiempo determinado, de un determinado datalogger y de un determinado canal 
         //const currentData = await DataModel.getDataByChannel('guemes', 'a1', '2023-12-28', '2023-12-29');    
-        console.log(results[0].nombre_tabla, currentChannel[0].nombre_columna);    
+        console.log(currentChannel[0]);    
         const currentData = await DataModel.getDataByChannelOneDay(results[0].nombre_tabla, currentChannel[0].nombre_columna);
         //console.log(currentData);        
 
         res.render('viewChannel', {user: req.session.user, 
                                    location: req.session.location, 
                                    datalogger: req.session.datalogger,
-                                   id: id, idChannel: idChannel, dataChannel: currentData || []});
+                                   id: id, currentChannel: currentChannel[0], dataChannel: currentData || []});
         
     },
     deleteById: async (req, res) => {
