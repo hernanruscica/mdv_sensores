@@ -50,7 +50,7 @@ module.exports = {
         const connection = await pool.getConnection();
         console.log("abierta la conexion con el pool de datos - Datalogger.getChannelsById");
         try {            
-            const [rows, fields] = await connection.execute(`select canales.nombre_columna, canales.nombre as canal_nombre, canales.descripcion as canal_descripcion
+            const [rows, fields] = await connection.execute(`select canales.id as canal_id, canales.nombre_columna, canales.nombre as canal_nombre, canales.descripcion as canal_descripcion
                 from canales
                 where datalogger_id = '${id}'`);  
             return rows;
@@ -134,6 +134,21 @@ module.exports = {
             connection.release(); // Liberar la conexión de vuelta al pool
             console.log("cerrada la conexion con el pool de datos");
         }
-    }
+    },
+    getChannellbyId: async (id) => {        
+        const connection = await pool.getConnection();
+        console.log("abierta la conexion con el pool de datos - Datalogger.getChannelById");
+        try {            
+            const [rows, fields] = await connection.execute(`select datalogger_id, nombre, descripcion, nombre_columna, multiplicador, fecha_creacion
+                                                              from mdvsrl.canales where id = ${id};`);  
+            return rows;
+        } catch (error){
+            //console.error(error);
+            throw error;
+        } finally {
+            connection.release(); // Liberar la conexión de vuelta al pool cuando hayas terminado
+            console.log("cerrada la conexion con el pool de datos");
+        }
+    },
 
 }

@@ -218,3 +218,23 @@ INSERT INTO `dataloggers_x_ubicacion`
 	(ubicaciones_id, datalogger_id, fecha_creacion)
 VALUES
 	('36', '1', CURRENT_TIMESTAMP());
+    
+/*Trabajando con los canales por cada datalogger*/    
+use mdvsrl;
+show tables;
+select * from mdvsrl.dataloggers;
+select * from mdvsrl.canales;
+select *  from mdvsrl.canales where id = 1;
+
+insert into mdvsrl.canales
+    (datalogger_id, nombre, descripcion, nombre_columna, multiplicador, fecha_creacion)
+values
+	(1, 'temperatura', 'Mide la temperatura del gabinete', 'a1', 1.2, current_date());
+	
+delete from mdvsrl.canales where datalogger_id = 2;
+
+delete from mdvsrl.canales where id = 8;
+
+update mdvsrl.canales 
+	set nombre_columna = 'd2'
+    where id = 2;

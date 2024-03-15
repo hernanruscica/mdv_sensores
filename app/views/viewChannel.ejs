@@ -95,7 +95,7 @@ const dataChannel= <%- JSON.stringify(dataChannel || []) %>;
   // Ahora puedes usar el arrayDeDatos en tu código JavaScript
   //console.log(dataChannel);
 
-/* Preparacion de datos     */
+/* Preparacion de datos   para mostrar datos analogicos  */
 const myFactor = 0.37;
 const myTimeStamps = dataChannel.map(data => data.fecha);
     const tensionesInstaneas = dataChannel.map(data => (data.inst * myFactor).toFixed(2));

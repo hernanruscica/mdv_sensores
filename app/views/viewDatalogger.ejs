@@ -83,7 +83,7 @@
                 <ul>
                   <% channels.forEach(channel => { %>
                     <li>
-                      <a href="/dataloggers/view/<%= datalogger.id %>/channels/1">
+                      <a href="/dataloggers/view/<%= datalogger.id %>/channels/<%= channel.canal_id %>">
                         <%= channel.canal_nombre %>
                       </a>
                       <p>
