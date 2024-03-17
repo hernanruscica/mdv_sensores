@@ -38,14 +38,15 @@
             <div class="mb-3">      
               <label for="nombre" class="form-label">Nombre</label>
               <input type="text" class="form-control" id="nombre" name="nombre" aria-describedby="nombreHelp" 
-                  pattern="[A-Za-z\s]{1,45}" title="Debe contener solo letras y tener como máximo 45 caracteres" maxlength="45" required>   
+                  pattern=".*{1,45}" title="Debe contener solo letras y tener como máximo 45 caracteres" maxlength="45" required>   
               <div id="nombreHelp" class="form-text">[CAMPO OBLIGATORIO]</div>        
             </div>  
             <!-- Descripción -->
             <div class="mb-3">      
               <label for="descripcion" class="form-label">Descripción</label>
               <input type="text" class="form-control" id="descripcion" name="descripcion" aria-describedby="descripcionHelp" 
-                  pattern="[A-Za-z\s]{1,45}" title="Debe contener solo letras y tener como máximo 100 caracteres" maxlength="100" required>         
+                  pattern=".*{1,100}" title="Debe contener solo letras y tener como máximo 100 caracteres" maxlength="100" required>   
+              <div id="descripcionHelp" class="form-text">[CAMPO OBLIGATORIO]</div>        
             </div>        
             <!-- Correo electrónico -->
             <div class="mb-3">

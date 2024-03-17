@@ -116,6 +116,7 @@ module.exports = {
             nombre: req.body.nombre,
             direccion_mac: req.body.direccion_mac,
             descripcion: req.body.descripcion,
+            nombre_tabla: req.body.nombre_tabla,
             foto: imageName
         }
         console.log(`insertando un nuevo datalogger a la BD con nombre: ${dataloggerData.nombre}`);
@@ -144,6 +145,7 @@ module.exports = {
             id: req.body.id,
             nombre: req.body.nombre,
             descripcion: req.body.descripcion,
+            nombre_tabla: req.body.nombre_tabla,
             foto: imageName,                      
             direccion_mac: req.body.direccion_mac 
         };  

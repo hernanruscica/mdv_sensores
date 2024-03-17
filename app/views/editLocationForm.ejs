@@ -44,15 +44,21 @@
             <label for="nombre" class="col-sm-2 col-md-3 col-form-label">Nombre</label>
             <div class="col-sm-10  col-md-9">
               <input type="text" class="form-control" id="nombre" name="nombre"
-                value="<%= location.nombre %>">
+                value="<%= location.nombre %>"
+                pattern=".*{1,45}" title="Debe contener solo letras y tener como máximo 45 caracteres" maxlength="45" 
+              required> 
+              <div id="nombreHelp" class="form-text">[CAMPO OBLIGATORIO]</div> 
             </div>
           </div>
           <!--Descripcion-->
           <div class="mb-3 row">
             <label for="nombre_2" class="col-sm-2 col-md-3 col-form-label">Descripcion</label>
             <div class="col-sm-10  col-md-9">
-              <input type="text" class="form-control" id="descripcion" name="descripcion"
-                value="<%= location.descripcion %>">
+              <input type="text" class="form-control" id="descripcion" name="descripcion"  aria-describedby="descripcionlHelp"
+                value="<%= location.descripcion %>"
+                pattern=".*{1,100}" title="Debe contener solo letras y tener como máximo 100 caracteres" maxlength="100"
+              required>
+              <div id="descripcionlHelp" class="form-text">[CAMPO OBLIGATORIO]</div>
             </div>
           </div>
           <!--Email-->
@@ -65,7 +71,7 @@
                 maxlength="45" 
                 title="Debe tener formato de correo electrónico válido y no sobrepasar los 45 caracteres [CAMPO OBLIGATORIO]" 
                 required>
-              
+              <div id="emailHelp" class="form-text">[CAMPO OBLIGATORIO]</div>
             </div>
           </div>     
           <!--Teléfono-->
@@ -77,7 +83,8 @@
                 pattern="^(?:(?:[1-9]\d{1}[1-9]\d{7})|(?:[1-9]\d{2}[1-9]\d{6}))$"
                 maxlength="10"
                 title="Debe tener formato de teléfono válido en Argentina y no sobrepasar los 10 dígitos"
-                required>          
+                required>   
+              <div id="telefonoHelp" class="form-text">[CAMPO OBLIGATORIO]</div>       
             </div>
           </div>       
           

@@ -43,29 +43,47 @@
           <div class="mb-3 row">
             <label for="nombre" class="col-sm-2 col-md-3 col-form-label">Nombre</label>
             <div class="col-sm-10  col-md-9">
-              <input type="text" class="form-control" id="nombre" name="nombre"
-                value="<%= datalogger[0].nombre %>">
-                <div id="direccion_macHelp" class="form-text">[CAMPO OBLIGATORIO]</div>
+              <input type="text" class="form-control" id="nombre" name="nombre"  aria-describedby="nombreHelp"
+                value="<%= datalogger[0].nombre %>"
+                pattern=".*{1,45}" title="Debe contener solo letras y tener como máximo 45 caracteres" maxlength="45" 
+              required >
+                <div id="nombreHelp" class="form-text">[CAMPO OBLIGATORIO]</div>
             </div>
           </div>
           <!--Descripcion-->
           <div class="mb-3 row">
             <label for="descripcion" class="col-sm-2 col-md-3 col-form-label">Descripcion</label>
             <div class="col-sm-10  col-md-9">
-              <input type="text" class="form-control" id="descripcion" name="descripcion"
-                value="<%= datalogger[0].descripcion %>">
-                <div id="direccion_macHelp" class="form-text">[CAMPO OBLIGATORIO]</div>
+              <input type="text" class="form-control" id="descripcion" name="descripcion"  aria-describedby="descripcionHelp"
+                value="<%= datalogger[0].descripcion %>"
+                pattern=".*{1,100}" title="Debe contener solo letras y tener como máximo 100 caracteres" maxlength="100"
+              required>
+                <div id="descripcionHelp" class="form-text">[CAMPO OBLIGATORIO]</div>
             </div>
           </div>
           <!--direccion_mac-->
           <div class="mb-3 row">
             <label for="descripcion" class="col-sm-2 col-md-3 col-form-label">Direccion MAC</label>
             <div class="col-sm-10  col-md-9">
-              <input type="text" class="form-control" id="direccion_mac" name="direccion_mac"
-                value="<%= datalogger[0].direccion_mac %>">
+              <input type="text" class="form-control" id="direccion_mac" name="direccion_mac"  aria-describedby="direccion_macHelp"
+                value="<%= datalogger[0].direccion_mac %>"
+                pattern="[A-Z0-9:\s]{1,17}" title="Debe contener solo letras mayusculas y tener como máximo 14 caracteres" maxlength="17"
+              required>
                 <div id="direccion_macHelp" class="form-text">[CAMPO OBLIGATORIO]</div>
             </div>
           </div>     
+
+          <!--Nombre de la tabla-->
+          <div class="mb-3 row">
+            <label for="nombre_tabla" class="col-sm-2 col-md-3 col-form-label">Tabla en la BD</label>
+            <div class="col-sm-10  col-md-9">
+              <input type="text" class="form-control" id="nombre_tabla" name="nombre_tabla" aria-describedby="nombre_tablaHelp"
+                value="<%= datalogger[0].nombre_tabla %>"
+                pattern="[a-zA-Z0-9_]+" title="El nombre de la tabla debe contener solo letras, números y guiones bajos (_)" 
+              required>
+                <div id="nombre_tablaHelp" class="form-text">[CAMPO OBLIGATORIO]</div>
+            </div>
+          </div>
 
           <input type="hidden" name="fecha_creacion" id="fecha_creacion" value="<%= datalogger[0].fecha_creacion %>">
           

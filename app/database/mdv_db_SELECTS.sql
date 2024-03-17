@@ -233,8 +233,21 @@ values
 	
 delete from mdvsrl.canales where datalogger_id = 2;
 
-delete from mdvsrl.canales where id = 8;
+delete from mdvsrl.canales where id = 2;
 
 update mdvsrl.canales 
-	set nombre_columna = 'd2'
-    where id = 2;
+	set 
+		nombre = 'Compresor 1 - Tiempos de servicio',
+		descripcion = 'Mide el tiempo de funcionamiento, cantidad de encendidos y entradas a la sala.',		
+		nombre_columna = 'd2'
+    where id = 9;
+    
+update mdvsrl.dataloggers 
+	set 
+		direccion_mac = '25:D8:7S:A6:77:D4',
+		nombre = 'Tercer NodeMCU',
+		descripcion = 'Dispositivo de recoleccion de datos instalado en el Guemes.',	
+        foto = '1709577022398-jpeg',
+		nombre_tabla = 'guemes',
+        fecha_creacion = current_timestamp()
+    where id = 3;

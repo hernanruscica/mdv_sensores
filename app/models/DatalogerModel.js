@@ -98,7 +98,7 @@ module.exports = {
             const [rows, fields] = await connection.execute(`insert into dataloggers
                                     (direccion_mac, nombre, descripcion, foto, nombre_tabla, fecha_creacion)
                                     values
-                                    ('${data.direccion_mac}', 'n${data.nombre}', '${data.descripcion}', '${data.foto}', 'guemes', CURRENT_TIMESTAMP());`);
+                                    ('${data.direccion_mac}', 'n${data.nombre}', '${data.descripcion}', '${data.foto}', '${data.nombre_tabla}', CURRENT_TIMESTAMP());`);
             return rows;
         } catch (error){
             console.error(error);
@@ -120,8 +120,9 @@ module.exports = {
                     nombre = ?,
                     descripcion = ?,
                     direccion_mac = ?,
-                    foto = ?                                       
-                WHERE id = ?`, [data.nombre, data.descripcion, data.direccion_mac, data.foto, data.id]);
+                    foto = ?,
+                    nombre_tabla = ?                                       
+                WHERE id = ?`, [data.nombre, data.descripcion, data.direccion_mac, data.foto, data.nombre_tabla, data.id]);
             
            
             console.log("Ubicacion y direccion actualizadas con exito.");
