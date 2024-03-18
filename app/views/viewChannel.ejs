@@ -70,7 +70,8 @@
   <!-- Fin  de la Card de dataloggers-->
     </div>    
     <!-- Aquí es donde se mostrará el gráfico -->
-    <div id="chart"></div>
+    <div id="chart"></div>    
+    <div id="chart2"></div>
 
   <% } else { %>
     <h1>Error: Usuario no encontrado</h1>
@@ -90,46 +91,110 @@
 
 //El script accede a los datos enviados desde el controlador - Esto se podria hacer consultando a una API que consulte a un endpoint en el servidor node.js
 const dataChannel= <%- JSON.stringify(dataChannel || []) %>;  
-const currentChannel= <%- JSON.stringify(currentChannel || []) %>;  
-  
-
+const currentChannel= <%- JSON.stringify(currentChannel || []) %>;    
   // Ahora puedes usar el arrayDeDatos en tu código JavaScript
   //console.log(dataChannel, currentChannel);  
 
-/* Preparacion de datos   para mostrar datos analogicos  */
-const myFactor = parseFloat(currentChannel.multiplicador);
-const myTimeStamps = dataChannel.map(data => data.fecha);
-
-    const tensionesInstaneas = dataChannel.map(data => (data.inst * myFactor).toFixed(2));
-    //console.log(myTimeStamps, tensionesInstaneas);
-    // Datos del gráfico
-    var options = { 
-        title: {
-        text : currentChannel.nombre
+  //Si el canal es analogico
+  if (currentChannel.isAnalog == true ){
+      /* Preparacion de datos   para mostrar datos analogicos  */
+      const myFactor = parseFloat(currentChannel.multiplicador);
+      const myTimeStamps = dataChannel.map(data => data.fecha);
+      const tensionesInstaneas = dataChannel.map(data => (data.inst * myFactor).toFixed(2));
+      console.log("es analogico");
+      // Datos del gráfico
+      var options = { 
+          title: {
+          text : currentChannel.nombre
+          },
+        chart: {
+          type: 'line',
+          height: 400,
+          width: 1200,
+          background: '#f4f4f4'
         },
-      chart: {
-        type: 'line',
-        height: 400,
-        width: 1200,
-        background: '#f4f4f4'
-      },
-      series: [{       
-        name: currentChannel.nombre,
-        data: tensionesInstaneas
-      }],
-      xaxis: {
-        categories: myTimeStamps,
-        type: 'datetime'
-      }
-    }  
-    // Inicializar el gráfico
-    var chart = new ApexCharts(document.querySelector("#chart"), options);  
-    // Renderizar el gráfico
+        series: [{       
+          name: currentChannel.nombre,
+          data: tensionesInstaneas
+        }],
+        xaxis: {
+          categories: myTimeStamps,
+          type: 'datetime'
+        }
+      }  
+      // Inicializar el gráfico
+      var chart = new ApexCharts(document.querySelector("#chart"), options);  
+      // Renderizar el gráfico
+      chart.render();
+  }else{
+    //Si el canal es digital
+    // document.querySelector("#chart").innerHTML =  
+    // `Canal Digital\nDatos: ${dataChannel[0].fecha} - ${dataChannel[0].estado} - ${dataChannel[0].cantidad} - ${dataChannel[0].tiempo} - ${dataChannel[0].tiempo_total}`;
+    const myTimeStamps = dataChannel.map(data => data.fecha);
+    const ultimosEstados = dataChannel.map(data => data.estado);
+    const cantidadEncendidos = dataChannel.map(data => data.cantidad);
+    const tiempoEncendidos = dataChannel.map(data => data.tiempo);
+    const porcentajeEncendido = dataChannel.map(data => ((data.tiempo / data.tiempo_total) * 100).toFixed(0));
+    
+    // Datos del gráfico de estados
+    var options = { 
+          title: {
+          text : currentChannel.nombre + ' - Últimos estados'
+          },
+        chart: {
+          type: 'line',
+          height: 200,
+          width: 1200,
+          background: '#f4f4f4',
+          offsetX: 20, // Margen interior a la derecha
+          offsetY: 20
+        },          
+        series: [
+        {       
+          name: 'Estados',
+          data: ultimosEstados
+        }        
+        ],
+        xaxis: {
+          categories: myTimeStamps,
+          type: 'datetime'
+        }
+      }  
+    
+    var chart = new ApexCharts(document.querySelector("#chart"), options);      
     chart.render();
+
+    //Datos del grafico de tiempos
+    var options = { 
+          title: {
+          text : currentChannel.nombre + ' - Tiempos de encendido'
+          },
+        chart: {
+          type: 'line',
+          height: 300,
+          width: 1200,
+          background: '#f4f4f4',
+          offsetX: 20, // Margen interior a la derecha
+          offsetY: 20
+        },          
+        series: [
+        {       
+          name: 'Tiempo encdendido',
+          data: tiempoEncendidos
+        }        
+        ],
+        xaxis: {
+          categories: myTimeStamps,
+          type: 'datetime'
+        }
+      }  
+    // Inicializar el gráfico
+    var chart2 = new ApexCharts(document.querySelector("#chart2"), options);  
+    // Renderizar el gráfico
+    chart2.render();
+  }
   
 </script>
-
-
     
 <script>
   // Función para ir a la página anterior

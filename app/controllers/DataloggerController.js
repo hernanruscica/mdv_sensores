@@ -74,25 +74,33 @@ module.exports = {
         console.log(`Viendo el canal ${idChannel} del datalogger con id: ${id}`);        
         
         const results = await DataloggerModel.getById(id);      
-        console.log(results[0]);
+        let currentData = null;
+        
         req.session.datalogger = {
             id: results[0].id,
-            nombre: results[0].nombre
+            nombre: results[0].nombre,
+            nombre_tabla: results[0].nombre_tabla
         }
-        const currentChannel = await DataloggerModel.getChannellbyId(idChannel);
+        const results02 = await DataloggerModel.getChannellbyId(idChannel);        
+        const currentChannel = results02[0];
 
-        //aca tengo que hacer la busqueda en la BD de los datos del canal y los datos de las ultimas 24 hs. o tiempo necesario para atras.
+        //Si es analogico
+        if (currentChannel.nombre_columna.startsWith('a')){            
+            currentChannel.isAnalog = true;
+            currentData = await DataModel.getDataByChannelOneDay(req.session.datalogger.nombre_tabla, currentChannel.nombre_columna);
 
-        // El Modelo puede traer la data de un periodo de tiempo determinado, de un determinado datalogger y de un determinado canal 
-        //const currentData = await DataModel.getDataByChannel('guemes', 'a1', '2023-12-28', '2023-12-29');    
-        console.log(currentChannel[0]);    
-        const currentData = await DataModel.getDataByChannelOneDay(results[0].nombre_tabla, currentChannel[0].nombre_columna);
-        //console.log(currentData);        
+        //si es Digital 
+        }else{            
+            currentChannel.isAnalog = false;     
+            currentData = await DataModel.getDataByChannelDigitalOneDay(req.session.datalogger.nombre_tabla, currentChannel.nombre_columna);       
+        }        
+
+        console.log(currentChannel);            
 
         res.render('viewChannel', {user: req.session.user, 
                                    location: req.session.location, 
                                    datalogger: req.session.datalogger,
-                                   id: id, currentChannel: currentChannel[0], dataChannel: currentData || []});
+                                   id: id, currentChannel: currentChannel, dataChannel: currentData || []});
         
     },
     deleteById: async (req, res) => {
