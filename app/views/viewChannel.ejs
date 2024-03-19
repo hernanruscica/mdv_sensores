@@ -4,7 +4,7 @@
 
 <div class="container my-5 py-3 " >
 <% if (typeof user !== 'undefined' && user !== null && user.nombre_1 && user.apellido_1) { %>
-    <h1>Graficos y opciones para el canal</h1>
+    <h1>Canal "<%= currentChannel.nombre %>"</h1>   
 
     <!--Breadcrumb-->
     <nav aria-label="breadcrumb">
@@ -23,52 +23,85 @@
         <li class="breadcrumb-item active" aria-current="page">Ver Canal</li>
       </ol>
     </nav>
+    <p class="fs-5 mt-5">En esta sección usted puede ver la información de este canal.</p>        
 
-    <p class="fs-5 mt-5">En esta sección usted puede ver la información de este canal.</p>
-    <div class="container row justify-content-start">
-       <a href="/dataloggers/editform/1" class="btn btn-secondary col-5 col-lg-2">Editar Canal</a>     
-  </div>
+    <div class="d-flex flex-column flex-lg-row ">
 
-  <div class="d-flex flex-column flex-lg-row ">
-    <div class="card m-3 col-12 col-lg-6">
-        <div class="card-body">
-            <!-- Nombre y Apellido -->
-            <h5 class="card-title">
-               Nombre del Canal : <%= currentChannel.nombre %>
-            </h5>
-
-            <!-- Descripcion -->
-            <p class="card-text">Descripcion : <%= currentChannel.descripcion %></p>
-
-            <!-- Foto -->
-            <img src="" class="card-img-top" alt="Foto del Canal ">
-
-            
-            <!-- Teléfono -->
-            <p class="card-text">Fecha de creacion: <%= currentChannel.fecha_creacion %></p>
-
-        </div>
-        
-    </div>
-    <!-- Fin de la Card personal-->
-
-    <!-- Principio de la Card de Entradas-->
-    <div class="card m-3 col-12 col-lg-6">    
-      <div class="card-body">
-        <h5 class="card-title">
-          Opciones del canal
-        </h5>
-        <!-- userLocationRoles -->        
-        <p class="card-text">
-          Listado de opciones para este canal, como las alarmas.
-        </p>        
-           
-        
+      <!-- Inicio  de la Card de info general-->
+      <div class="card m-3 col-12 col-lg-6">
+          <div class="card-body">            
+              <h5 class="card-title">
+                Información general
+              </h5>
+              <!-- Nombre del canal -->
+              <p class="card-text">Nombre : <%= currentChannel.nombre %></p>
+              <!-- Descripcion -->
+              <p class="card-text">Descripcion : <%= currentChannel.descripcion %></p>
+              <!-- Foto -->
+              <img src="" class="card-img-top" alt="Foto del Canal ">            
+              <!-- Fecha de creacion -->
+              <p class="card-text">Fecha de creacion: <%= currentChannel.fecha_creacion %></p>
+          </div>        
       </div>
-    </div>
-    
-  <!-- Fin  de la Card de dataloggers-->
+      <!-- Fin de la Card de info general-->
+
+      <!-- Principio de la Card de opciones del canal-->
+      <div class="card m-3 col-12 col-lg-6">
+        <div class="card-body">
+          <h5 class="card-title">
+            Opciones del canal
+          </h5>
+          <!-- userLocationRoles -->
+          <p class="card-text">
+            Listado de opciones para este canal, como las alarmas.
+          </p>
+          <div class="container row justify-content-start">
+            <a href="/dataloggers/editform/1" class="btn btn-secondary col-5 col-lg-6">Editar Canal</a>
+          </div>
+        </div>
+      </div>
+      <!-- Fin  de la Card de dataloggers-->
     </div>    
+    <% if (currentChannel.isAnalog == false){ %>
+    <div class="d-flex flex-column flex-lg-row ">
+
+      <!-- Inicio  de la Card de vision general de dato-->
+      <div class="card m-3 col-12 col-lg-6">
+        <div class="card-body d-flex flex-wrap justify-content-between align-items-center">
+          <div>
+              <h5 class="card-title">Vision general de Datos</h5>
+              <!-- Promedio ultima hora -->
+              <p class="card-text">Relación de uso. On/5 Min. Promedio última hora: 40%</p>
+              <!-- alarma minimo -->
+              <p class="card-text">Alarma Mínimo: 25%</p>
+              <!-- alarma maxima -->
+              <p class="card-text">Alarma Máximo: 75%</p>
+          </div>
+          <!-- Foto -->
+          <img src="/images/relojPromFunc.png" class="card-img-top order-first order-md-last" style="height: auto; width: 200px;" alt="Foto del reloj de promedio de funcionamiento">
+        </div> 
+      </div>
+      <!-- Fin de la Card de vison general de datos-->
+
+      <!-- Inicio  de la Card de vision general de datos 2-->
+      <div class="card m-3 col-12 col-lg-6">
+        <div class="card-body d-flex flex-wrap justify-content-between align-items-center">
+          <div>
+              <h5 class="card-title">Vision general de Datos 2</h5>
+              <!-- Horas de uso desde -->
+              <p class="card-text">Horas de uso desde 10/05/2021: 128</p>
+              <!-- alarma fecha mantenimiento preventivo -->
+              <p class="card-text">Próximo mantenimiento preventivo: 29/03/2024</p>
+              <!-- Usuario afectado -->
+              <p class="card-text">Operario a cargo: Juan Perez</p>
+          </div>          
+        </div> 
+      </div>
+      <!-- Fin de la Card de vison general de datos 2-->
+
+    </div>
+    <% } %>
+
     <!-- Aquí es donde se mostrará el gráfico -->
     <div id="chart"></div>    
     <div id="chart2"></div>

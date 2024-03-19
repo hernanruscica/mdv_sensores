@@ -35,7 +35,8 @@ module.exports = {
             //${channel}_cantidad AS cantidad, ${channel}_tiempo AS tiempo, tiempo_total   => para un  canal digital
             const [rows, fields] = await connection.execute(`select fecha, ${channel}_inst AS inst, ${channel}_min AS min, ${channel}_max AS max  
                                                             from ${table} 
-                                                            where fecha >= CURDATE() - INTERVAL 1 DAY AND fecha < CURDATE() + INTERVAL 1 DAY order by fecha desc limit 90000;`);  
+                                                            WHERE fecha >= DATE_SUB('2024-03-16', INTERVAL 1 DAY) AND fecha < DATE_ADD('2024-03-16', INTERVAL 1 DAY)
+                                                            order by fecha desc limit 90000;`);  
             return rows;
         } catch (error){
             //console.error(error);
@@ -50,9 +51,10 @@ module.exports = {
         console.log("abierta la conexion con el pool de datos - getData - ejemplo de fecha_inicio: '2023-08-01' y '2023-09-04'");
         try {            
             //${channel}_cantidad AS cantidad, ${channel}_tiempo AS tiempo, tiempo_total   => para un  canal digital
-            const [rows, fields] = await connection.execute(`select fecha, ${channel}_estado AS estado, ${channel}_cantidad AS cantidad, ${channel}_tiempo AS tiempo, tiempo_total  
+            const [rows, fields] = await connection.execute(`select fecha, ${channel}_estado AS estado, ${channel}_cantidad AS cantidad, ${channel}_tiempo AS tiempo, tiempo_total, servicio, energia, texto  
                                                             from ${table} 
-                                                            where fecha >= CURDATE() - INTERVAL 1 DAY AND fecha < CURDATE() + INTERVAL 1 DAY order by fecha desc limit 90000;`);  
+                                                            WHERE fecha >= DATE_SUB('2024-03-16', INTERVAL 1 DAY) AND fecha < DATE_ADD('2024-03-16', INTERVAL 1 DAY)
+                                                            ORDER BY fecha ASC LIMIT 100`);  
             return rows;
         } catch (error){
             //console.error(error);
