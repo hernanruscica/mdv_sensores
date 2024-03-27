@@ -220,10 +220,11 @@ module.exports = {
             console.log("usuario encontrado para editar!", userDataBD.nombre_1, userDataBD.dni, userDataBD.password, userDataBD.calle, userDataBD.id);    
             const userId = userDataBD.id;
             let locationRoles = await UserModel.getLocationRolesById(userId);   
+            const allLocations = await LocationModel.getAll();  
             console.log(locationRoles);
             locationRoles = locationRoles.length > 0 ? locationRoles :  null ;                                      
             //console.log("datos de la ubicacion y roles del usuario:", locationRoles);                  
-            return res.render('editUserForm', { user: req.session.user, userRequired: userDataBD, userLocationRoles: locationRoles, locations: locations, roles: roles});
+            return res.render('editUserForm', { user: req.session.user, userRequired: userDataBD, userLocationRoles: locationRoles, locations: locations, roles: roles, allLocations: allLocations});
         }else{
             console.log(`Usuario con dni: ${userDni} No encontrado para editar`);
             return res.redirect('/');
@@ -314,7 +315,7 @@ module.exports = {
             console.log("usuario encontrado!", userDataBD.nombre_1, userDataBD.dni, userDataBD.password, userDataBD.calle, userDataBD.id);    
             console.log(`de la sesion de ${req.session.user.nombre_1}`)
             const userId = userDataBD.id;
-            const locationRoles = await UserModel.getLocationRolesById(userId);                                                
+            const locationRoles = await UserModel.getLocationRolesById(userId);                                                          
             console.log("datos de la ubicacion y roles del usuario:", locationRoles);                  
             return res.render('profile', { user: req.session.user, userRequired: userDataBD, userLocationRoles: locationRoles, roles: roles, allLocations: allLocations});
         }else{

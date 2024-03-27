@@ -1,0 +1,291 @@
+
+<%- include('partials/cabecera', {titulo: "MDV Sensores - Panel de Control", nombre: user.nombre_1, apellido: user.apellido_1}) %>
+  
+
+<div class="container my-5 py-3 " >
+  <% if (typeof user !== 'undefined' && user !== null && user.nombre_1 && user.apellido_1) { %>
+      <h1>Edición del perfil de <%= userRequired.nombre_1 %> <%= userRequired.apellido_1 %></h1>
+      <!--Breadcrumb-->
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <a href="#" onclick="goBack()" >
+              <i class="fas fa-arrow-left"></i> Volver
+            </a>
+          </li>   
+          <li class="breadcrumb-item"><a href="/">Inicio</a></li>        
+          <li class="breadcrumb-item"><a href="/users/dashboard">Panel de control</a></li> 
+          <li class="breadcrumb-item"><a href="/users/all">Usuarios</a></li>   
+          <li class="breadcrumb-item active" aria-current="page">Editar Perfil</li>
+        </ol>
+      </nav>
+      <p class="fs-5 mt-5">En esta sección usted puede editar la información de la cuenta de un usuario.</p>
+      
+  <div class="d-flex flex-column flex-lg-row ">
+    <div class="card m-3 col-12 col-lg-6">
+      <div class="card-body">   
+        <form action="/users/update" method="post"  enctype="multipart/form-data">          
+
+          
+          <!--vista previa de la Foto -->
+          <img src="/images/<%= userRequired.foto %>" class="card-img-top" style="width: 200px; height:auto;  margin-top: 10px;"
+            alt="Foto del usuario <%= userRequired.nombre_1 %> <%= userRequired.apellido_1 %>" id="imagePreview">
+          <input type="hidden" name="foto" id="foto" value="<%= userRequired.foto %>">
+
+          <!--cambiar foto-->
+          <div class="mb-3 row">
+              <label for="image" class="col-sm-2 col-md-3 col-form-label">Cambiar imagen</label>
+              <div class="col-sm-10 col-md-9">
+                  <input type="file" class="form-control" id="image" name="image" accept="image/*">                  
+              </div>
+          </div>
+          <!--Primer nombre-->
+          <div class="mb-3 row">
+            <label for="nombre_1" class="col-sm-2 col-md-3 col-form-label">Primer Nombre</label>
+            <div class="col-sm-10  col-md-9">
+              <input type="text" class="form-control" id="nombre_1" name="nombre_1"
+                value="<%= userRequired.nombre_1 %>">
+            </div>
+          </div>
+          <!--Segundo nombre-->
+          <div class="mb-3 row">
+            <label for="nombre_2" class="col-sm-2 col-md-3 col-form-label">Segundo Nombre</label>
+            <div class="col-sm-10  col-md-9">
+              <input type="text" class="form-control" id="nombre_2" name="nombre_2"
+                value="<%= userRequired.nombre_2 %>">
+            </div>
+          </div>
+          <!--Primer apellido-->
+          <div class="mb-3 row">
+            <label for="apellido_1" class="col-sm-2 col-md-3 col-form-label">Primer apellido</label>
+            <div class="col-sm-10  col-md-9">
+              <input type="text" class="form-control" id="apellido_1" name="apellido_1"
+                value="<%= userRequired.apellido_1 %>">
+            </div>
+          </div>
+          <!--Segundo apellido-->
+          <div class="mb-3 row">
+            <label for="apellido_2" class="col-sm-2 col-md-3 col-form-label">Segundo apellido</label>
+            <div class="col-sm-10  col-md-9">
+              <input type="text" class="form-control" id="apellido_2" name="apellido_2"
+                value="<%= userRequired.apellido_2 %>">
+            </div>
+          </div>
+          <!--DNI-->
+          <div class="mb-3 row">
+            <label for="dni" class="col-sm-2 col-md-3 col-form-label">D.N.I.</label>
+            <div class="col-sm-10  col-md-9">
+              <input type="text" class="form-control" id="dni" name="dni"
+                value="<%= userRequired.dni %>">
+            </div>
+          </div>
+          <!--Email-->
+          <div class="mb-3 row">
+            <label for="email" class="col-sm-2 col-md-3 col-form-label">Correo electrónico</label>
+            <div class="col-sm-10  col-md-9">
+              <input type="email" class="form-control" id="email" name="email"  aria-describedby="emailHelp"
+                value="<%= userRequired.email %>"
+                pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" 
+                maxlength="45" 
+                title="Debe tener formato de correo electrónico válido y no sobrepasar los 45 caracteres [CAMPO OBLIGATORIO]" 
+                required>
+              
+            </div>
+          </div>     
+          <!--Teléfono-->
+          <div class="mb-3 row">
+            <label for="telefono" class="col-sm-2 col-md-3 col-form-label">Teléfono</label>
+            <div class="col-sm-10  col-md-9">
+              <input type="tel" class="form-control" id="telefono" name="telefono"  aria-describedby="telefonoHelp"
+                value="<%= userRequired.telefono %>"
+                pattern="^(?:(?:[1-9]\d{1}[1-9]\d{7})|(?:[1-9]\d{2}[1-9]\d{6}))$"
+                maxlength="10"
+                title="Debe tener formato de teléfono válido en Argentina y no sobrepasar los 10 dígitos"
+                required>          
+            </div>
+          </div>       
+          
+          <h3 class="display-3 fs-2 ">Domicilio</h3>     
+          
+          <input type="hidden" name="direcciones_id" value="<%= userRequired.direcciones_id %>">
+          <input type="hidden" id="provincia_id" value="<%= userRequired.provincia %>">
+          <input type="hidden" id="partido_id" value="<%= userRequired.partido %>">
+          <input type="hidden" id="localidad_id" value="<%= userRequired.localidad %>">
+
+
+          <% if (userRequired.calle === 'calle falsa' ) { %>
+            <div class="alert alert-warning mt-3" role="alert">
+              El usuario <strong> debe indicar su domicilio </strong> , completando, calle, numero, provincia, partido, y localidad. 
+              <!-- estos datos <strong> son obligatorios </strong>.             -->
+            </div>
+          <% } %>
+
+          <!-- calle -->
+          <div class="mb-3 row">
+            <label for="calle" class="col-sm-2 col-md-3 col-form-label">Calle</label>
+            <div class="col-sm-10  col-md-9">
+              <input type="text" class="form-control" id="calle" name="calle"  aria-describedby="calleHelp"
+                value="<%=  userRequired.calle  %>"            
+                maxlength="45"
+                title="Debe ser un nombre de calle y no sobrepasar los 45 caracteres"
+                required>          
+            </div>
+          </div>     
+          <!-- Número -->
+          <div class="mb-3 row">
+            <label for="numero" class="col-sm-2 col-md-3 col-form-label">Número</label>
+            <div class="col-sm-10  col-md-9">
+              <input type="text" class="form-control" id="numero" name="numero" aria-describedby="numeroHelp" 
+              value="<%= userRequired.numero  %>"            
+                inputmode="numeric" pattern="[0-9]{1,8}" title="Puede sólo números, hasta 8 dígitos numéricos" maxlength="8" required>     
+            </div>
+          </div>     
+
+
+          <!-- Provincia -->         
+          <div class="mb-3 row">
+            <label for="provincia" class="col-sm-2 col-md-3 col-form-label">provincia</label>
+            <div class="col-sm-10 col-md-9">
+                <select class="form-select" id="provincia" name="provincia">
+                  <option value="" disabled selected>Seleccione una provincia</option>
+                </select>
+            </div>
+          </div>
+          <!-- partido -->
+          <div class="mb-3 row">
+            <label for="partido" class="col-sm-6 col-md-5 col-form-label">Partido / Departamento / Comuna</label>
+            <div class="col-sm-6 col-md-7">
+                <select class="form-select" id="partido" name="partido" disabled>
+                  <option value="" disabled selected>Seleccione una ...</option>
+                </select>
+            </div>
+          </div>
+          <!-- localidad -->
+          <div class="mb-3 row">
+            <label for="localidad" class="col-sm-2 col-md-3 col-form-label">Localidad / Barrio</label>
+            <div class="col-sm-10 col-md-9">
+                <select class="form-select" id="localidad" name="localidad" disabled>
+                  <option value="" disabled selected>Seleccione una ...</option>
+                </select>
+            </div>
+          </div>  
+          <div class="mb-3 row">
+            
+            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+          </div>
+        </form> 
+      </div>    
+      
+    </div>
+    <!-- Fin de la Card personal-->
+  
+    <!-- Comienzo de la Card de roles, estados y ubicaciones-->
+    <div class="card m-3 col-12 col-lg-6">
+      <div class="card-body">
+        <h5 class="card-title">Roles del usuario y estado</h5>
+        <p>En esta sección se pueden asignar roles y estados para el usuario en distintas ubicaciones.</p>
+        <!-- Botón para agregar una nueva carga de ubicación -->
+        <button type="button" class="btn btn-success mb-3" id="agregarUbicacion">Agregar nuevo rol</button>
+        
+
+        <!-- COMIENZO de una  Card de roles, estados y ubicaciones-->
+        <% if (userLocationRoles === null || userLocationRoles.length === 0) { %>
+          
+          <div class="alert alert-warning" role="alert">
+            El usuario no tiene roles asignados en ninguna ubicación.
+          </div>
+        <% } else { %>
+          <% userLocationRoles.forEach(function(locationRole, i) { %>     
+
+            <div class="card mb-3"l>
+              <div class="card-body">
+                <div class="mb-3 row">
+                  <label for="ubicacion<%= i %>" class="col-sm-3 col-md-5 col-form-label">Ubicación</label>
+                  <div class="col-sm-9 col-md-7 my-2">
+                    <select class="form-select" id="ubicacion<%= i %>" name="ubicacion">
+                      <option value="" disabled selected>Seleccione una ...</option>
+                      <% locations.forEach(function(location, index) { %>
+                        <option value="<%= location.id %>" <%= locationRole.nombre === location.nombre ? 'selected' : '' %>>
+                          <%= location.nombre %>
+                        </option>
+                      <% }); %>
+                    </select>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label for="rol<%= i %>" class="col-sm-3 col-md-5 col-form-label">Rol</label>
+                  <div class="col-sm-9 col-md-7 my-2">
+                    <select class="form-select" id="rol<%= i %>" name="rol">
+                      <option value="" disabled selected>Seleccione una ...</option>
+                      <% roles.forEach(function(rol, index) { %>
+                        <option value="<%= rol.id %>" <%= locationRole.roles_id === rol.id ? 'selected' : '' %>>
+                          <%= rol.nombre %>
+                        </option>
+                      <% }); %>
+                    </select>
+                  </div>
+                </div>                
+                <!-- Botón para eliminar esta tarjeta de ubicación -->
+                <button type="button" class="btn btn-danger eliminarUbicacion">Eliminar ubicación</button>
+              </div>
+            </div>
+
+           
+            
+
+          <% }); %>
+        <% } %>
+        
+        
+        <!-- FIN de una  Card de roles, estados y ubicaciones-->
+        
+      </div>
+    </div>
+    <!-- FIN de la Card de roles, estados y ubicaciones-->
+
+  </div>
+
+    <% } else { %>
+      <h1>Error: Usuario no encontrado</h1>
+    <% } %>
+</div>
+
+    
+<%- include('partials/piedepagina') %>        
+
+
+<script src="/scripts/loadComboLocation.mjs" type="module"></script> 
+
+<script>
+  document.getElementById('image').addEventListener('change', function(event) {
+        var file = event.target.files[0];
+        var imgPreview = document.getElementById('imagePreview');
+
+        // Verifica si se seleccionó una imagen
+        if (file) {
+            var reader = new FileReader();
+
+            // Cuando se cargue el archivo, muestra la vista previa de la imagen
+            reader.onload = function(e) {
+                imgPreview.src = e.target.result;
+                imgPreview.style.display = 'block';
+            };
+
+            // Lee el archivo como una URL de datos
+            reader.readAsDataURL(file);
+        } else {
+            // Si no se seleccionó ninguna imagen, oculta la vista previa
+            imgPreview.src = '';
+            imgPreview.style.display = 'none';
+        }
+    });
+</script>
+<script>
+  // Función para ir a la página anterior
+  function goBack() {
+    window.history.back();
+  }
+</script>
+
+   </body>
+</html>

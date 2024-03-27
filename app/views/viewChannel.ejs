@@ -164,10 +164,12 @@ const currentChannel= <%- JSON.stringify(currentChannel || []) %>;
     // document.querySelector("#chart").innerHTML =  
     // `Canal Digital\nDatos: ${dataChannel[0].fecha} - ${dataChannel[0].estado} - ${dataChannel[0].cantidad} - ${dataChannel[0].tiempo} - ${dataChannel[0].tiempo_total}`;
     const myTimeStamps = dataChannel.map(data => data.fecha);
+    
     const ultimosEstados = dataChannel.map(data => data.estado);
     const cantidadEncendidos = dataChannel.map(data => data.cantidad);
     const tiempoEncendidos = dataChannel.map(data => data.tiempo);
     const porcentajeEncendido = dataChannel.map(data => ((data.tiempo / data.tiempo_total) * 100).toFixed(0));
+    console.log(porcentajeEncendido)
     
     // Datos del gráfico de estados
     var options = { 
@@ -191,7 +193,15 @@ const currentChannel= <%- JSON.stringify(currentChannel || []) %>;
         xaxis: {
           categories: myTimeStamps,
           type: 'datetime'
-        }
+        },
+        stroke: {
+              show: true,
+              curve: 'straight',
+              lineCap: 'butt',
+              colors: undefined,
+              width: 1,
+              dashArray: 0, 
+          }
       }  
     
     var chart = new ApexCharts(document.querySelector("#chart"), options);      
@@ -200,7 +210,7 @@ const currentChannel= <%- JSON.stringify(currentChannel || []) %>;
     //Datos del grafico de tiempos
     var options = { 
           title: {
-          text : currentChannel.nombre + ' - Tiempos de encendido'
+          text : currentChannel.nombre + ' - Tiempos de encendido - 24Hs cada 5 mins.'
           },
         chart: {
           type: 'line',
@@ -208,18 +218,26 @@ const currentChannel= <%- JSON.stringify(currentChannel || []) %>;
           width: 1200,
           background: '#f4f4f4',
           offsetX: 20, // Margen interior a la derecha
-          offsetY: 20
+          offsetY: 20          
         },          
         series: [
         {       
-          name: 'Tiempo encdendido',
-          data: tiempoEncendidos
+          name: 'Tiempo encendedido',
+          data: tiempoEncendidos          
         }        
         ],
         xaxis: {
           categories: myTimeStamps,
           type: 'datetime'
-        }
+        },
+        stroke: {
+              show: true,
+              curve: 'straight',
+              lineCap: 'butt',
+              colors: undefined,
+              width: 1,
+              dashArray: 0, 
+          }
       }  
     // Inicializar el gráfico
     var chart2 = new ApexCharts(document.querySelector("#chart2"), options);  

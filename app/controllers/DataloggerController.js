@@ -95,7 +95,7 @@ module.exports = {
             currentData = await DataModel.getDataByChannelDigitalOneDay(req.session.datalogger.nombre_tabla, currentChannel.nombre_columna);       
         }        
 
-        console.log(currentChannel);            
+        console.log(currentChannel, currentData[0]);            
 
         res.render('viewChannel', {user: req.session.user, 
                                    location: req.session.location, 

@@ -66,51 +66,44 @@
     </div>
     <!-- Fin de la Card personal-->
 
-    <!-- Principio de la Card de ubicaciones y roles-->
-    <div class="card m-3 col-12 col-lg-6">    
+    <!-- Comienzo de la Card de roles, estados y ubicaciones-->
+    <div class="card m-3 col-12 col-lg-6" >
       <div class="card-body">
-        <h5 class="card-title">
-          Ubicaciones y roles
-        </h5>
-        <!-- userLocationRoles userLocationRoles.nombre userLocationRoles.nombre_rol  userRequired.estado === 1 ? 'Alta' : 'Baja'-->        
-        <% if (userLocationRoles.length > 0) { %>
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Ubicación</th>
-                <th>Rol</th>                
-                <th>Acciones</th>  
-              </tr>
-            </thead>
-            <tbody>
-              <% userLocationRoles.forEach(function(item) { %>
-                <tr>
-                  <td><a href="/locations/view/<%= item.id %>" class="btn-sm mb-1"><%= item.nombre %></a></td>
-                  <td><%= item.nombre_rol %></td>      
-                  <td>
-                      <a href="/locations/view/<%= item.id %>" class="btn btn-primary btn-sm mb-1">Ver</a>
-                      <a href="#" id="editarRolesBtn"  class="btn btn-secondary btn-sm mb-1" 
-                        data-id_usuario = "<%= item.usuarios_id %>"
-                        data-id_ubicacion="<%= item.id %>" 
-                        data-id_rol="<%= item.roles_id %>" 
-                        data-nombre_ubicacion="<%= item.nombre %>" 
-                        data-nombre_rol="<%= item.nombre_rol %>"
-                        data-usuarios_x_ubicaciones_x_roles_id="<%= item.usuarios_x_ubicaciones_x_roles_id %>"
-                        >Editar</a>
-                  </td>            
-                </tr>
-              <% }); %>
-            </tbody>
-          </table>
+        <h5 class="card-title">Roles del usuario y estado</h5>
+        <p>En esta sección se pueden asignar roles y estados para el usuario en distintas ubicaciones.</p>
+        
+        <!-- COMIENZO de una  Card de roles, estados y ubicaciones-->
+        <% if (userLocationRoles === null || userLocationRoles.length === 0) { %>
+          
+          <div class="alert alert-warning" role="alert">
+            El usuario no tiene roles asignados en ninguna ubicación.
+          </div>
         <% } else { %>
-          <p>No hay elementos para mostrar.</p>
-        <% } %>        
-        <div class="container row justify-content-start">
-          <a href="#" id="agregarRolesBtn" class="btn btn-success col-12">Agregar roles</a>
-        </div>
+          <% userLocationRoles.forEach(function(locationRole, i) { %>     
+
+            <div class="card mb-3"l>
+              <div class="card-body">
+                <div class="mb-3 row">
+                  <label for="ubicacion<%= i %>" class="col-sm-3 col-md-5 col-form-label"><%= locationRole.nombre %></label>
+                </div>
+                <div class="mb-3 row">
+                  <label for="rol<%= i %>" class="col-sm-3 col-md-5 col-form-label">Rol: <%= locationRole.nombre_rol %></label>                  
+                </div>                                
+              </div>
+            </div>           
+            
+
+          <% }); %>
+        <% } %>
+        
+        
+        <!-- FIN de una  Card de roles, estados y ubicaciones-->
+        
       </div>
     </div>
-    <!-- Fin  de la Card de ubicaciones y roles-->
+    <!-- FIN de la Card de roles, estados y ubicaciones-->
+
+    
     </div>
 
 
@@ -119,130 +112,7 @@
   <% } %>
 </div>
 
-<!--Empieza modal de NUEVO rol-->
-    <div class="container">
-      <!-- Aquí colocamos el enlace y el modal -->
-      
 
-      <div class="modal fade" id="agregarRolesModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <form action="/locations/role/add" method="POST">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Agregar Nuevo Rol</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <!-- Aquí coloca el contenido del formulario para agregar un nuevo rol -->
-                <div class="card mb-3">
-                  <div class="card-body">
-                    <div class="mb-3 row">
-                      <label for="ubicacion" class="col-sm-3 col-md-5 col-form-label">Ubicación</label>
-                      <div class="col-sm-9 col-md-7 my-2">
-                        <input type="hidden" value="<%= userRequired.id %>" id="usuarios_id" name="usuarios_id">
-                        <select class="form-select" id="ubicaciones_id" name="ubicaciones_id">
-                          <option value="" disabled selected>Seleccione una ...</option>
-                          <% allLocations.forEach(function(location, index) { %>
-                            <option value="<%= location.id %>">
-                              <%= location.nombre %>
-                            </option>
-                          <% }); %>
-                        </select>
-                      </div>
-                    </div>
-                    <div class="mb-3 row">
-                      <label for="rol" class="col-sm-3 col-md-5 col-form-label">Rol</label>
-                      <div class="col-sm-9 col-md-7 my-2">
-                        <select class="form-select"  id="roles_id" name="roles_id">
-                          <option value="" disabled selected>Seleccione una ...</option>
-                          <% roles.forEach(function(rol, index) { %>
-                            <option value="<%= rol.id %>"  data-nombrerol="<%= rol.nombre %>">
-                              <%= rol.nombre %>
-                            </option>
-                          <% }); %>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="submit" class="btn btn-primary" id="guardarRolBtn">Guardar</button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-<!--Termina modal de nuevo rol-->
-
-<!--Empieza modal de EDITAR rol-->
-<div class="container">
-  <!-- Aquí colocamos el enlace y el modal -->  
-
-  <div class="modal fade" id="editarRolesModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <form action="/locations/role/update" method="POST">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Editar Rol</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <!-- Aquí coloca el contenido del formulario para editar un rol 
-            atributos personaliados del boton "editar": 
-                        data-id_usuario 
-                        data-id_ubicacion
-                        data-id_rol 
-                        data-nombre_ubicacion 
-                        data-nombre_rol
-                        usuarios_x_ubicaciones_x_roles_id -->
-            <input type="hidden" name="usuarios_x_ubicaciones_x_roles_id_edit" id="usuarios_x_ubicaciones_x_roles_id_edit" 
-              value = "<%= userLocationRoles.usuarios_x_ubicaciones_x_roles_id %>">
-            <div class="card mb-3">
-              <div class="card-body">
-                <div class="mb-3 row">
-                  <label for="ubicaciones_id_edit" class="col-sm-3 col-md-5 col-form-label">Ubicación</label>
-                  <div class="col-sm-9 col-md-7 my-2">
-                    <input type="hidden" value="<%= userRequired.id %>" id="usuarios_id_edit" name="usuarios_id_edit">
-                    <select class="form-select" id="ubicaciones_id_edit" name="ubicaciones_id_edit">
-                      <option value="" disabled selected>Seleccione una ...</option>
-                      <% allLocations.forEach(function(location, index) { %>
-                        <option value="<%= location.id %>">
-                          <%= location.nombre %>
-                        </option>
-                      <% }); %>
-                    </select>
-                  </div>
-                </div>
-                <div class="mb-3 row">
-                  <label for="roles_id_edit" class="col-sm-3 col-md-5 col-form-label">Rol</label>
-                  <div class="col-sm-9 col-md-7 my-2">
-                    <select class="form-select"  id="roles_id_edit" name="roles_id_edit">
-                      <option value="" disabled selected>Seleccione una ...</option>
-                      <% roles.forEach(function(rol, index) { %>
-                        <option value="<%= rol.id %>"  data-nombrerol="<%= rol.nombre %>">
-                          <%= rol.nombre %>
-                        </option>
-                      <% }); %>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-primary" id="guardarRolBtn">Guardar</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-<!--Termina modal de editar rol-->
 
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -256,40 +126,6 @@
   function goBack() {
     window.history.back();
   }
-</script>
-
-<!-- Script para abrir el modal -->
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    var myModal = new bootstrap.Modal(document.getElementById('agregarRolesModal'));
-    document.getElementById('agregarRolesBtn').addEventListener('click', function () {
-      myModal.show();
-    });
-    var myModal2 = new bootstrap.Modal(document.getElementById('editarRolesModal'));
-    document.querySelectorAll('#editarRolesBtn').forEach(button => {
-    button.addEventListener('click', function (e) {
-      // Extraemos los datos personalizados del botón "Editar"
-      const idUsuario = button.getAttribute('data-id_usuario');
-      const idUbicacion = button.getAttribute('data-id_ubicacion');
-      const idRol = button.getAttribute('data-id_rol');
-      const nombreUbicacion = button.getAttribute('data-nombre_ubicacion');
-      const nombreRol = button.getAttribute('data-nombre_rol');
-      const idUsuariosXubicacionesXroles = button.getAttribute('data-usuarios_x_ubicaciones_x_roles_id');
-          
-      console.log(idUsuario, idUbicacion, idRol, nombreUbicacion, nombreRol, idUsuariosXubicacionesXroles);      
-      myModal2.show();
-      
-      document.getElementById("usuarios_id").value = idUsuario;
-      document.getElementById("usuarios_x_ubicaciones_x_roles_id_edit").value = idUsuariosXubicacionesXroles;
-
-      const ubicacionesSelect = document.getElementById("ubicaciones_id_edit");
-      ubicacionesSelect.value = idUbicacion;
-      const rolesSelect = document.getElementById("roles_id_edit");
-      rolesSelect.value = idRol;
-    });
-  });
-
-  });
 </script>
     
 </body>

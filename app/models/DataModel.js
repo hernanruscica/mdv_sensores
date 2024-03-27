@@ -54,7 +54,7 @@ module.exports = {
             const [rows, fields] = await connection.execute(`select fecha, ${channel}_estado AS estado, ${channel}_cantidad AS cantidad, ${channel}_tiempo AS tiempo, tiempo_total, servicio, energia, texto  
                                                             from ${table} 
                                                             WHERE fecha >= DATE_SUB('2024-03-16', INTERVAL 1 DAY) AND fecha < DATE_ADD('2024-03-16', INTERVAL 1 DAY)
-                                                            ORDER BY fecha ASC LIMIT 100`);  
+                                                            ORDER BY fecha ASC LIMIT 288`);  
             return rows;
         } catch (error){
             //console.error(error);

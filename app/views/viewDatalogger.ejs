@@ -29,79 +29,56 @@
   </div>
 
   <div class="d-flex flex-column flex-lg-row ">
+    <!-- Inicio de la Card info general-->
     <div class="card m-3 col-12 col-lg-6">
-        <div class="card-body">
-            <!-- Nombre y Apellido -->
-            <h5 class="card-title">
-               <%= datalogger.nombre %>
-            </h5>
-
-            <!-- Descripcion -->
-            <p class="card-text"><%= datalogger.descripcion %></p>
-
-            <!-- Foto -->
-            <img src="/images/<%= datalogger.foto %>" class="card-img-top" style="width: 200px; height:auto;" alt="Foto del datalogger ">
-
-            
-            <!-- Teléfono -->
-            <p class="card-text">Fecha de creacion: <%= datalogger.fecha_creacion %></p>
-
-        </div>
-        
+      <div class="card-body">
+        <!-- Nombre  -->
+        <h5 class="card-title">
+          <%= datalogger.nombre %>
+        </h5>
+        <!-- Descripcion -->
+        <p class="card-text">
+          <%= datalogger.descripcion %>
+        </p>
+        <!-- Foto -->
+        <img src="/images/<%= datalogger.foto %>" class="card-img-top" style="width: 200px; height:auto;"
+          alt="Foto del datalogger ">
+        <!-- Fecha de creacion -->
+        <p class="card-text">Fecha de creacion: <%= datalogger.fecha_creacion %>
+        </p>
+      </div>
     </div>
-    <!-- Fin de la Card personal-->
+    <!-- Fin de la Card info general-->
 
-    <!-- Principio de la Card de Entradas-->
-    <div class="card m-3 col-12 col-lg-6">    
+    <!-- Principio de la Card de canales-->
+    <div class="card m-3 col-12 col-lg-6">
       <div class="card-body">
         <h5 class="card-title">
           Canales Digitales y/o analogicos
-        </h5>
-        <!-- userLocationRoles -->        
+        </h5>    
         <p class="card-text">
           Listado de los canales Digitales y/o Analogicas usados en este datalogger.
-        </p>        
-                      
-              <!-- <ul><li>
-                <a href="/dataloggers/view/1/channels/1">
-                  Canal digital 1
-                </a>
-                <p>
-                  Descripcion del canal 1
-                </p>
-              </li>   
+        </p>
+        <% if (channels.length> 0) { %>
+          <ul>
+            <% channels.forEach(channel=> { %>
               <li>
-                <a href="/dataloggers/view/1/channels/2">
-                  Canal Analogico 2
+                <a href="/dataloggers/view/<%= datalogger.id %>/channels/<%= channel.canal_id %>">
+                  <%= channel.canal_nombre %>
                 </a>
                 <p>
-                  Descripcion del canal analogico 2
+                  <%= channel.canal_descripcion %>
                 </p>
-              </li>  </ul>           -->
-              
-              <% if (channels.length > 0) { %>
-                <ul>
-                  <% channels.forEach(channel => { %>
-                    <li>
-                      <a href="/dataloggers/view/<%= datalogger.id %>/channels/<%= channel.canal_id %>">
-                        <%= channel.canal_nombre %>
-                      </a>
-                      <p>
-                        <%= channel.canal_descripcion %>
-                      </p>
-                    </li>
-                  <% }); %>
-                </ul>
-              <% } else { %>
-                <p>No tiene canales asociados.</p>
-              <% } %>
-        
+              </li>
+              <% }); %>
+          </ul>
+          <% } else { %>
+            <p>No tiene canales asociados.</p>
+            <% } %>
       </div>
     </div>
-  <!-- Fin  de la Card de dataloggers-->
-    </div>    
-
-
+    <!-- Fin  de la Card de canales-->
+  </div>   
   <% } else { %>
     <h1>Error: Usuario no encontrado</h1>
   <% } %>
