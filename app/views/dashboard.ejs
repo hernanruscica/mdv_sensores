@@ -95,6 +95,11 @@
                   text: '<%= message %>',
                   icon: 'success',
                   confirmButtonText: 'Entendido'})
+                  .then((result) => {
+                  if (result.isConfirmed){
+                    location.href='/users/view/<%= userDni %>';
+                  }
+                })
       </script>
     <% }  %>
 

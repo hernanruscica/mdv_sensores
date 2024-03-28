@@ -63,12 +63,12 @@ module.exports = {
             // Realizar acciones de éxito aquí si es necesario          
             if (results.affectedRows > 0){
                 delete userData.password;
-                console.log("Inserción exitosa:", userData);
-                //mail.sendWelcome(data, token);                
-                res.render('dashboard', {results: 'registrocorrecto', 
+                console.log("Inserción exitosa:", userData);                
+                mail.sendActivation(userData, userToken);           
+                res.render('messages', {results: 'addUserOk', 
                                         message: `Se registró correctamente, se envió un correo de activacion a la direccion: ${userData.email}`,
                                         user: req.session.user});
-                mail.sendActivation(userData, userToken);
+                
             }
         })
         .catch((error) => {
@@ -76,13 +76,13 @@ module.exports = {
             console.error(`Error en la inserción: ${error}`);
             if (error.code == 'ER_DUP_ENTRY'){                    
                 console.log('No se inserto correctamente, atributos unicos, ya insertados en la tabla.', userData);                  
-                res.render('dashboard', {results: 'registrofallido', 
+                res.render('message', {results: 'addUserFails', 
                                         message: `No se registró correctamente, dni: ${userData.dni} o correo: ${userData.email} ya existen en la Base de datos`,
                                         user: req.session.user});               
 
             }else {
                 console.log('Error al insertar el registro en la tabla de la Base de datos', userData);                       
-                res.render('dashboard', {results: 'registrofallido', 
+                res.render('message', {results: 'addUserFails', 
                                         message: `Ocurrió un error al registrar el usuario ${userData.nombre_1} ${userData.apellido_1} en la base de datos.`,
                                         user: req.session.user});                             
             }                    
@@ -196,16 +196,14 @@ module.exports = {
       res.render('registerUserForm', {user: req.session.user, locations: locations, roles: roles});      
     },
     editForm: async (req, res) => {
-        //prueba con 40159357
+        
         const userDni = parseInt(req.params.dni) || 0;
-        //console.clear();
+        
         if (req.session.user == undefined){
             console.log("Usuario que hace la consulta no esta logueado en la aplicacion.");
             return res.redirect('/loginform');
-        }
-
+        }        
         
-        //console.clear();
         console.log(`editForm controller buscando usuario con dni: ${userDni}`);
 
         const  results = await UserModel.getByDni(userDni);
@@ -224,7 +222,12 @@ module.exports = {
             console.log(locationRoles);
             locationRoles = locationRoles.length > 0 ? locationRoles :  null ;                                      
             //console.log("datos de la ubicacion y roles del usuario:", locationRoles);                  
-            return res.render('editUserForm', { user: req.session.user, userRequired: userDataBD, userLocationRoles: locationRoles, locations: locations, roles: roles, allLocations: allLocations});
+            return res.render('editUserForm', { user: req.session.user, 
+                                                userRequired: userDataBD, 
+                                                userLocationRoles: locationRoles, 
+                                                locations: locations, 
+                                                roles: roles, 
+                                                allLocations: allLocations});
         }else{
             console.log(`Usuario con dni: ${userDni} No encontrado para editar`);
             return res.redirect('/');
@@ -389,12 +392,21 @@ module.exports = {
         };
         console.log(`editando al usuario con dni ${data.dni}`, data);
 
-        const updateOk = await UserModel.updateUser(data);
-        //console.log(results);
+        const updateOk = await UserModel.updateUser(data);       
+        //console.log(updateOk);
 
-
-        //res.redirect('/users/all');
-        res.render('dashboard', {user: req.session.user,  results : 'edicioncorrecta', message: `El usuario ${data.nombre_1} ${data.apellido_1} fue editado correctamente!`})
-        
+        //editUserFails   
+        if (updateOk === true){
+            return res.render('messages', {user: req.session.user,  
+                results : 'editUserOk', 
+                message: `El usuario ${data.nombre_1} ${data.apellido_1} fue editado correctamente!`,
+                userDni: data.dni})      
+        }else{
+            return res.render('messages', {user: req.session.user,  
+                results : 'editUserFails', 
+                message: `Error al actualizar los datos del usuario ${data.nombre_1} ${data.apellido_1}`,
+                userDni: data.dni})   
+        }    
+          
     }
 }

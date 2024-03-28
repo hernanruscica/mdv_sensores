@@ -161,11 +161,12 @@ module.exports = {
             
             await connection.commit(); // Confirma la transacción
             console.log("Transacción completada con éxito.");
-            return "Transacción completada con éxito.";
+            return true;
         } catch (error) {
             await connection.rollback(); // Revierte la transacción en caso de error
             console.error("Error en la transacción:", error);
-            throw error;
+            //throw error;
+            return false;
         } finally {
             connection.release(); // Liberar la conexión de vuelta al pool
             console.log("cerrada la conexion con el pool de datos");

@@ -6,6 +6,11 @@
   <!-- Breadcrumb -->
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="#" onclick="goBack()" >
+          <i class="fas fa-arrow-left"></i> Volver
+        </a>
+      </li> 
       <li class="breadcrumb-item"><a href="/">Inicio</a></li>
       <li class="breadcrumb-item"><a href="/users/dashboard">Panel de control</a></li>
       <li class="breadcrumb-item"><a href="/dataloggers/all">Dataloggers</a></li>
@@ -70,46 +75,20 @@
         <button type="submit" class="btn btn-primary w-100">Registrar datalogger</button>      
     </div> 
   </form>
-    </div>       
-
-     
+    </div>            
   </div>
-
-  <!-- Botón Enviar 
-  <div class="row">
-   
-  </div>
- -->
 </div>
     
 <%- include('partials/piedepagina') %>
 
+<script src="/scripts/loadImagePreview.js"></script>
+
 <script>
-  document.getElementById('image').addEventListener('change', function(event) {
-        var file = event.target.files[0];
-        var imgPreview = document.getElementById('imagePreview');
-
-        // Verifica si se seleccionó una imagen
-        if (file) {
-            var reader = new FileReader();
-
-            // Cuando se cargue el archivo, muestra la vista previa de la imagen
-            reader.onload = function(e) {
-                imgPreview.src = e.target.result;
-                imgPreview.style.display = 'block';                                         
-            };
-            
-            // Lee el archivo como una URL de datos
-            reader.readAsDataURL(file);
-        } else {
-            // Si no se seleccionó ninguna imagen, oculta la vista previa
-            imgPreview.src = '';
-            imgPreview.style.display = 'none';
-        }
-        
-    });
+  // Función para ir a la página anterior
+  function goBack() {
+    window.history.back();
+  }
 </script>
-
 
 </body>
 </html>

@@ -1,0 +1,54 @@
+<!--Empieza modal de NUEVO rol-->
+<div class="container">
+    <div class="modal fade" id="agregarRolesModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form action="/locations/role/add" method="POST">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Agregar Nuevo Rol</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">            
+              <div class="card mb-3">
+                <div class="card-body">
+                  <div class="mb-3 row">
+                    <label for="ubicacion" class="col-sm-3 col-md-5 col-form-label">Ubicación</label>
+                    <div class="col-sm-9 col-md-7 my-2">
+                      <input type="hidden" value="<%= userRequired.id %>" id="usuarios_id" name="usuarios_id">
+                      <input type="hidden" value="<%= userRequired.dni %>" id="usuarios_dni_nuevo" name="usuarios_dni_nuevo">
+                      <select class="form-select" id="ubicaciones_id" name="ubicaciones_id">
+                        <option value="" disabled selected>Seleccione una ...</option>
+                        <% allLocations.forEach(function(location, index) { %>
+                          <option value="<%= location.id %>">
+                            <%= location.nombre %>
+                          </option>
+                        <% }); %>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="mb-3 row">
+                    <label for="rol" class="col-sm-3 col-md-5 col-form-label">Rol</label>
+                    <div class="col-sm-9 col-md-7 my-2">
+                      <select class="form-select"  id="roles_id" name="roles_id">
+                        <option value="" disabled selected>Seleccione una ...</option>
+                        <% roles.forEach(function(rol, index) { %>
+                          <option value="<%= rol.id %>"  data-nombrerol="<%= rol.nombre %>">
+                            <%= rol.nombre %>
+                          </option>
+                        <% }); %>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-primary" id="guardarRolBtn">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--Termina modal de nuevo rol-->
