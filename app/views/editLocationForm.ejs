@@ -22,6 +22,8 @@
       <p class="fs-5 mt-5">En esta sección usted puede editar la información de una ubicacion.</p>
       
   <div class="d-flex flex-column flex-lg-row ">
+
+    <!-- Inicio de la Card de ubicacion--> 
     <div class="card m-3 col-12 col-lg-6">
       <div class="card-body">   
         <form action="/locations/update" method="post"  enctype="multipart/form-data">          
@@ -73,7 +75,7 @@
                 required>
               <div id="emailHelp" class="form-text">[CAMPO OBLIGATORIO]</div>
             </div>
-          </div>     
+          </div>              
           <!--Teléfono-->
           <div class="mb-3 row">
             <label for="telefono" class="col-sm-2 col-md-3 col-form-label">Teléfono</label>
@@ -86,17 +88,12 @@
                 required>   
               <div id="telefonoHelp" class="form-text">[CAMPO OBLIGATORIO]</div>       
             </div>
-          </div>       
-          
-          <h3 class="display-3 fs-2 ">Domicilio</h3>     
-          
-          
+          </div>                 
+          <h3 class="display-3 fs-2 ">Domicilio</h3>    
           <input type="hidden" name="direcciones_id" id="direcciones_id" value="<%= location.direcciones_id %>">
           <input type="hidden" id="provincia_id" name="provincia_id" value="<%= location.provincia %>">
           <input type="hidden" id="partido_id" name="partido_id" value="<%= location.partido %>">
           <input type="hidden" id="localidad_id" name="localidad_id" value="<%= location.localidad %>">
-
-
           <!-- calle -->
           <div class="mb-3 row">
             <label for="calle" class="col-sm-2 col-md-3 col-form-label">Calle</label>
@@ -144,15 +141,14 @@
                 </select>
             </div>
           </div>  
-          <div class="mb-3 row">
-            
+          <div class="mb-3 row">            
             <button type="submit" class="btn btn-primary">Guardar cambios</button>
           </div>
         </form> 
-      </div>    
-      
+      </div>          
     </div>
-    <!-- Fin de la Card personal--> 
+    <!-- Fin de la Card de ubicacion--> 
+
    
 
   </div>
@@ -167,31 +163,8 @@
 
 
 <script src="/scripts/loadComboLocation.mjs" type="module"></script> 
+<script src="/scripts/loadImagePreview.js"></script>
 
-<script>
-  document.getElementById('image').addEventListener('change', function(event) {
-        var file = event.target.files[0];
-        var imgPreview = document.getElementById('imagePreview');
-
-        // Verifica si se seleccionó una imagen
-        if (file) {
-            var reader = new FileReader();
-
-            // Cuando se cargue el archivo, muestra la vista previa de la imagen
-            reader.onload = function(e) {
-                imgPreview.src = e.target.result;
-                imgPreview.style.display = 'block';
-            };
-
-            // Lee el archivo como una URL de datos
-            reader.readAsDataURL(file);
-        } else {
-            // Si no se seleccionó ninguna imagen, oculta la vista previa
-            imgPreview.src = '';
-            imgPreview.style.display = 'none';
-        }
-    });
-</script>
 <script>
   // Función para ir a la página anterior
   function goBack() {

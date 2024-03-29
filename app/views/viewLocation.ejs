@@ -27,18 +27,17 @@
   </div>
 
   <div class="d-flex flex-column flex-lg-row ">
+
+    <!-- Inicio de la Card de ubicacion-->
     <div class="card m-3 col-12 col-lg-6">
         <div class="card-body">
-
           <!-- Foto -->
           <img src="/images/<%= location[0].foto %>" class="card-img-top"  style="width: 200px; height:auto;"
             alt="Foto de la ubicacion <%= location[0].nombre %> ">
-
           <!-- Nombre de la ubicacion -->
           <h3 class="card-title my-3">
                <%= location[0].nombre %>  
           </h3>
-
           <!-- Direccion -->
           <h4 class="card-title my-3">
             Direccion  
@@ -53,21 +52,18 @@
           <p class="card-text" id="partido_nombre"><strong>Partido:</strong> <%= location[0].partido %></p>   
           <p class="card-text" id="provincia_nombre"><strong>Provincia:</strong> <%= location[0].provincia %></p>   
 
-          <!-- Teléfono -->
-          <p class="card-text"><%= location[0].descripcion %></p>
-          
+          <!-- Descripcion -->
+          <p class="card-text"><%= location[0].descripcion %></p>          
           <!-- Teléfono -->
           <p class="card-text"><strong>Teléfono:</strong> <%= location[0].telefono %></p>
-
           <!-- Email -->
           <p class="card-text"><strong>Correo electronico: </strong> <%= location[0].email %></p>
 
-        </div>
-        
+        </div>        
     </div>
-    <!-- Fin de la Card personal-->
+    <!-- Fin de la Card de ubicacion-->
 
-    <!-- Principio de la Card de datalogger-->
+    <!-- Principio de la Card de dataloggers asociados-->
     <div class="card m-3 col-12 col-lg-6">    
       <div class="card-body">
         <h5 class="card-title">
@@ -116,13 +112,9 @@
         </div>
       </div>
     </div>
-  <!-- Fin  de la Card de dataloggers-->
-    </div>
+    <!-- Fin de la Card de dataloggers asociados-->
 
-    <!-- <div>
-      <canvas id="myChart"></canvas>
-    </div> -->
-
+  </div>    
 
   <% } else { %>
     <h1>Error: Usuario no encontrado</h1>

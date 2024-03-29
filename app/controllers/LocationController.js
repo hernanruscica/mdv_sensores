@@ -111,8 +111,6 @@ module.exports = {
                 nombre: results[0].nombre
             }
 
-
-            /** */
             const results02 = await LocationModel.getDataloggersByLocationId(id);
             //console.log('results02', results02);
             const dataloggersInfo = results02.map(result => {
@@ -123,7 +121,7 @@ module.exports = {
             });
             //console.log(dataloggersdataloggersInfo, dataloggersIds.length);     
             
-            const GetDataloggersInfo = async (dataloggersInfo) => {
+            const GetDataloggersInfo = async (  ) => {
                 if (dataloggersInfo.length === 0) return null;
                 console.log(dataloggersInfo)
                 const dataloggersPromises = dataloggersInfo.map(async (dataloggerInfo) => {
@@ -137,12 +135,12 @@ module.exports = {
             };
             
             const dataloggers = await GetDataloggersInfo(dataloggersInfo);
-            console.log(dataloggers);
-            
-            /** */
-            
-            
-            res.render('viewLocation', { user: req.session.user, location: results, dataloggersInfo: dataloggers, allDataloggers: allDataloggers});
+            //console.log(dataloggers);
+                      
+            res.render('viewLocation', { user: req.session.user, 
+                                            location: results, 
+                                            dataloggersInfo: dataloggers, 
+                                            allDataloggers: allDataloggers});
         } catch (error) {
             console.error(error);
             res.status(500).send('Error interno del servidor');
@@ -168,7 +166,8 @@ module.exports = {
         const id = req.params.id;
         const results = await LocationModel.getById(id);
         const location = results[0];
-        res.render('editLocationForm', {user: req.session.user, location: location});
+        res.render('editLocationForm', {user: req.session.user, 
+                                        location: location});
     },
     update: async (req, res) => {
 
