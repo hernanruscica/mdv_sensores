@@ -83,12 +83,208 @@
     }     
 %>
 
+<!-- addLocationOK -->
+<%  if (typeof results !== 'undefined' && results === 'addLocationOK'){ %>
+  <script>
+      Swal.fire({
+              title: 'Registro exitoso !',
+              text: '<%= message %>',
+              icon: 'success',
+              confirmButtonText: 'Entendido'})
+              .then((result) => {
+              if (result.isConfirmed){
+                location.href='/locations/view/<%= locationId %>';
+              }
+            })
+  </script>
+  <% 
+  }  
+%>
+
+<!-- addLocationFails -->
+<%  if (typeof results !== 'undefined' && results === 'addLocationFails'){ %>
+  <script>
+      Swal.fire({
+              title: 'Registro Fallido !',
+              text: '<%= message %>',
+              icon: 'error',
+              confirmButtonText: 'Entendido'})
+              .then((result) => {
+              if (result.isConfirmed){
+                location.href='/locations/all';
+              }
+            })
+  </script>
+  <% 
+  }  
+%>
+
+<%  if (typeof results !== 'undefined' && results === 'editLocationOk'){ %>
+  <script>
+      Swal.fire({
+              title: 'Edicion exitosa !',
+              text: '<%= message %>',
+              icon: 'success',
+              confirmButtonText: 'Entendido'})
+              .then((result) => {
+              if (result.isConfirmed){
+                location.href='/locations/view/<%= locationId %>';
+              }
+            })
+  </script>
+  <% 
+  }  
+%>
+
+<%  if (typeof results !== 'undefined' && results === 'editLocationFails'){ %>
+  <script>
+      Swal.fire({
+              title: 'Edicion erronea !',
+              text: '<%= message %>',
+              icon: 'error',
+              confirmButtonText: 'Entendido'})
+              .then((result) => {
+              if (result.isConfirmed){
+                location.href='/locations/view/<%= locationId %>';
+              }
+            })
+  </script>
+  <% 
+  }     
+%>
+
+<!-- addLocationUserRoleOk -->
+<%  if (typeof results !== 'undefined' && results === 'addLocationUserRoleOk'){ %>
+  <script>
+      Swal.fire({
+              title: 'Edicion exitosa !',
+              text: '<%= message %>',
+              icon: 'success',
+              confirmButtonText: 'Entendido'})
+              .then((result) => {
+              if (result.isConfirmed){
+                location.href='/users/view/<%= userDni %>';
+              }
+            })
+  </script>
+  <% 
+  }     
+%>
+
+<!-- addLocationUserRoleFails -->
+<%  if (typeof results !== 'undefined' && results === 'addLocationUserRoleFails'){ %>
+  <script>
+      Swal.fire({
+              title: 'Edicion erronea !',
+              text: '<%= message %>',
+              icon: 'success',
+              confirmButtonText: 'Entendido'})
+              .then((result) => {
+              if (result.isConfirmed){
+                location.href='/users/view/<%= userDni %>';
+              }
+            })
+  </script>
+  <% 
+  }     
+%>
+
+<!-- addDataloggerOk -->
+<%  if (typeof results !== 'undefined' && results === 'addDataloggerOk'){ %>
+  <script>
+      Swal.fire({
+              title: 'Registro exitoso !',
+              text: '<%= message %>',
+              icon: 'success',
+              confirmButtonText: 'Entendido'})
+              .then((result) => {
+              if (result.isConfirmed){
+                location.href='/dataloggers/view/<%= dataloggerId %>';
+              }
+            })
+  </script>
+  <% 
+  }     
+%>
+
+<!-- addDataloggerFails -->
+<%  if (typeof results !== 'undefined' && results === 'addDataloggerFails'){ %>
+  <script>
+      Swal.fire({
+              title: 'Registro erroneo !',
+              text: '<%= message %>',
+              icon: 'success',
+              confirmButtonText: 'Entendido'})
+              .then((result) => {
+              if (result.isConfirmed){
+                location.href='/dataloggers/all';
+              }
+            })
+  </script>
+  <% 
+  }     
+%>
+
+<!-- editDataloggerOk -->
+<%  if (typeof results !== 'undefined' && results === 'editDataloggerOk'){ %>
+  <script>
+      Swal.fire({
+              title: 'Edicion exitosa !',
+              text: '<%= message %>',
+              icon: 'success',
+              confirmButtonText: 'Entendido'})
+              .then((result) => {
+              if (result.isConfirmed){
+                location.href='/dataloggers/view/<%= dataloggerId %>';
+              }
+            })
+  </script>
+  <% 
+  }     
+%>
+
+<!-- editDataloggerFails -->
+<%  if (typeof results !== 'undefined' && results === 'editDataloggerFails'){ %>
+  <script>
+      Swal.fire({
+              title: 'Edicion erronea !',
+              text: '<%= message %>',
+              icon: 'success',
+              confirmButtonText: 'Entendido'})
+              .then((result) => {
+              if (result.isConfirmed){
+                location.href='/dataloggers/view/<%= dataloggerId %>';
+              }
+            })
+  </script>
+  <% 
+  }     
+%>
+
+
+<%  if (typeof results !== 'undefined' && results === 'locationNoFound'){ %>
+  <script>
+      Swal.fire({
+              title: 'Ubicación no encontrada !',
+              text: '<%= message %>',
+              icon: 'error',
+              confirmButtonText: 'Entendido'})
+              .then((result) => {
+              if (result.isConfirmed){
+                location.href='/locations/all';
+              }
+            })
+  </script>
+  <% 
+  }  
+%>
+
 <%  if (typeof results !== 'undefined' && results === 'correoenviado'){ %>
   <script>
       Swal.fire({
               title: 'Correo enviado !',
               text: '<%= message %>',
-              icon: 'succes',
+              icon: 'success',
               confirmButtonText: 'Entendido'})
               .then((result) => {
                 if (result.isConfirmed){

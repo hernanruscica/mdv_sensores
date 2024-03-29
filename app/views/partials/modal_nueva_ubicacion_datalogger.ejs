@@ -1,0 +1,44 @@
+<!--Empieza modal de NUEVO asociacion ubicacion / datalogger-->
+<div class="container">
+    <div class="modal fade" id="agregarDataloggerModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form action="/dataloggers/location/add" method="POST">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Asociar nuevo datalogger</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <!-- Aquí coloca el contenido del formulario para agregar un nuevo datalogger -->
+              <div class="card mb-3">
+                <div class="card-body">
+                  <div class="mb-3 row">
+                    <p>Seleccione un datalogger disponible para asociar con la ubicacion <strong><%= location.nombre %></strong></p>
+                    <label for="ubicacion" class="col-sm-3 col-md-5 col-form-label">Datalogger</label>
+                    <div class="col-sm-9 col-md-7 my-2">
+                      <input type="hidden" value="<%= user.id %>" id="usuario_id" name="usuario_id">
+                      <input type="hidden" value="<%= location.id %>" id="ubicacion_id" name="ubicacion_id">
+  
+                      <select class="form-select" id="datalogger_id" name="datalogger_id" required>
+                        <option value="" disabled selected>Seleccione una ...</option>
+                        <% allDataloggers.forEach(function(datalogger, index) { %>
+                          <option value="<%= datalogger.id %>">
+                            <%= datalogger.nombre %>
+                          </option>
+                        <% }); %>
+                      </select>
+                    </div>
+                  </div>                
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="submit" class="btn btn-primary" id="guardarRolBtn">Guardar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--Termina modal de nuevo rol-->

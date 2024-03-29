@@ -16,6 +16,7 @@
           <li class="breadcrumb-item"><a href="/">Inicio</a></li>        
           <li class="breadcrumb-item"><a href="/users/dashboard">Panel de control</a></li> 
           <li class="breadcrumb-item"><a href="/locations/all">Ubicaciones</a></li>   
+          <li class="breadcrumb-item"><a href="/locations/view/<%= location.id %>"><%= location.nombre %></a></li>   
           <li class="breadcrumb-item active" aria-current="page">Editar Ubicacion</li>
         </ol>
       </nav>
@@ -149,7 +150,56 @@
     </div>
     <!-- Fin de la Card de ubicacion--> 
 
-   
+    <!-- Principio de la Card de dataloggers asociados-->
+    <div class="card m-3 col-12 col-lg-6">    
+      <div class="card-body">
+        <h5 class="card-title">
+          Dataloggers asociados
+        </h5>
+           
+        <% if (Array.isArray(dataloggersInfo) && dataloggersInfo.length > 0) { %>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Nombre</th>                          
+                <th>Acciones</th>  
+              </tr>
+            </thead>
+            <tbody>
+              <% dataloggersInfo.forEach(function(item) { %>
+                <tr>
+                  <td><a href="/dataloggers/view/<%= item.id %>" class="btn-sm mb-1"><%= item.nombre %></a></td>                      
+                  <td>
+                      <a href="/dataloggers/view/<%= item.id %>" class="btn btn-primary btn-sm mb-1">Ver</a>
+                      
+                      <button type="button" class="btn btn-danger btn-sm mb-1" 
+                      id="desasociar_datalogger" 
+                      data-id_datalogger_ubicacion = "<%= item.idDataloggerUbicacion %>"
+                      data-id_datalogger="<%= item.id %>" 
+                      data-nombre_datalogger="<%= item.nombre %>"
+                      data-id_ubicacion="<%= location.id %>"     
+                      data-nombre_ubicacion="<%= location.nombre %>"                      
+                      >Desasociar</button>
+                  </td>            
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        <% } else { %>
+          <p>No hay elementos para mostrar.</p>
+          <input type="hidden" class="btn btn-danger btn-sm mb-1" 
+                      id="desasociar_datalogger" 
+                      
+                      data-id_ubicacion="<%= location.id %>"     
+                      data-nombre_ubicacion="<%= location.nombre %>"                      
+                      />
+        <% } %>        
+        <div class="container row justify-content-start">
+          <a href="#" id="agregarDataloggerBtn" class="btn btn-success col-12">Asociar datalogger</a>
+        </div>
+      </div>
+    </div>
+    <!-- Fin de la Card de dataloggers asociados-->
 
   </div>
 
@@ -161,9 +211,13 @@
     
 <%- include('partials/piedepagina') %>        
 
+<%- include('partials/modal_nueva_ubicacion_datalogger') %>   
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/scripts/usersFunctionsBtns.js"></script>
 <script src="/scripts/loadComboLocation.mjs" type="module"></script> 
 <script src="/scripts/loadImagePreview.js"></script>
+<script src="/scripts/addDataloggerLocation.js"></script>
 
 <script>
   // Función para ir a la página anterior

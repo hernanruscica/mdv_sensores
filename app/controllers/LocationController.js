@@ -3,6 +3,7 @@ const LocationModel = require('../models/LocationModel');
 const DataloggerModel = require('../models/DatalogerModel');
 const UserModel = require('../models/UserModel');
 const AddressModel = require('../models/AddressModel');
+const dataBuild = require('../utils/dataBuild');
 
 module.exports = {
     add: async (req, res) => {
@@ -20,7 +21,7 @@ module.exports = {
             longitud: 0
           }
         
-          console.log(dataDireccion)
+          //console.log(dataDireccion)
         try {
             const results = await AddressModel.add(dataDireccion);
             if (results.affectedRows > 0){
@@ -55,9 +56,12 @@ module.exports = {
 
                 //deberia poder hacer un rollback aunque en el metodo de agregar una ubicacion, el usuario y la ubicacion son nuevas y el rol es propietario
                 if (resultsLocationAdd.affectedRows > 0 && locationUserRoleAdded.affectedRows > 0){
-                    res.render('dashboard', {results: 'registrocorrecto', message: `La ubicacion ${dataUbicacion.nombre} se registro correctamente`, user: req.session.user});
+                    res.render('messages', {results: 'addLocationOK', 
+                                            message: `La ubicacion ${dataUbicacion.nombre} se registro correctamente`,
+                                            locationId: resultsLocationAdd.insertId});
                 }else{
-                    res.render('dashboard', {results: 'registrofallido', message: `La ubicacion ${dataUbicacion.nombre} No se registro correctamente`, user: req.session.user})
+                    res.render('messages', {results: 'addLocationFails', 
+                                            message: `La ubicacion ${dataUbicacion.nombre} No se registro correctamente`})
                 }
 
               }else
@@ -99,46 +103,35 @@ module.exports = {
     },
     viewLocation: async (req, res) => {
         console.log("viewLocation Controller");
+        const locationId = parseInt(req.params.id);
+        let location = null;
+        const allDataloggers = await DataloggerModel.getAll();  
+
+        //Busco la informacion de la ubicacion a mostrar
         try {
-            const id = parseInt(req.params.id);
-            const results = await LocationModel.getById(id);
-            const allDataloggers = await DataloggerModel.getAll();
-
-            //saco el id y el nombre y lo pongo en session cookie para armar el breadcrumb
-            //console.log(results[0]);            
-            req.session.location = {
-                id: results[0].id,
-                nombre: results[0].nombre
-            }
-
-            const results02 = await LocationModel.getDataloggersByLocationId(id);
-            //console.log('results02', results02);
-            const dataloggersInfo = results02.map(result => {
-                return {
-                    datalogger_id: result.datalogger_id,
-                    id: result.id // Agregamos el id proveniente de LocationModel
-                };
-            });
-            //console.log(dataloggersdataloggersInfo, dataloggersIds.length);     
-            
-            const GetDataloggersInfo = async (  ) => {
-                if (dataloggersInfo.length === 0) return null;
-                console.log(dataloggersInfo)
-                const dataloggersPromises = dataloggersInfo.map(async (dataloggerInfo) => {
-                    const results03 = await DataloggerModel.getById(dataloggerInfo.datalogger_id);                    
-                    const info = { ...results03[0], idDataloggerUbicacion: dataloggerInfo.id }; // Añadir la propiedad "id"
-                    return info;
-                });
-            
-                const dataloggers = await Promise.all(dataloggersPromises);
-                return dataloggers;
-            };
-            
-            const dataloggers = await GetDataloggersInfo(dataloggersInfo);
-            //console.log(dataloggers);
-                      
+            const results = await LocationModel.getById(locationId);
+            //saco el id y el nombre y lo pongo en session cookie para armar el breadcrumb    
+            if (results.length > 0 ){
+                location= results[0];
+                console.log(location);   
+                req.session.location = {
+                    id: results[0].id,
+                    nombre: results[0].nombre
+                }            
+            } else{
+                return res.render('messages', {results: 'locationNoFound', 
+                                               message: `Ubicacion con id ${locationId} no encontrada !`})
+            }      
+        }catch(error){
+            console.error(error);
+            res.status(500).send('Error interno del servidor.<br><a href="/dashboard">panel de control</a>');
+        }
+        
+        try {        
+            const dataloggers = await dataBuild.GetDataloggersInfoByLocation(locationId);
+            //console.log(dataloggers);                      
             res.render('viewLocation', { user: req.session.user, 
-                                            location: results, 
+                                            location: location, 
                                             dataloggersInfo: dataloggers, 
                                             allDataloggers: allDataloggers});
         } catch (error) {
@@ -151,7 +144,7 @@ module.exports = {
     },
     deleteById: async (req, res) => {        
         const id = parseInt(req.params.id);
-        console.log(`borrando la ubicacion con id : ${id} desde el LocationController`);
+        console.log(`borrando la ubicación con id : ${id} desde el LocationController`);
         //deleteById
          const results = await LocationModel.deleteById(id);
          console.log(results);
@@ -162,12 +155,23 @@ module.exports = {
          }
     },
     editForm: async (req, res) => {
-        console.log("Editando la ubicacion con id: ", req.params.id);
-        const id = req.params.id;
-        const results = await LocationModel.getById(id);
-        const location = results[0];
-        res.render('editLocationForm', {user: req.session.user, 
-                                        location: location});
+        console.log("Editando la ubicación con id: ", req.params.id);
+        const locationId = req.params.id;        
+        const results = await LocationModel.getById(locationId);
+
+        if (results.length > 0){           
+            const allDataloggers = await DataloggerModel.getAll();  
+            const dataloggers = await dataBuild.GetDataloggersInfoByLocation(locationId); 
+            return res.render('editLocationForm', {user: req.session.user, 
+                                                    location: results[0], 
+                                                    allDataloggers: allDataloggers,
+                                                    dataloggersInfo: dataloggers});
+        }else{
+            console.log('Ubicación no encontrada!');
+            return res.render('messages', {results: 'locationNoFound', 
+                                           message: `La ubicación con id ${locationId} no se encuentra en la Base de datos !`});
+        }
+        
     },
     update: async (req, res) => {
 
@@ -191,9 +195,13 @@ module.exports = {
         const updateOk = await LocationModel.updateLocation(dataUbicacion);
         
         if (updateOk !== null && updateOk == true){
-            return res.render('dashboard', {user: req.session.user,  results : 'edicioncorrecta', message: `La ubicacion ${dataUbicacion.nombre} fue editada correctamente!`})
+            return res.render('messages', {results : 'editLocationOk', 
+                                            message: `La ubicacion ${dataUbicacion.nombre} fue editada correctamente!`,
+                                            locationId: dataUbicacion.id})
         }else{
-            return res.render('dashboard', {user: req.session.user,  results : 'edicionerronea', message: `Error al querer editar la ubicacion  ${dataUbicacion.nombre}!`})
+            return res.render('messages',{ results : 'editLocationFails', 
+                                            message: `Error al querer editar la ubicacion  ${dataUbicacion.nombre}!`,
+                                            locationId: dataUbicacion.id})
         }
     },
     addLocationUserRole: async (req, res) => {
@@ -210,12 +218,13 @@ module.exports = {
 
         //deberia poder hacer un rollback aunque en el metodo de agregar una ubicacion, el usuario y la ubicacion son nuevas y el rol es propietario
         if (locationUserRoleAdded.affectedRows > 0){
-            res.render('dashboard', {results: 'edicioncorrecta', 
-                                    message: `El rol  se registro correctamente`, 
-                                    user: req.session.user, 
+            res.render('messages', {results: 'addLocationUserRoleOk', 
+                                    message: `El rol  se registro correctamente`,                                          
                                     userDni: dataLocationUserRole.usuarios_dni});
         }else{
-            res.render('dashboard', {results: 'registrofallido', message: `Fallo en el registro del rol`, user: req.session.user})
+            res.render('messages', {results: 'addLocationUserRoleFails', 
+                                    message: `Fallo en el registro del rol`,
+                                    userDni: dataLocationUserRole.usuarios_dni});
         }             
     },
     updateLocationUserRole: async (req, res) => {
@@ -233,9 +242,13 @@ module.exports = {
 
         //deberia poder hacer un rollback aunque en el metodo de agregar una ubicacion, el usuario y la ubicacion son nuevas y el rol es propietario
         if (locationUserRoleAdded.affectedRows > 0){
-            res.render('dashboard', {results: 'edicioncorrecta', message: `El rol  se edito correctamente`, user: req.session.user, userDni: dataLocationUserRole.dni});
+            res.render('messages', {results: 'editUserOk', 
+                                    message: `El rol se edito correctamente`, 
+                                    userDni: dataLocationUserRole.dni});
         }else{
-            res.render('dashboard', {results: 'edicionerronea', message: `Fallo en la edicion del rol`, user: req.session.user})
+            res.render('messages', {results: 'editUserFails', 
+                                    message: `Fallo en la edicion del rol`, 
+                                    userDni: dataLocationUserRole.dni});
         }             
     },
     addDataloggerLocation: async (req, res) => {
@@ -247,13 +260,17 @@ module.exports = {
         //res.send(`agregando un nuevo datalogger en una ubicacion ${dataDataloggerLocation.usuario_id} ${dataDataloggerLocation.ubicacion_id} dataloggerid: ${dataDataloggerLocation.datalogger_id}`);
 
          const dataloggerLocationAdded = await LocationModel.addDataloggerLocation(dataDataloggerLocation);        
-         console.log(dataloggerLocationAdded);
+         //console.log(dataloggerLocationAdded);
 
         //deberia poder hacer un rollback aunque en el metodo de agregar una ubicacion, el usuario y la ubicacion son nuevas y el rol es propietario
         if (dataloggerLocationAdded.affectedRows > 0){
-            return res.render('dashboard', {results: 'registrocorrecto', message: `El datalogger  se registro correctamente`, user: req.session.user});
+            return res.render('messages', {results: 'addLocationOK', 
+                                           message: `El datalogger se asocio correctamente`,
+                                           locationId: dataDataloggerLocation.ubicacion_id});
         }else{
-            return res.render('dashboard', {results: 'registrofallido', message: `Fallo en el registro del datalogger`, user: req.session.user})
+            return res.render('messages', {results: 'addLocationFails', 
+                                           message: `Fallo en la asociacion del datalogger`,
+                                           locationId: dataDataloggerLocation.ubicacion_id})
         }             
     },
     deleteDataloggerById: async (req, res) => {        

@@ -363,7 +363,7 @@ module.exports = {
             const userData = results[0];
             const userToken = jwt.sign({dni: userData.dni}, process.env.SECRET_KEY, {expiresIn: 86400}); //expira en un dia
             mail.sendActivation(userData, userToken);
-            return res.render('dashboard', {results: 'correoenviado', 
+            return res.render('messages', {results: 'correoenviado', 
                                             message: `Se envio un correo de activación a la dirección: ${userData.email} `,
                                             user: req.session.user});  
         }else{

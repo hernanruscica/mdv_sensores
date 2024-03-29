@@ -132,10 +132,13 @@ module.exports = {
         results = await DataloggerModel.add(dataloggerData);
         if (results.affectedRows > 0){
             console.log("Datalogger insertado correctamente");
-            res.render('dashboard', {results: 'registrocorrecto', message: `El datalogger ${dataloggerData.nombre} se registro correctamente`, user: req.session.user});
+            res.render('messages', {results: 'addDataloggerOk', 
+                                    message: `El datalogger ${dataloggerData.nombre} se registro correctamente`,
+                                    dataloggerId: results.insertId});
         }else{
             console.log("Error al insertar el datalogger");
-            res.render('dashboard', {results: 'registrofallido', message: `Error al registrar el datalogger ${dataloggerData.nombre} !`, user: req.session.user});
+            res.render('messages', {results: 'addDataloggerFails', 
+                                    message: `Error al registrar el datalogger ${dataloggerData.nombre} !`});
         }
     },
     editForm: async (req, res) => {
@@ -143,7 +146,7 @@ module.exports = {
         console.log(`Viendo el formulario de edicion de datalogger con id ${dataloggerId}`);
         const dataloggerBd = await DataloggerModel.getById(dataloggerId);
         console.log(dataloggerBd)
-        res.render('editDataloggerForm', {user: req.session.user, datalogger: dataloggerBd});
+        res.render('editDataloggerForm', {user: req.session.user, datalogger: dataloggerBd[0]});
     },
     update: async (req, res) => {
 
@@ -161,9 +164,13 @@ module.exports = {
         const updateOk = await DataloggerModel.update(dataDatalogger);
         
         if (updateOk !== null && updateOk == true){
-            return res.render('dashboard', {user: req.session.user,  results : 'edicioncorrecta', message: `El datalogger ${dataDatalogger.nombre} fue editado correctamente!`})
+            return res.render('messages', {results : 'editDataloggerOk', 
+                                            message: `El datalogger ${dataDatalogger.nombre} fue editado correctamente!`,
+                                            dataloggerId: dataDatalogger.id})
         }else{
-            return res.render('dashboard', {user: req.session.user,  results : 'edicionerronea', message: `Error al querer editar el datalogger  ${dataDatalogger.nombre}!`})
+            return res.render('messages', {results : 'editDataloggerFails', 
+                                            message: `Error al querer editar el datalogger  ${dataDatalogger.nombre}!`,
+                                            dataloggerId: dataDatalogger.id})
         }
     }
 }
