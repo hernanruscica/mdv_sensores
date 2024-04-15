@@ -4,7 +4,7 @@ select * from guemes order by fecha desc;
 /*Para un canal digital del 15 al 16 de marzo - reemplazar la fecha hardcodeada por CURDATE()*/
 SELECT fecha, d2_cantidad, d2_tiempo, d2_estado, tiempo_total, servicio, energia, texto
 FROM guemes
-WHERE fecha >= DATE_SUB('2024-03-16', INTERVAL 1 DAY) AND fecha < DATE_ADD('2024-03-16', INTERVAL 1 DAY)
+WHERE fecha >= DATE_SUB('2024-03-16', INTERVAL 1 HOUR) AND fecha < DATE_ADD('2024-03-16', INTERVAL 1 HOUR)
 ORDER BY fecha ASC
 LIMIT 9000;
 

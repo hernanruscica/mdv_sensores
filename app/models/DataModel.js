@@ -64,5 +64,46 @@ module.exports = {
             console.log("cerrada la conexion con el pool de datos");
         }
     },
+    //Data example: timePeriod = '1 DAY' '1 HOUR'
+    getDigital: async (table, channel, timePeriod) => {
+        console.log("getDigital on dataModel");
+        const connection = await pool.getConnection();
+        const query =  `select fecha, ${channel}_estado AS estado, 
+                            ${channel}_cantidad AS cantidad, 
+                            ${channel}_tiempo AS tiempo, 
+                            tiempo_total, servicio, energia, texto  
+                        from ${table} 
+                        WHERE fecha >= '2024-03-16' AND fecha < DATE_ADD('2024-03-16', INTERVAL ${timePeriod})
+                        ORDER BY fecha ASC LIMIT 288`   
+        try {
+            const [rows, fields] = await connection.execute(query);
+            return rows;
+        } catch (error) {
+            throw error;            
+        }finally {
+            connection.release();            
+        }
+    },
+    //Data example: timePeriod = '1 DAY' '1 HOUR'
+    getAnalog: async (table, channel, timePeriod) => {
+        console.log("getAnalog on dataModel");
+        const connection = await pool.getConnection();
+        const query =  `select fecha, servicio, texto,
+                            ${channel}_inst AS inst, 
+                            ${channel}_min AS min, 
+                            ${channel}_max AS max
+                        from ${table} 
+                        WHERE fecha >= '2024-03-16' AND fecha < DATE_ADD('2024-03-16', INTERVAL ${timePeriod})
+                        ORDER BY fecha ASC LIMIT 288`   
+        try {
+            const [rows, fields] = await connection.execute(query);
+            return rows;
+        } catch (error) {
+            throw error;            
+        }finally {
+            connection.release();            
+        }
+
+    }
 
 }

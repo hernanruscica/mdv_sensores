@@ -52,21 +52,29 @@ module.exports = {
     
     viewDatalogger: async (req, res) => {
         const id = req.params.id;                      
-        //console.log(`viewDatalogger Controller con id ${id}`);     
-
+        
         //  traer la info de la tabla dataloggers y la data de los canales activos de hace una hora. buscando con la id del datalogger
-        const results = await DataloggerModel.getById(id);         
+        const results = await DataloggerModel.getById(id);        
+        const dataloggerData =  (results.length > 0) ? results[0] : [];        
         const results02 = await DataloggerModel.getChannelsById(id);
-        //console.log(results[0]);
+        const activeChannels = (results02.length > 0) ? results02 : [];
+       
         req.session.datalogger = {
             id: results.id,
             nombre: results.nombre
         }
-        res.render('viewDatalogger', {user: req.session.user, location: req.session.location, datalogger: results[0] || [], channels: results02 || []});
 
-        // Cambia a este formato 2023-08-23 12:50:02
-        //const fechaFormateadaParaApex = dataloggerData[0].fecha.toISOString().slice(0, 19).replace('T', ' ');   
-        //console.log(fechaFormateadaParaApex);    
+        const dataDigital = await DataModel.getDigital('guemes', 'd2', '1 HOUR');
+        const dataAnalog = await DataModel.getAnalog('guemes', 'a1', '1 DAY');
+        console.log( dataDigital.length);
+        console.log(dataAnalog.length);
+
+        res.render('viewDatalogger', {user: req.session.user, 
+            location: req.session.location, 
+            datalogger: dataloggerData, 
+            channels: activeChannels});
+
+        
     },
     viewChannel: async (req, res) => {
         const id = req.params.id;
@@ -87,7 +95,8 @@ module.exports = {
         //Si es analogico
         if (currentChannel.nombre_columna.startsWith('a')){            
             currentChannel.isAnalog = true;
-            currentData = await DataModel.getDataByChannelOneDay(req.session.datalogger.nombre_tabla, currentChannel.nombre_columna);
+            //currentData = await DataModel.getDataByChannelOneDay(req.session.datalogger.nombre_tabla, currentChannel.nombre_columna);
+            currentData = await DataModel.getAnalog(req.session.datalogger.nombre_tabla, currentChannel.nombre_columna, '1 DAY');
 
         //si es Digital 
         }else{            
