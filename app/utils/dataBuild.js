@@ -1,6 +1,7 @@
 
 const LocationModel = require('../models/LocationModel');
 const DataloggerModel = require('../models/DatalogerModel');
+const DataModel = require('../models/DataModel');
 
 module.exports = {    
     //Busco los dataloggers asociados a una ubicacion.
@@ -21,5 +22,27 @@ module.exports = {
         });            
         const dataloggers = await Promise.all(dataloggersPromises);
         return dataloggers;
+    },
+    getAllDataChannels : async (table, channels, timePeriod) => {
+        let allData = [];
+        const columnNames = channels.map(channel => channel.nombre_columna);
+        const channelsQty = columnNames.length;
+        
+        for (let i=0; i < channelsQty;i++){            
+            if (columnNames[i].startsWith('a')){
+                const data = await DataModel.getAnalog(table, columnNames[i], timePeriod);   
+                allData.push({
+                    channel: columnNames[i],
+                    data: [...data]
+                });              
+            }else{
+                const data = await DataModel.getDigital(table, columnNames[i], timePeriod);                
+                allData.push({
+                    channel: columnNames[i],
+                    data: [...data]
+                }); 
+            }                       
+        };         
+        return allData;
     }
 }

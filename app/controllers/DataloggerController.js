@@ -3,6 +3,7 @@ const LocationModel = require('../models/LocationModel');
 const DataloggerModel = require('../models/DatalogerModel');
 const DataModel = require('../models/DataModel');
 const UserModel = require('../models/UserModel');
+const dataBuild = require('../utils/dataBuild');
 
 module.exports = {
     getAll: async (req, res) => {
@@ -64,17 +65,14 @@ module.exports = {
             nombre: results.nombre
         }
 
-        const dataDigital = await DataModel.getDigital('guemes', 'd2', '1 HOUR');
-        const dataAnalog = await DataModel.getAnalog('guemes', 'a1', '1 DAY');
-        console.log( dataDigital.length);
-        console.log(dataAnalog.length);
+        const data = await dataBuild.getAllDataChannels('guemes', activeChannels, '1 DAY')
+        //console.log(data);                    
 
         res.render('viewDatalogger', {user: req.session.user, 
             location: req.session.location, 
             datalogger: dataloggerData, 
-            channels: activeChannels});
-
-        
+            channels: activeChannels,
+            channelsData: data});        
     },
     viewChannel: async (req, res) => {
         const id = req.params.id;

@@ -66,7 +66,7 @@ module.exports = {
     },
     //Data example: timePeriod = '1 DAY' '1 HOUR'
     getDigital: async (table, channel, timePeriod) => {
-        console.log("getDigital on dataModel");
+        //console.log("getDigital on dataModel");
         const connection = await pool.getConnection();
         const query =  `select fecha, ${channel}_estado AS estado, 
                             ${channel}_cantidad AS cantidad, 
@@ -86,7 +86,7 @@ module.exports = {
     },
     //Data example: timePeriod = '1 DAY' '1 HOUR'
     getAnalog: async (table, channel, timePeriod) => {
-        console.log("getAnalog on dataModel");
+        //console.log("getAnalog on dataModel");
         const connection = await pool.getConnection();
         const query =  `select fecha, servicio, texto,
                             ${channel}_inst AS inst, 
@@ -103,7 +103,6 @@ module.exports = {
         }finally {
             connection.release();            
         }
-
     }
 
 }
