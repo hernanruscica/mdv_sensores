@@ -22,36 +22,36 @@
         <li class="breadcrumb-item active" aria-current="page">Ver datalogger</li>
       </ol>
     </nav>
-
-    <p class="fs-5 mt-5">En esta sección usted puede ver la información de un datalogger.</p>
-    <div class="container row justify-content-start">
-       <a href="/dataloggers/editform/<%= datalogger.id %>" class="btn btn-secondary col-5 col-lg-2">Editar Datalogger</a>     
-  </div>
-
-  <div class="d-flex flex-column flex-lg-row ">
     <!-- Inicio de la Card info general-->
-    <div class="card m-3 col-12 col-lg-6">
-      <div class="card-body">
-        <!-- Nombre  -->
-        <h5 class="card-title">
-          <%= datalogger.nombre %>
-        </h5>
-        <!-- Descripcion -->
-        <p class="card-text">
-          <%= datalogger.descripcion %>
-        </p>
-        <!-- Foto -->
-        <img src="/images/<%= datalogger.foto %>" class="card-img-top" style="width: 200px; height:auto;"
+    <div class="card ">
+      <div class="card-body row">
+        <div class="col-sm-6 col-12 ">
+          <!-- Foto -->
+          <img src="/images/<%= datalogger.foto %>" class="card-img-top" style="width: 200px; height:auto;"
           alt="Foto del datalogger ">
-        <!-- Fecha de creacion -->
-        <p class="card-text">Fecha de creacion: <%= datalogger.fecha_creacion %>
-        </p>
+        </div>
+        <div class="col-sm-6 col-12  ">
+          <!-- Nombre  -->
+          <h5 class="card-title">
+            <%= datalogger.nombre %>
+          </h5>
+          <!-- Descripcion -->
+          <p class="card-text">
+            <%= datalogger.descripcion %>
+          </p>        
+          <!-- Fecha de creacion -->
+          <p class="card-text">Fecha de creacion: <%= datalogger.fecha_creacion %>
+          </p>          
+          <a href="/dataloggers/editform/<%= datalogger.id %>" class="btn btn-secondary col-6 col-lg-6">Editar Datalogger</a>               
+        </div>
+        
       </div>
     </div>
     <!-- Fin de la Card info general-->
+  <div class="d-flex flex-column flex-lg-row ">
 
     <!-- Principio de la Card de canales-->
-    <div class="card m-3 col-12 col-lg-6">
+    <div class="card mt-2 col-12 col-lg-6">
       <div class="card-body">
         <h5 class="card-title">
           Canales Digitales y/o analogicos
@@ -78,22 +78,103 @@
       </div>
     </div>
     <!-- Fin  de la Card de canales-->
+
+    <!-- Principio de la Card de 1 canal analogico-->
+    <div class="card mt-2 col-12 col-lg-6">
+      <div class="card-body">
+        <h5 class="card-title">
+          Canal analogico #<%= channels[0].nombre_columna %> "<em><%= channels[0].canal_nombre %></em>"
+        </h5>    
+        <p class="card-text">
+          <%= channels[0].canal_descripcion %>
+        </p>
+        <div id="chart"></div>  
+      </div>
+    </div>
+    <!-- Fin  de la Card de 1 canal analogico-->
+   
   </div>   
   <% } else { %>
-    <h1>Error: Usuario no encontrado</h1>
+    <h1>Error: datalogger no encontrado</h1>
   <% } %>
 </div>
  
     
 <%- include('partials/piedepagina') %>        
+  <!-- Incluye ApexCharts.js -->
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script>
   // Función para ir a la página anterior
   function goBack() {
     window.history.back();
   }
 
+  const channels = <%- JSON.stringify(channels || []) %>;
   const channelsData= <%- JSON.stringify(channelsData || []) %>; 
-  console.log(channelsData);
+  //console.log(channelsData);
+  //saco los datos de la ultima hora
+  const dataChannel = channelsData[0].data;
+
+
+  /* Preparacion de datos   para mostrar datos analogicos  */
+  const myFactor = parseFloat(channels[0].multiplicador);
+      const myTimeStamps = dataChannel.map(data => data.fecha);
+      const valuesInst = dataChannel.map(data => (data.inst * myFactor).toFixed(2));      
+      const valuesMax = dataChannel.map(data => (data.max * myFactor).toFixed(2));
+      const valuesMin = dataChannel.map(data => (data.min * myFactor).toFixed(2));
+
+      console.log("es analogico");
+      // Datos del gráfico
+      var options = { 
+          title: {
+          text : channels[0].canal_nombre
+          },
+        chart: {
+          type: 'line',
+          height: 300,
+          width: "100%",
+          background: '#f4f4f4'
+        },
+        series: [{       
+          name: "Promedio",
+          data: valuesInst
+        },
+        {       
+          name: "Maxima",
+          data: valuesMax
+        },
+        {       
+          name: "Minima",
+          data: valuesMin
+        }
+        ],
+        xaxis: {
+          categories: myTimeStamps,
+          type: 'datetime',
+          min: new Date('2024-03-16T13:00:00').getTime(),
+          max: new Date('2024-03-16T14:00:00').getTime(),
+        },
+        stroke: {
+        show: true,
+        curve: 'straight',
+        lineCap: 'butt',
+        colors: undefined,
+        width: 1,
+        dashArray: 0, 
+      },
+      tooltip: {
+        x: {
+          show: true,
+          format: 'dd/MMM - hh:mm ',
+          formatter: undefined,
+      }
+      }
+      }  
+      // Inicializar el gráfico
+      var chart = new ApexCharts(document.querySelector("#chart"), options);  
+      // Renderizar el gráfico
+      
+      chart.render();
 
 </script>
     

@@ -50,7 +50,11 @@ module.exports = {
         const connection = await pool.getConnection();
         console.log("abierta la conexion con el pool de datos - Datalogger.getChannelsById");
         try {            
-            const [rows, fields] = await connection.execute(`select canales.id as canal_id, canales.nombre_columna, canales.nombre as canal_nombre, canales.descripcion as canal_descripcion
+            const [rows, fields] = await connection.execute(`select canales.id as canal_id, 
+            canales.nombre_columna, 
+            canales.nombre as canal_nombre, 
+            canales.descripcion as canal_descripcion,
+            canales.multiplicador
                 from canales
                 where datalogger_id = '${id}'`);                  
             return rows;
