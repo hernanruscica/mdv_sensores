@@ -47,57 +47,34 @@
       </div>
     </div>
     <!-- Fin de la Card info general-->
-  <div class="d-flex flex-column flex-lg-row ">
+  <div class="d-flex flex-column flex-lg-row ">   
 
-    <!-- Principio de la Card de canales-->
-    <div class="card mt-2 col-12 col-lg-6">
-      <div class="card-body">
-        <h5 class="card-title">
-          Canales Digitales y/o analogicos
-        </h5>    
-        <p class="card-text">
-          Listado de los canales Digitales y/o Analogicas usados en este datalogger.
-        </p>
-        <% if (channels.length> 0) { %>
-          <ul>
-            <% channels.forEach(channel=> { %>
-              <li>
-                <a href="/dataloggers/view/<%= datalogger.id %>/channels/<%= channel.canal_id %>">
-                  <%= channel.canal_nombre %>
-                </a>
-                <p>
-                  <%= channel.canal_descripcion %>
-                </p>
-              </li>
-              <% }); %>
-          </ul>
-          <% } else { %>
-            <p>No tiene canales asociados.</p>
-            <% } %>
-      </div>
-    </div>
-    <!-- Fin  de la Card de canales-->
-
-    <!-- Principio de la Card de 1 canal analogico-->
-    <div class="card mt-2 col-12 col-lg-6">
-      <div class="card-body">
-        <h5 class="card-title">
-          Canal analogico #<%= channels[0].nombre_columna %> "<em><%= channels[0].canal_nombre %></em>"
-        </h5>    
-        <p class="card-text">
-          <%= channels[0].canal_descripcion %>
-        </p>
-        <div id="chart"></div>  
-        <p class="card-text">
-          Ultimas 24Hs. <br>
-          Temp. MAX: <strong><span id="temp_max_text"></span>°C.</strong> -  Temp. MIN: <strong><span id="temp_min_text"></span>°C.</strong> <br>           
-          Alarmas MAX: <span id="alarm_max_text"></span>°C. - MIN: <span id="alarm_min_text">°C.</span> <br>   
-          <a href="/dataloggers/view/<%= datalogger.id %>/channels/<%= channels[0].canal_id %>" class="btn btn-secondary mt-3">Ver y/o editar canal y alarmas</a>               
-        </p>
-      </div>
-    </div>
-    <!-- Fin  de la Card de 1 canal analogico-->
-   
+    <% if (channels.length> 0) { 
+       channels.forEach(channel=> { %>
+        <!-- Principio de la Card de 1 canal analogico o digital-->
+        <div class="card mt-2 col-12 col-lg-6">
+          <div class="card-body">
+            <h5 class="card-title">
+              Canal <%= (channel.nombre_columna.startsWith('a')) ? 'analogico' : 'digital' %> #<%= channel.nombre_columna %> "<em><%= channel.canal_nombre %></em>"
+            </h5>    
+            <p class="card-text">
+              <%= channel.canal_descripcion %>
+            </p>
+            <!-- Ejemplo de id para los graficos 'chart_a1 o chart_d1' -->
+            <div id="chart_<%= channel.nombre_columna %>"></div>  
+            <p class="card-text">
+              Ultimas 24Hs. <br>
+              Temp. MAX: <strong><span id="temp_max_text"></span>°C.</strong> -  Temp. MIN: <strong><span id="temp_min_text"></span>°C.</strong> <br>           
+              Alarmas MAX: <span id="alarm_max_text"></span>°C. - MIN: <span id="alarm_min_text">°C.</span> <br>   
+              <a href="/dataloggers/view/<%= datalogger.id %>/channels/<%= channel.canal_id %>" class="btn btn-secondary mt-3">Ver y/o editar canal y alarmas</a>               
+            </p>
+          </div>
+        </div>
+        <!-- Fin  de la Card de 1 canal analogico o digital-->
+        <% }); %>
+    <% } else { %>
+      <p>No tiene canales asociados.</p>
+      <% } %>   
   </div>   
   <% } else { %>
     <h1>Error: datalogger no encontrado</h1>
@@ -117,87 +94,98 @@
 
   const channels = <%- JSON.stringify(channels || []) %>;
   const channelsData= <%- JSON.stringify(channelsData || []) %>; 
-  //console.log(channelsData);
-  //saco los datos de la ultima hora
-  const dataChannel = channelsData[0].data;
+  
 
-
-  /* Preparacion de datos   para mostrar datos analogicos  */
-  const myFactor = parseFloat(channels[0].multiplicador);
-      const myTimeStamps = dataChannel.map(data => data.fecha);
-      const valuesInst = dataChannel.map(data => (data.inst * myFactor).toFixed(2));      
-      const valuesMax = dataChannel.map(data => (data.max * myFactor).toFixed(2));
-      const valuesMin = dataChannel.map(data => (data.min * myFactor).toFixed(2));
-     
-      //const valueAlarmMAX =Array(myTimeStamps.length).fill(50);     
-      const $tempMaxText = document.getElementById("temp_max_text"); 
-      const $tempMinText = document.getElementById("temp_min_text");
-      const $alarmMaxText = document.getElementById("alarm_max_text");
-      const $alarmMinText = document.getElementById("alarm_min_text");
-      $tempMaxText.innerHTML = Math.max(...valuesMax);
-      $tempMinText.innerHTML = Math.min(...valuesMin);
-      $alarmMaxText.innerHTML = 50;
-      $alarmMinText.innerHTML = 30;
-      
-
-      console.log("es analogico");
-      // Datos del gráfico
-      var options = { 
-          title: {
-          text : channels[0].canal_nombre
-          },
-        chart: {
-          type: 'line',
-          height: 300,
-          width: "100%",
-          background: '#f4f4f4',          
-        },
+  const showAnalogCard = (currentChannel, dataChannel) => {  
+    /* Preparacion de datos   para mostrar datos analogicos  */
+    const myFactor = parseFloat(currentChannel.multiplicador);
+    const myTimeStamps = dataChannel.map(data => data.fecha);
+    const valuesInst = dataChannel.map(data => (data.inst * myFactor).toFixed(2));      
+    const valuesMax = dataChannel.map(data => (data.max * myFactor).toFixed(2));
+    const valuesMin = dataChannel.map(data => (data.min * myFactor).toFixed(2));
         
-        series: [        
-        {       
-          name: "Maxima",
-          data: valuesMax,
-          color: '#e29578'
+    const $tempMaxText = document.getElementById("temp_max_text"); 
+    const $tempMinText = document.getElementById("temp_min_text");
+    const $alarmMaxText = document.getElementById("alarm_max_text");
+    const $alarmMinText = document.getElementById("alarm_min_text");
+    $tempMaxText.innerHTML = Math.max(...valuesMax);
+    $tempMinText.innerHTML = Math.min(...valuesMin);
+    $alarmMaxText.innerHTML = 50;
+    $alarmMinText.innerHTML = 30;
+      
+    // Datos del gráfico
+    var options = { 
+        title: {
+        text : currentChannel.canal_nombre
         },
-        {       
-          name: "Promedio",
-          data: valuesInst,
-          color: '#83c5be'
-        },        
-        {       
-          name: "Minima",
-          data: valuesMin,
-          color: '#006d77'
-        }
-        ],
-        xaxis: {
-          categories: myTimeStamps,
-          type: 'datetime',
-          min: new Date('2024-03-16T10:00:00').getTime(),
-          max: new Date('2024-03-16T12:00:00').getTime(),
-        },
-        stroke: {
-        show: true,
-        curve: 'straight',
-        lineCap: 'butt',
-        colors: undefined,
-        width: 1,
-        dashArray: 0, 
+      chart: {
+        type: 'line',
+        height: 300,
+        width: "100%",
+        background: '#f4f4f4',          
       },
-      tooltip: {
-        x: {
-          show: true,
-          format: 'dd/MMM - hh:mm ',
-          formatter: undefined,
+      
+      series: [        
+      {       
+        name: "Maxima",
+        data: valuesMax,
+        color: '#e29578'
+      },
+      {       
+        name: "Promedio",
+        data: valuesInst,
+        color: '#83c5be'
+      },        
+      {       
+        name: "Minima",
+        data: valuesMin,
+        color: '#006d77'
       }
+      ],
+      xaxis: {
+        categories: myTimeStamps,
+        type: 'datetime',
+        min: new Date('2024-03-16T10:00:00').getTime(),
+        max: new Date('2024-03-16T12:00:00').getTime(),
+      },
+      stroke: {
+      show: true,
+      curve: 'straight',
+      lineCap: 'butt',
+      colors: undefined,
+      width: 1,
+      dashArray: 0, 
+    },
+    tooltip: {
+      x: {
+        show: true,
+        format: 'dd/MMM - hh:mm ',
+        formatter: undefined,
+    }
+    }
+    }  
+    // Inicializar el gráfico chart_a1
+    const idNameChart = `chart_${currentChannel.nombre_columna}`;
+    var chart = new ApexCharts(document.getElementById(idNameChart), options);  
+
+    // Renderizar el gráfico      
+    chart.render();
+  }
+
+  const channelsQty = channels.length;
+
+  if (channels.length > 0){
+    for (let i = 0; i < channelsQty; i++){      
+      if (channels[i].nombre_columna.startsWith('a')){      
+        console.log(`Canal analogico: ${channels[i].nombre_columna}`);   
+        showAnalogCard(channels[i], channelsData[i].data);
+      }else {
+        console.log(`Canal digital: ${channels[i].nombre_columna}`); 
       }
-      }  
-      // Inicializar el gráfico
-      var chart = new ApexCharts(document.querySelector("#chart"), options);  
-
-      // Renderizar el gráfico      
-      chart.render();
-
+    }
+  }else{
+    console.log("No tiene canales asociados al datalogger");
+  }
 </script>
     
 </body>

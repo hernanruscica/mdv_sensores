@@ -48,47 +48,46 @@ module.exports = {
             console.error('Error al obtener los dataloggers:', error);
             return res.status(500).json({ error: 'Ocurrió un error al obtener los dataloggers.' });
         }
-    },
-    
+    },    
     
     viewDatalogger: async (req, res) => {
-        const id = req.params.id;                      
-        
-        //  traer la info de la tabla dataloggers y la data de los canales activos de hace una hora. buscando con la id del datalogger
+        const id = req.params.id;        
+        console.log(`Viendo el datalogger con id: ${id}`);               
+                
         const results = await DataloggerModel.getById(id);        
-        const dataloggerData =  (results.length > 0) ? results[0] : [];        
+        const dataloggerData =  (results.length > 0) ? results[0] : [];       
+        const { ubicacion_id }  = dataloggerData;
+
         const results02 = await DataloggerModel.getChannelsById(id);
         const activeChannels = (results02.length > 0) ? results02 : [];
-       
-        req.session.datalogger = {
-            id: results.id,
-            nombre: results.nombre
-        }
 
-        const data = await dataBuild.getAllDataChannels('guemes', activeChannels, '1 DAY')
-        console.log(activeChannels);                    
+        const results03 = await LocationModel.getById(ubicacion_id);
+        const locationData = (results03.length > 0) ? results03[0] : [];
+        
+        const data = await dataBuild.getAllDataChannels('guemes', activeChannels, '1 DAY');       
+        
+        console.log(activeChannels);
 
         res.render('viewDatalogger', {user: req.session.user, 
-            location: req.session.location, 
+            location: locationData, 
             datalogger: dataloggerData, 
             channels: activeChannels,
             channelsData: data});        
     },
     viewChannel: async (req, res) => {
-        const id = req.params.id;
-        const idChannel = req.params.idchannel;        
-        console.log(`Viendo el canal ${idChannel} del datalogger con id: ${id}`);        
+        const { id, idchannel }  = req.params;
+        console.log(`Viendo el canal ${idchannel} del datalogger con id: ${id}`);        
         
-        const results = await DataloggerModel.getById(id);      
-        let currentData = null;
-        
-        req.session.datalogger = {
-            id: results[0].id,
-            nombre: results[0].nombre,
-            nombre_tabla: results[0].nombre_tabla
-        }
-        const results02 = await DataloggerModel.getChannellbyId(idChannel);        
-        const currentChannel = results02[0];
+        const results = await DataloggerModel.getById(id);  
+        const dataloggerData =  (results.length > 0) ? results[0] : [];   
+
+        const results02 = await DataloggerModel.getChannellbyId(idchannel);        
+        const currentChannel = (results.length > 0) ? results02[0] : [];
+
+        const results03 = await LocationModel.getById(dataloggerData.ubicacion_id);
+        const location = (results03.length > 0) ? results03[0] : [];
+
+        let currentData = null;   
 
         //Si es analogico
         if (currentChannel.nombre_columna.startsWith('a')){            
@@ -100,14 +99,14 @@ module.exports = {
         }else{            
             currentChannel.isAnalog = false;     
             currentData = await DataModel.getDataByChannelDigitalOneDay(req.session.datalogger.nombre_tabla, currentChannel.nombre_columna);       
-        }        
-
-        console.log(currentChannel, currentData[0]);            
-
+        } 
+        //console.log(currentChannel, currentData[0]); 
         res.render('viewChannel', {user: req.session.user, 
-                                   location: req.session.location, 
-                                   datalogger: req.session.datalogger,
-                                   id: id, currentChannel: currentChannel, dataChannel: currentData || []});
+                                   location: location, 
+                                   datalogger: dataloggerData,
+                                   id: id, 
+                                   currentChannel: currentChannel, 
+                                   dataChannel: currentData || []});
         
     },
     deleteById: async (req, res) => {

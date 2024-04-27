@@ -17,9 +17,11 @@ module.exports = {
         const connection = await pool.getConnection();
         console.log("abierta la conexion con el pool de datos - Datalogger.getByid");
         try {            
-            const [rows, fields] = await connection.execute(`SELECT id, direccion_mac, nombre, descripcion, foto, nombre_tabla, fecha_creacion
-            FROM dataloggers
-            WHERE dataloggers.id  = '${id}'`);  
+            const [rows, fields] = await connection.execute(`SELECT dataloggers.*,
+                                    dataloggers_x_ubicacion.ubicaciones_id as ubicacion_id
+                                    FROM dataloggers_x_ubicacion
+                                    inner join dataloggers on dataloggers_x_ubicacion.datalogger_id = dataloggers.id
+                                    WHERE dataloggers.id  = '${id}'`);  
             return rows;
         } catch (error){
             //console.error(error);
