@@ -66,7 +66,7 @@ module.exports = {
         
         const data = await dataBuild.getAllDataChannels('guemes', activeChannels, '1 DAY');       
         
-        console.log(activeChannels);
+        //console.log(activeChannels);
 
         res.render('viewDatalogger', {user: req.session.user, 
             location: locationData, 

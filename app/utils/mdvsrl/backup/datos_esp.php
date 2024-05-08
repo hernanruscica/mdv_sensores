@@ -1,7 +1,5 @@
 <?php
-include_once ('./credenciales_mysql.php');
-
-
+include_once ('credenciales_mysql.php');
 
 //  inicializo todo en cero canales digitales
 $identificador = 0;
@@ -134,9 +132,9 @@ $texto    = $_POST['texto'];
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 $d_date = date('Y-m-d H:i:s', time());
 
-// *******   apertura base de datos a mdvSrl  *********
+// *******   apertura base de datos   *********
 $conexion=mysqli_connect($servidorSQL ,$usuario,$password,$base_datos);
-mysqli_select_db($conexion,$base_datos);
+mysqli_select_db($conexion,$base);
 mysqli_query($conexion,"SET NAMES 'utf8'");
 mysqli_query($conexion, "INSERT INTO $tabla (`indice`,`fecha`,`identificador`,`tiempo_total`,
              `d1_estado`,`d1_cantidad`,`d1_tiempo`,
@@ -168,45 +166,8 @@ mysqli_query($conexion, "INSERT INTO $tabla (`indice`,`fecha`,`identificador`,`t
              '$a4_inst','$a4_min','$a4_max','$a4_estado','$a4_cantidad','$a4_tiempo',
              '$a5_inst','$a5_min','$a5_max','$a5_estado','$a5_cantidad','$a5_tiempo',
              '$servicio','$energia','$texto');"  );
-mysqli_close($conexion);
-// *******   Cierre de la base de datos a mdvSrl  *********
 
-// *******   apertura base de datos a mdvSrl  *********
-$conexion_ruscica=mysqli_connect($servidorSQL_ruscica ,$usuario_ruscica,$password_ruscica,$base_datos_ruscica);
-mysqli_select_db($conexion_ruscica,$base_datos_ruscica);
-mysqli_query($conexion_ruscica,"SET NAMES 'utf8'");
-mysqli_query($conexion_ruscica, "INSERT INTO $tabla (`indice`,`fecha`,`identificador`,`tiempo_total`,
-             `d1_estado`,`d1_cantidad`,`d1_tiempo`,
-             `d2_estado`,`d2_cantidad`,`d2_tiempo`,
-             `d3_estado`,`d3_cantidad`,`d3_tiempo`,  
-             `d4_estado`,`d4_cantidad`,`d4_tiempo`,
-             `d5_estado`,`d5_cantidad`,`d5_tiempo`,
-             `d6_estado`,`d6_cantidad`,`d6_tiempo`, 
-             `d7_estado`,`d7_cantidad`,`d7_tiempo`,
-             `d8_estado`,`d8_cantidad`,`d8_tiempo`,
-             `a1_inst`,`a1_min`,`a1_max`,`a1_estado`,`a1_cantidad`,`a1_tiempo`,
-             `a2_inst`,`a2_min`,`a2_max`,`a2_estado`,`a2_cantidad`,`a2_tiempo`,
-             `a3_inst`,`a3_min`,`a3_max`,`a3_estado`,`a3_cantidad`,`a3_tiempo`,
-             `a4_inst`,`a4_min`,`a4_max`,`a4_estado`,`a4_cantidad`,`a4_tiempo`,
-             `a5_inst`,`a5_min`,`a5_max`,`a5_estado`,`a5_cantidad`,`a5_tiempo`,
-             `servicio`,`energia`,`texto`)
-             VALUES ('NULL','$d_date','$identificador','$tiempo_total',
-             '$d1_estado','$d1_cantidad','$d1_tiempo',
-             '$d2_estado','$d2_cantidad','$d2_tiempo',
-             '$d3_estado','$d3_cantidad','$d3_tiempo',
-             '$d4_estado','$d4_cantidad','$d4_tiempo',
-             '$d5_estado','$d5_cantidad','$d5_tiempo',
-             '$d6_estado','$d6_cantidad','$d6_tiempo',
-             '$d7_estado','$d7_cantidad','$d7_tiempo',
-             '$d8_estado','$d8_cantidad','$d8_tiempo',
-             '$a1_inst','$a1_min','$a1_max','$a1_estado','$a1_cantidad','$a1_tiempo',
-             '$a2_inst','$a2_min','$a2_max','$a2_estado','$a2_cantidad','$a2_tiempo',
-             '$a3_inst','$a3_min','$a3_max','$a3_estado','$a3_cantidad','$a3_tiempo',
-             '$a4_inst','$a4_min','$a4_max','$a4_estado','$a4_cantidad','$a4_tiempo',
-             '$a5_inst','$a5_min','$a5_max','$a5_estado','$a5_cantidad','$a5_tiempo',
-             '$servicio','$energia','$texto');"  );
-mysqli_close($conexion_ruscica);
-// *******   Cierre de la base de datos a mdvSrl  *********
+mysqli_close($conexion);
 
 // fin de rutina MySQL
 echo  "datos recibidos<br>";

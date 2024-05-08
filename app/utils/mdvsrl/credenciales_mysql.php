@@ -1,20 +1,20 @@
 <?php
-//   Servidor local XAMP
+//   Servidor local XAMPv en mdvsrl.com.ar
 
-/*
-$servidorSQL = 'localhost';
-$usuario 	 = 'root';
-$password	 = '';
-$base_datos  = 'mdvsrl_mdv';
-$tabla 		 = 'plantilla';   	
-*/
+$servidorSQL = 	'localhost';
+$usuario = 		'mdvsrl_mdv';
+$password   =	'gu8GIM9hsapvln';
+$base_datos = 	'mdvsrl_mdv';
+$tabla =                       'guemes';  
+		
 
-//   Servidor hosting MDV en ruscica-code.ar v10.1	
-$servidorSQL = 	'192.168.0.60';
-$usuario = 		'dbadmin_cruscica';
-$password   =	'B4rt0n2023';
-$base_datos = 	'mdvsrldatos';
-$tabla =        'guemes';  	
+
+//   Servidor en ruscica-code.ar v10.1	
+$servidorSQL_ruscica = 	'190.228.29.68'; //Public IP address
+$usuario_ruscica = 		'mdvsrl_admin_57';
+$password_ruscica   =	'B4rt0n2023';
+$base_datos_ruscica = 	'mdvsrl_datos';
+$tabla_ruscica =        'guemes';  	
 
 	
 ?>

@@ -177,7 +177,7 @@
   const showDigitalCard = (currentChannel, dataChannel) => {  
     /* Preparacion de datos   para mostrar datos analogicos  */
     //const myFactor = parseFloat(currentChannel.multiplicador);
-    const myTimeStamps = dataChannel.map(data => data.fecha);
+    const myTimeStamps = dataChannel.map(data => data.fecha_local);
 
     const valuesCantidad = dataChannel.map(data => data.cantidad); 
     const valuesEnergia = dataChannel.map(data => data.energia)
@@ -221,8 +221,8 @@
       xaxis: {
         categories: myTimeStamps,
         type: 'datetime',
-        min: new Date('2024-03-16T10:00:00').getTime(),
-        max: new Date('2024-03-16T12:00:00').getTime(),
+        // min: new Date('2024-03-16T10:00:00').getTime(),
+        // max: new Date('2024-03-16T12:00:00').getTime(),
       },
       stroke: {
       show: true,

@@ -68,15 +68,27 @@ module.exports = {
     getDigital: async (table, channel, timePeriod) => {
         //console.log("getDigital on dataModel");
         const connection = await pool.getConnection();
-        const query =  `select fecha, ${channel}_estado AS estado, 
-                            ${channel}_cantidad AS cantidad, 
-                            ${channel}_tiempo AS tiempo, 
-                            tiempo_total, servicio, energia, texto  
-                        from ${table} 
-                        WHERE fecha >= '2024-03-16' AND fecha < DATE_ADD('2024-03-16', INTERVAL ${timePeriod})
-                        ORDER BY fecha ASC LIMIT 288`   
+        const query =  `
+                        SELECT                             
+                            fecha as fecha_local,
+                            ${channel}_estado AS estado,
+                            ${channel}_cantidad AS cantidad,
+                            ${channel}_tiempo AS tiempo,
+                            tiempo_total,
+                            servicio,
+                            energia,
+                            texto
+                        FROM 
+                            ${table}
+                        WHERE 
+                            fecha >= DATE_SUB(NOW(), INTERVAL ${timePeriod}) AND fecha <= NOW()
+                        ORDER BY 
+                            fecha ASC
+                        LIMIT 288
+                    `   
         try {
             const [rows, fields] = await connection.execute(query);
+            console.log(rows);
             return rows;
         } catch (error) {
             throw error;            

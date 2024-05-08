@@ -1,5 +1,9 @@
+
 <?php
+
 include_once('./credenciales_mysql.php');
+
+//Version mejorada del codigo originalmente subido a mdvsrl para recepcion de los datos.
 
 // Inicializo todo en cero para canales digitales, analógicos y extras
 $identificador = $tiempo_total = $d_date = 0;
