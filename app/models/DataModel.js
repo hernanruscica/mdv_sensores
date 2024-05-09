@@ -67,10 +67,10 @@ module.exports = {
     //Data example: timePeriod = '1 DAY' '1 HOUR'
     getDigital: async (table, channel, timePeriod) => {
         //console.log("getDigital on dataModel");
-        const connection = await pool.getConnection();
+        const connection = await pool.getConnection();//SELECT CONVERT_TZ('2004-01-01 12:00:00','+00:00','+10:00');
         const query =  `
                         SELECT                             
-                            fecha as fecha_local,
+                            CONVERT_TZ(fecha, '+00:00', '-03:00') as fecha_local,
                             ${channel}_estado AS estado,
                             ${channel}_cantidad AS cantidad,
                             ${channel}_tiempo AS tiempo,
@@ -87,8 +87,8 @@ module.exports = {
                         LIMIT 288
                     `   
         try {
-            const [rows, fields] = await connection.execute(query);
-            console.log(rows);
+            const [rows, fields] = await connection.execute(query);   
+            
             return rows;
         } catch (error) {
             throw error;            
@@ -100,13 +100,18 @@ module.exports = {
     getAnalog: async (table, channel, timePeriod) => {
         //console.log("getAnalog on dataModel");
         const connection = await pool.getConnection();
-        const query =  `select fecha, servicio, texto,
+        const query =  `select 
+                            CONVERT_TZ(fecha, '+00:00', '-03:00') as fecha_local, 
+                            servicio, texto,
                             ${channel}_inst AS inst, 
                             ${channel}_min AS min, 
                             ${channel}_max AS max
                         from ${table} 
-                        WHERE fecha >= '2024-03-16' AND fecha < DATE_ADD('2024-03-16', INTERVAL ${timePeriod})
-                        ORDER BY fecha ASC LIMIT 288`   
+                        WHERE  
+                            fecha >= DATE_SUB(NOW(), INTERVAL ${timePeriod}) AND fecha <= NOW()
+                        ORDER BY 
+                            fecha ASC 
+                        LIMIT 288`   
         try {
             const [rows, fields] = await connection.execute(query);
             return rows;

@@ -96,12 +96,12 @@
   const channels = <%- JSON.stringify(channels || []) %>;
   const channelsData= <%- JSON.stringify(channelsData || []) %>; 
   
-  console.log(channelsData[1]);
+  //console.log(channelsData[1]);
 
   const showAnalogCard = (currentChannel, dataChannel) => {  
     /* Preparacion de datos   para mostrar datos analogicos  */
     const myFactor = parseFloat(currentChannel.multiplicador);
-    const myTimeStamps = dataChannel.map(data => data.fecha);
+    const myTimeStamps = dataChannel.map(data => data.fecha_local);
     const valuesInst = dataChannel.map(data => (data.inst * myFactor).toFixed(2));      
     const valuesMax = dataChannel.map(data => (data.max * myFactor).toFixed(2));
     const valuesMin = dataChannel.map(data => (data.min * myFactor).toFixed(2));         
@@ -113,6 +113,8 @@
     $minValue.innerHTML = Math.min(...valuesMin);
     $alarmMax.innerHTML = 50;
     $alarmMin.innerHTML = 30;
+
+    
       
     // Datos del gráfico
     var options = { 
@@ -145,9 +147,7 @@
       ],
       xaxis: {
         categories: myTimeStamps,
-        type: 'datetime',
-        min: new Date('2024-03-16T10:00:00').getTime(),
-        max: new Date('2024-03-16T12:00:00').getTime(),
+        type: 'datetime'
       },
       stroke: {
       show: true,
@@ -178,7 +178,10 @@
     /* Preparacion de datos   para mostrar datos analogicos  */
     //const myFactor = parseFloat(currentChannel.multiplicador);
     const myTimeStamps = dataChannel.map(data => data.fecha_local);
+    console.log(myTimeStamps);
 
+    
+    
     const valuesCantidad = dataChannel.map(data => data.cantidad); 
     const valuesEnergia = dataChannel.map(data => data.energia)
     const valuesEstado = dataChannel.map(data => data.estado);                  
@@ -198,7 +201,29 @@
     $minValue.innerHTML = Math.min(...valuesTiempo);
     $alarmMax.innerHTML = 50;
     $alarmMin.innerHTML = 30;
-      
+
+    const now = new Date() ;
+    const currentTime = new Date(now.getTime() - (60 * 60 * 1000 * 3));
+    // Calcular la hora una hora atrás
+    const oneHourAgo = new Date(now.getTime() - (60 * 60 * 1000 * 4));    
+
+    // Convertir las fechas a formato ISO 8601
+    const nowISOString = currentTime.toISOString();
+    const oneHourAgoISOString = oneHourAgo.toISOString();
+
+    // Encontrar el índice de la última marca de tiempo menor o igual a la hora actual
+    const lastIndexBeforeNow = myTimeStamps.findLastIndex(timestamp => timestamp <= nowISOString);
+
+    // Encontrar el índice de la primera marca de tiempo mayor que la hora una hora atrás
+    const firstIndexAfterOneHourAgo = myTimeStamps.findIndex(timestamp => timestamp > oneHourAgoISOString);
+
+
+    // Filtrar myTimeStamps para obtener los datos entre la hora actual y una hora atrás
+    const myTimeStampsOneHour = myTimeStamps.slice(firstIndexAfterOneHourAgo, lastIndexBeforeNow + 1);
+    //valuesTiempo
+    const myValuesOneHour = valuesTiempo.slice(firstIndexAfterOneHourAgo, lastIndexBeforeNow + 1);
+    //console.log(nowISOString, oneHourAgoISOString, myTimeStampsOneHour);
+    
     // Datos del gráfico
     var options = { 
         title: {
@@ -213,20 +238,18 @@
       
       series: [        
       {       
-        name: "Cantidad",
-        data: valuesTiempo,
+        name: "Tiempo de encendido",
+        data: myValuesOneHour,
         color: '#e29578'
       }
       ],
       xaxis: {
-        categories: myTimeStamps,
-        type: 'datetime',
-        // min: new Date('2024-03-16T10:00:00').getTime(),
-        // max: new Date('2024-03-16T12:00:00').getTime(),
-      },
+      categories: myTimeStampsOneHour,
+      type: 'datetime'      
+  },
       stroke: {
       show: true,
-      curve: 'stepline',
+      curve: 'straight',
       lineCap: 'butt',
       colors: undefined,
       width: 1,

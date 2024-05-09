@@ -36,13 +36,15 @@ module.exports = {
                     data: [...data]
                 });              
             }else{
-                const data = await DataModel.getDigital(table, columnNames[i], timePeriod);                
+                const data = await DataModel.getDigital(table, columnNames[i], timePeriod);     
+                         
                 allData.push({
                     channel: columnNames[i],
                     data: [...data]
                 }); 
             }                       
-        };         
+        };        
+                 
         return allData;
     }
 }
