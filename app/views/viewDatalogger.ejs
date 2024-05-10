@@ -47,7 +47,7 @@
       </div>
     </div>
     <!-- Fin de la Card info general-->
-  <div class="d-flex flex-column flex-lg-row ">   
+  <div class="d-flex flex-row flex-wrap ">   
 
     <% if (channels.length> 0) { 
        channels.forEach(channel=> { %>
@@ -178,7 +178,7 @@
     /* Preparacion de datos   para mostrar datos analogicos  */
     //const myFactor = parseFloat(currentChannel.multiplicador);
     const myTimeStamps = dataChannel.map(data => data.fecha_local);
-    console.log(myTimeStamps);
+    //console.log(dataChannel);
 
     
     
@@ -216,7 +216,6 @@
 
     // Encontrar el índice de la primera marca de tiempo mayor que la hora una hora atrás
     const firstIndexAfterOneHourAgo = myTimeStamps.findIndex(timestamp => timestamp > oneHourAgoISOString);
-
 
     // Filtrar myTimeStamps para obtener los datos entre la hora actual y una hora atrás
     const myTimeStampsOneHour = myTimeStamps.slice(firstIndexAfterOneHourAgo, lastIndexBeforeNow + 1);

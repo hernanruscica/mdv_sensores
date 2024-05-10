@@ -5,6 +5,8 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cookieSession = require("cookie-session");
 const methodOverride = require('method-override');
+//const cron = require('node-cron');
+const cronjobs = require('./app/cronjobs/cronjob.js');
 
 const axios = require('axios');
 
@@ -37,6 +39,7 @@ const UploadRouter = require('./app/routes/UploadRoutes.js');
 
 
 
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use('/', IndexRouter);
@@ -49,7 +52,7 @@ app.use(express.static('./public'));
 app.use(methodOverride('_method'));
 
 
-
+cronjobs.taskAlarm.start();
 
 
 

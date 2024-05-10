@@ -94,7 +94,53 @@ module.exports = {
         process.on('uncaughtException', (err) => {
             console.error('Uncaught Exception:', err);
             // Puedes realizar acciones adicionales aquí, como cerrar el servidor o registrar el error.
-        });
+        });        
+    },
+    sendAlarm: async (data) => {
+        console.log("enviando mail de alarma")
+
+        // const maniana = fechas.obtenerFechaYHora24Horas();
         
-    }      
+        // Definir los detalles del correo electrónico
+        let mailOptions = {
+            from: 'info@ruscica-code.ar',
+            to: `cesarhernanruscica@gmail.com`,//aca deberia ir data.email
+            subject: 'Alarma ! - MDV Sensores',
+            html: ` <div style="font-size: 1rem">
+                        <h1>Correo Alarma - MDV Sensores</h1>                        
+
+                        <p>El sensor registro un cambio en los valores criticos.</p>                        
+
+                        <p>
+                            Min: ${data}
+                        </p>                        
+                    </div>
+                    `
+            };    
+        // Enviar el correo electrónico
+        try {
+            // Configurar el servicio de correo electrónico
+            let transporter = nodemailer.createTransport({
+                host: process.env.EMAIL_HOST ,
+                port: process.env.EMAIL_PORT,
+                secure: false,
+                auth: {                
+                    user: process.env.EMAIL_USER,
+                    pass: process.env.EMAIL_PASS
+                },
+                tls : { rejectUnauthorized: false }
+            });
+        
+            const results = await transporter.sendMail(mailOptions);
+            console.log("Correo enviado (despues del try)");
+        } catch (error) {
+            console.error('Error sending email with the token', error);
+        }
+        
+        // Captura excepciones no manejadas globalmente
+        process.on('uncaughtException', (err) => {
+            console.error('Uncaught Exception:', err);
+            // Puedes realizar acciones adicionales aquí, como cerrar el servidor o registrar el error.
+        });      
+}
 }
