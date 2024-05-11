@@ -93,12 +93,12 @@ module.exports = {
         if (currentChannel.nombre_columna.startsWith('a')){            
             currentChannel.isAnalog = true;
             //currentData = await DataModel.getDataByChannelOneDay(req.session.datalogger.nombre_tabla, currentChannel.nombre_columna);
-            currentData = await DataModel.getAnalog(req.session.datalogger.nombre_tabla, currentChannel.nombre_columna, '1 DAY');
+            currentData = await DataModel.getAnalog(dataloggerData.nombre_tabla, currentChannel.nombre_columna, '1 DAY');
 
         //si es Digital 
         }else{            
             currentChannel.isAnalog = false;     
-            currentData = await DataModel.getDataByChannelDigitalOneDay(req.session.datalogger.nombre_tabla, currentChannel.nombre_columna);       
+            currentData = await DataModel.getDataByChannelDigitalOneDay(dataloggerData.nombre_tabla, currentChannel.nombre_columna);       
         } 
         //console.log(currentChannel, currentData[0]); 
         res.render('viewChannel', {user: req.session.user, 

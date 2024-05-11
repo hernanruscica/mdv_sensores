@@ -177,30 +177,51 @@
   const showDigitalCard = (currentChannel, dataChannel) => {  
     /* Preparacion de datos   para mostrar datos analogicos  */
     //const myFactor = parseFloat(currentChannel.multiplicador);
-    const myTimeStamps = dataChannel.map(data => data.fecha_local);
-    //console.log(dataChannel);
-
     
+    // console.log(dataChannel);    
     
     const valuesCantidad = dataChannel.map(data => data.cantidad); 
     const valuesEnergia = dataChannel.map(data => data.energia)
     const valuesEstado = dataChannel.map(data => data.estado);                  
     const valuesServicio = dataChannel.map(data => data.servicio);                  
-    const valuesTiempo = dataChannel.map(data => data.tiempo);
-    const valuesTiempoTotal = dataChannel.map(data => data.tiempo_total);   
+    //const valuesTiempo = dataChannel.map(data => data.tiempo);//tiempos de encendido
+    const valuesPorcEncendido = dataChannel.map(data => data.porc_encendido);
+    const valuesTiempoTotal = dataChannel.map(data => data.tiempo_total);  
+    
+    
+    const groupByThree = (data) => {
+      const result = [];
+
+      for (let i = 0; i < data.length; i += 3) {
+        const group = data.slice(i, i + 3);
+
+        if (group.length === 3) {
+          const fechaTercero = group[2].fecha_local;
+          const promedioTiemposEncendidos = group.reduce((sum, item) => sum + item.tiempo, 0) / 3;
+          const porcentajeEncendidoApagado = group.reduce((sum, item) => sum + item.porc_encendido, 0) / 3;
+
+          result.push({
+            fecha_local: fechaTercero,
+            tiempo: promedioTiemposEncendidos.toFixed(0),
+            porc_encendido: porcentajeEncendidoApagado.toFixed(2)
+          });
+        }
+        }
+      
+    return result;
+  }
+    const dataGroupByThree = groupByThree(dataChannel);
+    console.log(dataGroupByThree);
+
+    const myTimeStamps = dataGroupByThree.map(data => data.fecha_local);
+    const myValuesGroupByThree = dataGroupByThree.map(data => data.tiempo);
 
     
     const $maxValue = document.getElementById(`${currentChannel.nombre_columna}_max_value`); 
     const $minValue = document.getElementById(`${currentChannel.nombre_columna}_min_value`);
     const $alarmMax = document.getElementById(`${currentChannel.nombre_columna}_alarm_max`);
     const $alarmMin = document.getElementById(`${currentChannel.nombre_columna}_alarm_min`);
-
-    
-
-    $maxValue.innerHTML = Math.max(...valuesTiempo);
-    $minValue.innerHTML = Math.min(...valuesTiempo);
-    $alarmMax.innerHTML = 50;
-    $alarmMin.innerHTML = 30;
+   
 
     const now = new Date() ;
     const currentTime = new Date(now.getTime() - (60 * 60 * 1000 * 3));
@@ -220,8 +241,20 @@
     // Filtrar myTimeStamps para obtener los datos entre la hora actual y una hora atrás
     const myTimeStampsOneHour = myTimeStamps.slice(firstIndexAfterOneHourAgo, lastIndexBeforeNow + 1);
     //valuesTiempo
-    const myValuesOneHour = valuesTiempo.slice(firstIndexAfterOneHourAgo, lastIndexBeforeNow + 1);
-    //console.log(nowISOString, oneHourAgoISOString, myTimeStampsOneHour);
+    const myValuesGroupByThreeOneHour = myValuesGroupByThree.slice(firstIndexAfterOneHourAgo, lastIndexBeforeNow + 1);
+    
+    $maxValue.innerHTML = Math.max(...myValuesGroupByThree);
+    $minValue.innerHTML = Math.min(...myValuesGroupByThree);
+    $alarmMax.innerHTML = 50;
+    $alarmMin.innerHTML = 30;
+    
+    const max = new Array(myValuesGroupByThreeOneHour.length), min = new Array(myValuesGroupByThreeOneHour.length);
+    max.fill(Math.max(...myValuesGroupByThree))
+    min.fill(Math.min(...myValuesGroupByThree))
+
+
+    console.log(myTimeStampsOneHour, myValuesGroupByThreeOneHour, max);
+
     
     // Datos del gráfico
     var options = { 
@@ -236,16 +269,26 @@
       },
       
       series: [        
-      {       
-        name: "Tiempo de encendido",
-        data: myValuesOneHour,
-        color: '#e29578'
-      }
-      ],
-      xaxis: {
-      categories: myTimeStampsOneHour,
-      type: 'datetime'      
-  },
+            {       
+              name: "Tiempo de encendido",
+              data: myValuesGroupByThreeOneHour,
+              color: '#e29578'
+            },
+            {       
+              name: "max",
+              data: max,
+              color: '#e29578'
+            },
+            {       
+              name: "min",
+              data: min,
+              color: '#e29578'
+            }
+            ],
+              xaxis: {
+              categories: myTimeStampsOneHour,
+              type: 'datetime'      
+          },
       stroke: {
       show: true,
       curve: 'straight',

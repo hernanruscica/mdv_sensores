@@ -14,7 +14,7 @@ const axios = require('axios');
 const app = express();
 
 const hostName = "localhost";
-const port = 3001;
+const port = 3002;
 
 app.set('views', path.join(__dirname, 'app/views'));
 app.set('view engine', 'ejs');

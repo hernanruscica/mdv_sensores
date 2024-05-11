@@ -74,6 +74,7 @@ module.exports = {
                             ${channel}_estado AS estado,
                             ${channel}_cantidad AS cantidad,
                             ${channel}_tiempo AS tiempo,
+                            round(${channel}_tiempo / tiempo_total * 100, 2)  as porc_encendido,
                             tiempo_total,
                             servicio,
                             energia,
