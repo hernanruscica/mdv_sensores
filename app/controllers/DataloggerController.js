@@ -52,7 +52,8 @@ module.exports = {
     
     viewDatalogger: async (req, res) => {
         const id = req.params.id;        
-        console.log(`Viendo el datalogger con id: ${id}`);               
+        console.log(`Viendo el datalogger con id: ${id}`);   
+        console.log('fecha y hora',new Date().toString());             
                 
         const results = await DataloggerModel.getById(id);        
         const dataloggerData =  (results.length > 0) ? results[0] : [];       
@@ -100,7 +101,7 @@ module.exports = {
             currentChannel.isAnalog = false;     
             currentData = await DataModel.getDataByChannelDigitalOneDay(dataloggerData.nombre_tabla, currentChannel.nombre_columna);       
         } 
-        //console.log(currentChannel, currentData[0]); 
+        
         res.render('viewChannel', {user: req.session.user, 
                                    location: location, 
                                    datalogger: dataloggerData,
