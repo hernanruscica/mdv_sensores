@@ -63,8 +63,9 @@
             <!-- Ejemplo de id para los graficos 'chart_a1 o chart_d1' -->
             <div id="chart_<%= channel.nombre_columna %>"></div>  
             <p class="card-text">
-              <!-- //`chart_${currentChannel.nombre_columna}` a1_alarm_max a1_alarm_min a1_max_value a1_min_value  -->
-              Ultimas 24Hs. <br>
+              
+              <button id="<%= channel.nombre_columna %>_cambiarSerieBtn"  value="24">Cambiar serie</button>
+              <label for="<%= channel.nombre_columna %>_cambiarSerieBtn" id="<%= channel.nombre_columna %>_cambiarSerieLabel">Ultimas 24 Hs.</label><br>
               Valor MAX: <strong><span id="<%= channel.nombre_columna %>_max_value"></span></strong> -  Valor MIN: <strong><span id="<%= channel.nombre_columna %>_min_value">></span></strong> <br>           
               Alarmas MAX: <span id="<%= channel.nombre_columna %>_alarm_max"></span> - MIN: <span id="<%= channel.nombre_columna %>_alarm_min"></span> <br>   
               <a href="/dataloggers/view/<%= datalogger.id %>/channels/<%= channel.canal_id %>" class="btn btn-secondary mt-3">Ver y/o editar canal y alarmas</a>               
@@ -112,9 +113,7 @@
     $maxValue.innerHTML = Math.max(...valuesMax);
     $minValue.innerHTML = Math.min(...valuesMin);
     $alarmMax.innerHTML = 50;
-    $alarmMin.innerHTML = 30;
-
-    
+    $alarmMin.innerHTML = 30;    
       
     // Datos del gráfico
     var options = { 
@@ -171,27 +170,60 @@
 
     // Renderizar el gráfico      
     chart.render();
+
+    
   }
 
 
   const showDigitalCard = (currentChannel, dataChannel) => {  
+
+    const $maxValue = document.getElementById(`${currentChannel.nombre_columna}_max_value`); 
+    const $minValue = document.getElementById(`${currentChannel.nombre_columna}_min_value`);
+    const $alarmMax = document.getElementById(`${currentChannel.nombre_columna}_alarm_max`);
+    const $alarmMin = document.getElementById(`${currentChannel.nombre_columna}_alarm_min`);
+
+    const $cambiarSerieBtn = document.getElementById(`${currentChannel.nombre_columna}_cambiarSerieBtn`);
+    const $cambiarSerieLabel = document.getElementById(`${currentChannel.nombre_columna}_cambiarSerieLabel`);
+    $cambiarSerieBtn.addEventListener('click', (e) => {   
+      $cambiarSerieLabel.innerHTML = $cambiarSerieBtn.value == '24' ? 'Ultima hora' : 'Ultimas 24 Hs.';
+      $cambiarSerieBtn.value = $cambiarSerieBtn.value == '24' ? '1' : '24';
+      // window.location.reload();
+      console.log($cambiarSerieBtn.value);      
+      chart.updateOptions({
+        title: {
+        text : `Porcentaje de encendido - ${$cambiarSerieLabel.innerHTML}`
+        },
+        series: [        
+            {       
+              name: "Porcentaje de encendido",
+              data: $cambiarSerieBtn.value == '1' ?  dataGroupByThreeOneHour.porc_encendido : dataGroupByThree.porc_encendido,
+              color: '#e29578'             
+            }                 
+            ],
+              xaxis: {
+              categories: $cambiarSerieBtn.value == '1' ?  dataGroupByThreeOneHour.fecha_local : dataGroupByThree.fecha_local,
+              type: 'datetime'      
+          }
+      })
+    });
+
     /* Preparacion de datos   para mostrar datos analogicos  */
-    //const myFactor = parseFloat(currentChannel.multiplicador);
-    
-    // console.log(dataChannel);    
-    
-    const valuesCantidad = dataChannel.map(data => data.cantidad); 
-    const valuesEnergia = dataChannel.map(data => data.energia)
-    const valuesEstado = dataChannel.map(data => data.estado);                  
-    const valuesServicio = dataChannel.map(data => data.servicio);                  
-    //const valuesTiempo = dataChannel.map(data => data.tiempo);//tiempos de encendido
-    const valuesPorcEncendido = dataChannel.map(data => data.porc_encendido);
-    const valuesTiempoTotal = dataChannel.map(data => data.tiempo_total);  
-    
+    const dataAll = {
+        fecha_local: [],
+        tiempo: [],
+        porc_encendido: []
+      };
+        
+    dataAll.fecha_local = dataChannel.map(data => data.fecha_local);            
+    dataAll.tiempo = dataChannel.map(data => data.tiempo);
+    dataAll.porc_encendido = dataChannel.map(data => data.porc_encendido);
     
     const groupByThree = (data) => {
-      const result = [];
-
+      const result = {
+        fecha_local: [],
+        tiempo: [],
+        porc_encendido: []
+      };
       for (let i = 0; i < data.length; i += 3) {
         const group = data.slice(i, i + 3);
 
@@ -199,94 +231,89 @@
           const fechaTercero = group[2].fecha_local;
           const promedioTiemposEncendidos = group.reduce((sum, item) => sum + item.tiempo, 0) / 3;
           const porcentajeEncendidoApagado = group.reduce((sum, item) => sum + item.porc_encendido, 0) / 3;
-
-          result.push({
-            fecha_local: fechaTercero,
-            tiempo: promedioTiemposEncendidos.toFixed(0),
-            porc_encendido: porcentajeEncendidoApagado.toFixed(2)
-          });
+          result.fecha_local.push(fechaTercero);
+          result.tiempo.push(promedioTiemposEncendidos.toFixed(0));
+          result.porc_encendido.push(porcentajeEncendidoApagado.toFixed(2));
         }
-        }
-      
-    return result;
-  }
+      }      
+      return result;
+    }
     const dataGroupByThree = groupByThree(dataChannel);
-    console.log(dataGroupByThree);
+    
+    const myTimeStamps = dataGroupByThree.fecha_local;
+    const maxPorcEncendido = Math.max(...dataGroupByThree.porc_encendido);
+    const minPorcEncendido = Math.min(...dataGroupByThree.porc_encendido);
 
-    const myTimeStamps = dataGroupByThree.map(data => data.fecha_local);
-    const myValuesGroupByThree = dataGroupByThree.map(data => data.tiempo);
+    const groupByLastHour = (data) => {      
+      
+      const now = new Date() ;
+      const timeZone = 3;
+
+      let {fecha_local, tiempo, porc_encendido} = data;
+      
+      const currentTime = new Date(now.getTime() - (60 * 60 * 1000 * timeZone));      
+      const oneHourAgo = new Date(now.getTime() - (60 * 60 * 1000 * (timeZone + 1)));   
+      // Convertir las fechas a formato ISO 8601
+      const nowISOString = currentTime.toISOString();
+      const oneHourAgoISOString = oneHourAgo.toISOString();
+      // Encontrar el índice de la última marca de tiempo menor o igual a la hora actual
+      const lastIndexBeforeNow = fecha_local.findLastIndex(timestamp => timestamp <= nowISOString);
+      // Encontrar el índice de la primera marca de tiempo mayor que la hora una hora atrás
+      const firstIndexAfterOneHourAgo = fecha_local.findIndex(timestamp => timestamp > oneHourAgoISOString);      
+      
+      return {
+        fecha_local:  fecha_local.slice(firstIndexAfterOneHourAgo, lastIndexBeforeNow + 1),
+        tiempo: tiempo.slice(firstIndexAfterOneHourAgo, lastIndexBeforeNow + 1),
+        porc_encendido: porc_encendido.slice(firstIndexAfterOneHourAgo, lastIndexBeforeNow + 1),
+      }         
+    }
 
     
-    const $maxValue = document.getElementById(`${currentChannel.nombre_columna}_max_value`); 
-    const $minValue = document.getElementById(`${currentChannel.nombre_columna}_min_value`);
-    const $alarmMax = document.getElementById(`${currentChannel.nombre_columna}_alarm_max`);
-    const $alarmMin = document.getElementById(`${currentChannel.nombre_columna}_alarm_min`);
-   
-
-    const now = new Date() ;
-    const currentTime = new Date(now.getTime() - (60 * 60 * 1000 * 3));
-    // Calcular la hora una hora atrás
-    const oneHourAgo = new Date(now.getTime() - (60 * 60 * 1000 * 4));    
-
-    // Convertir las fechas a formato ISO 8601
-    const nowISOString = currentTime.toISOString();
-    const oneHourAgoISOString = oneHourAgo.toISOString();
-
-    // Encontrar el índice de la última marca de tiempo menor o igual a la hora actual
-    const lastIndexBeforeNow = myTimeStamps.findLastIndex(timestamp => timestamp <= nowISOString);
-
-    // Encontrar el índice de la primera marca de tiempo mayor que la hora una hora atrás
-    const firstIndexAfterOneHourAgo = myTimeStamps.findIndex(timestamp => timestamp > oneHourAgoISOString);
-
-    // Filtrar myTimeStamps para obtener los datos entre la hora actual y una hora atrás
-    const myTimeStampsOneHour = myTimeStamps.slice(firstIndexAfterOneHourAgo, lastIndexBeforeNow + 1);
-    //valuesTiempo
-    const myValuesGroupByThreeOneHour = myValuesGroupByThree.slice(firstIndexAfterOneHourAgo, lastIndexBeforeNow + 1);
+    $maxValue.innerHTML = maxPorcEncendido;
+    $minValue.innerHTML = minPorcEncendido;
+    $alarmMax.innerHTML = 'null';
+    $alarmMin.innerHTML = 'null';
     
-    $maxValue.innerHTML = Math.max(...myValuesGroupByThree);
-    $minValue.innerHTML = Math.min(...myValuesGroupByThree);
-    $alarmMax.innerHTML = 50;
-    $alarmMin.innerHTML = 30;
-    
-    const max = new Array(myValuesGroupByThreeOneHour.length), min = new Array(myValuesGroupByThreeOneHour.length);
-    max.fill(Math.max(...myValuesGroupByThree))
-    min.fill(Math.min(...myValuesGroupByThree))
+    // const max = new Array(myValuesGroupByThreeOneHour.length), min = new Array(myValuesGroupByThreeOneHour.length);   
 
-
-    console.log(myTimeStampsOneHour, myValuesGroupByThreeOneHour, max);
+    const dataGroupByThreeOneHour = groupByLastHour(dataGroupByThree);
+    console.log(dataGroupByThreeOneHour);
 
     
-    // Datos del gráfico
+    // Datos del gráfico - posibilidades de vistas, todo los registros, o los de la ultima hora: "dataGroupByThree, dataGroupByThreeOneHour"
+    //$cambiarSerieBtn.value '24' o '1'
     var options = { 
         title: {
-        text : currentChannel.canal_nombre
+        text : `Porcentaje de encendido - ${$cambiarSerieLabel.innerHTML}`
         },
       chart: {
         type: 'line',
         height: 300,
         width: "100%",
-        background: '#f4f4f4',          
-      },
-      
+        background: '#f4f4f4',        
+        toolbar: {
+          show: true,
+          tools: {
+            download: true,
+            selection: true,
+            zoom: false,
+            zoomin: true,
+            zoomout: true,
+            pan: true,
+            reset: true | '<img src="/static/icons/reset.png" width="20">',
+            customIcons: []
+          } 
+        }                 
+      },    
       series: [        
             {       
-              name: "Tiempo de encendido",
-              data: myValuesGroupByThreeOneHour,
-              color: '#e29578'
-            },
-            {       
-              name: "max",
-              data: max,
-              color: '#e29578'
-            },
-            {       
-              name: "min",
-              data: min,
-              color: '#e29578'
-            }
+              name: "Porcentaje de encendido",
+              data: dataGroupByThree.porc_encendido,
+              color: '#e29578'             
+            }                 
             ],
               xaxis: {
-              categories: myTimeStampsOneHour,
+              categories: dataGroupByThree.fecha_local,
               type: 'datetime'      
           },
       stroke: {
@@ -322,12 +349,14 @@
         showAnalogCard(channels[i], channelsData[i].data);
       }else {
         console.log(`Canal digital: ${channels[i].nombre_columna}`); 
-        showDigitalCard(channels[i], channelsData[i].data);
+        showDigitalCard(channels[i], channelsData[i].data);             
       }
     }
   }else{
     console.log("No tiene canales asociados al datalogger");
   }
+
+  
 </script>
     
 </body>

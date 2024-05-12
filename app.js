@@ -52,7 +52,7 @@ app.use(express.static('./public'));
 app.use(methodOverride('_method'));
 
 
-cronjobs.taskAlarm.start();
+cronjobs.taskAlarm.stop();
 
 
 
