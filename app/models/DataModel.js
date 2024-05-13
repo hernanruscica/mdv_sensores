@@ -68,10 +68,10 @@ module.exports = {
     getDigital: async (table, channel, timePeriod) => {
         //console.log("getDigital on dataModel");
         const connection = await pool.getConnection();//SELECT CONVERT_TZ('2004-01-01 12:00:00','+00:00','+10:00');
-        //  
+        //  render: UTC_LOCAL='+03:00' localhost UTC_LOCAL='00:00'
         const query =  `
                         SELECT 
-                            CONVERT_TZ(fecha, '+00:00', '+03:00') as fecha_local,
+                            CONVERT_TZ(fecha, '+00:00', '${process.env.UTC_LOCAL}') as fecha_local,
                             ${channel}_estado AS estado,
                             ${channel}_cantidad AS cantidad,
                             ${channel}_tiempo AS tiempo,
