@@ -3,14 +3,16 @@ const DataModel = require('../models/DataModel');
 const mail = require('../utils/mail');
 
 module.exports = {
-  taskAlarm: cron.schedule(`*/60 * * * * *`, async () => {
-      console.log("Cada 1 minuto");
-      const dataAnalog = await DataModel.getAnalog("guemes", "a1", "1 HOUR");
-      const tempMaxLastHour = Math.max(...dataAnalog.map((data) => data.max));
-      console.log("datosa", tempMaxLastHour);
-      if (tempMaxLastHour < 800) {
-        mail.sendAlarm(tempMaxLastHour);
-        console.log("menor que 800");
+  taskAlarm: cron.schedule('*/5 * * * *', async () => {
+      //console.log("Cada 15 segundos");
+      const dataDigital = await DataModel.getDigital("guemes", "d2", "1 HOUR");
+      const porcOnLastHour = [...dataDigital.map(data => data.porc_encendido)];
+      const sum = porcOnLastHour.reduce((a,c) => a + c, 0);
+      const avg = sum / porcOnLastHour.length;
+      console.log("datosa", Date(), porcOnLastHour, avg);
+      if (avg > 45) {
+        mail.sendAlarm(avg);
+        console.log("porcentaje de encendido mayor a 45");
       }
     })  
 };

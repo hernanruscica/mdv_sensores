@@ -195,10 +195,20 @@
         },
         series: [        
             {       
+              name: "MAX % Enc. / Apag.",
+              data: $cambiarSerieBtn.value == '1' ?  maxArrayOneHour : maxArray,
+              color: 'red'             
+            },
+            {       
               name: "Porcentaje de encendido",
               data: $cambiarSerieBtn.value == '1' ?  dataGroupByThreeOneHour.porc_encendido : dataGroupByThree.porc_encendido,
               color: '#e29578'             
-            }                 
+            },
+            {       
+              name: "MIN % Enc. / Apag.",
+              data: $cambiarSerieBtn.value == '1' ?  minArrayOneHour : minArray,
+              color: 'green'             
+            },                 
             ],
               xaxis: {
               categories: $cambiarSerieBtn.value == '1' ?  dataGroupByThreeOneHour.fecha_local : dataGroupByThree.fecha_local,
@@ -274,14 +284,23 @@
     $alarmMax.innerHTML = 'null';
     $alarmMin.innerHTML = 'null';
     
-    // const max = new Array(myValuesGroupByThreeOneHour.length), min = new Array(myValuesGroupByThreeOneHour.length);   
+      
 
     const dataGroupByThreeOneHour = groupByLastHour(dataGroupByThree);
-    console.log(dataChannel, dataGroupByThree, dataGroupByThreeOneHour);
 
-    
-    // Datos del gráfico - posibilidades de vistas, todo los registros, o los de la ultima hora: "dataGroupByThree, dataGroupByThreeOneHour"
-    //$cambiarSerieBtn.value '24' o '1'
+
+    const maxArray = new Array(dataGroupByThree.fecha_local.length), minArray = new Array(dataGroupByThree.fecha_local.length); 
+    const maxArrayOneHour = new Array(dataGroupByThreeOneHour.fecha_local.length), minArrayOneHour = new Array(dataGroupByThreeOneHour.fecha_local.length); 
+    maxArray.fill(maxPorcEncendido);
+    minArray.fill(minPorcEncendido);
+    maxArrayOneHour.fill(maxPorcEncendido);
+    minArrayOneHour.fill(minPorcEncendido);
+    //maxArrayOneHour
+
+    //console.log(dataChannel, dataGroupByThree, dataGroupByThreeOneHour);
+    console.log(maxArray, dataGroupByThree, maxArrayOneHour, dataGroupByThreeOneHour);
+
+       
     var options = { 
         title: {
         text : `Porcentaje de encendido - ${$cambiarSerieLabel.innerHTML}`
@@ -307,10 +326,20 @@
       },    
       series: [        
             {       
+              name: "MAX % Enc. / Apag.",
+              data: maxArray,
+              color: 'red'             
+            },
+            {       
               name: "Porcentaje de encendido",
               data: dataGroupByThree.porc_encendido,
               color: '#e29578'             
-            }                 
+            },                               
+            {       
+              name: "MIN % Enc. / Apag.",
+              data: minArray,
+              color: 'green'             
+            }
             ],
               xaxis: {
               categories: dataGroupByThree.fecha_local,
