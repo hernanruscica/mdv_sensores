@@ -92,9 +92,7 @@ module.exports = {
 
         let currentData = null;   
 
-        const resultsMail = await mail.sendWelcome({email: 'cesarhernanruscica@gmail.com'}, 'pepe');
-        console.log(resultsMail);
-
+       
         //console.log(currentChannel)
         // AlarmModel.add({dataloggerID: 1, channelId: 10, table: "guemes", column: "d2",
         //                 name: "Guemes encendido por hora", 

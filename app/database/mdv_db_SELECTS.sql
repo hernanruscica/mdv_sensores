@@ -270,10 +270,16 @@ where id != 1 AND id != 10 AND id != 25;
 
 update mdvsrl.alarmas
 	set 
+		canal_id = 11,
+        tabla = 'guemes',
+        columna= 'd6',
+        nombre = 'bomba 1 - tiempos de funcionamiento - max = 60',
+		descripcion = 'Se activa si se sobrepasa 60% de tiempo de encendido',
 		max = 60,
-        nombre = 'Guemes compresor 2 - Encendidos - Ult. Hora - Max = 60%',
-		descripcion = 'Se activa si se sobrepasa 60% de tiempo de encendido'
-	where id = 1;
+        min = 0,
+        periodo_tiempo = '1 HOUR',
+        estado= false
+	where id = 6;
         
 select * from `mdvsrl`.`alarmas_logs` where usuario_id = 32;
 select * from `mdvsrl`.`alarmas_logs` where canal_id = 10 AND  usuario_id = 32;

@@ -1,4 +1,5 @@
 const mysql2 = require('mysql2/promise');
+const { insert } = require('./UserModel');
 
 // Configurar el pool de conexiones
 const pool = mysql2.createPool({
@@ -18,14 +19,18 @@ module.exports = {
         //console.log(`inserto en la tabla 'alarmas':`, data);
         try {
             const [rows, columns] = await  connection.execute(`insert into alarmas
-            (datalogger_id, canal_id, tabla, columna, nombre, descripcion, max, min, periodo_tiempo, fecha_creacion)
+            (canal_id, tabla, columna, nombre, descripcion, max, min, periodo_tiempo, estado, fecha_creacion)
             values
-            ('${data.dataloggerID}', '${data.channelId}', '${data.table}', '${data.column}', 
-             '${data.name}', '${data.description}', '${data.max}', '${data.min}', '${data.timePeriod}', CURRENT_TIMESTAMP());`);
-        return rows;
+            ('${data.channelId}', '${data.table}', '${data.column}', 
+             '${data.name}', '${data.description}', '${data.max}', '${data.min}', '${data.timePeriod}', true, CURRENT_TIMESTAMP());`);            
+            if (rows.affectedRows > 0){
+                return {message: 'Alarm added ok', insertId: rows.insertId}
+            }else{
+                return {message: 'Alarm added Fails', insertId: -1};
+            }        
         } catch (error) {
             console.log(error);
-            throw error;            
+            return {message: 'Alarm added ERROR', insertId: -1, error: error}                        
         }finally{
             connection.release(); 
             console.log("cerrada la conexion con el pool de datos");
@@ -46,6 +51,71 @@ module.exports = {
             console.log("cerrada la conexion con el pool de datos");
         }
     },
+    getById: async (id) => {        
+        const connection = await pool.getConnection();
+        console.log("abierta la conexion con el pool de datos - Alarmas.getById");
+        try {            
+            const [rows, fields] = await connection.execute(`select *
+                from alarmas where id = ?`, [id]);  
+            return rows;
+        } catch (error){
+            //console.error(error);
+            throw error;
+        } finally {
+            connection.release(); // Liberar la conexión de vuelta al pool cuando hayas terminado
+            console.log("cerrada la conexion con el pool de datos");
+        }
+    },
+    update: async (data, id) => {
+        const connection = await pool.getConnection();
+        console.log(`abierta la conexion con el pool de datos - Update - alarm ` );
+        //console.log(`inserto en la tabla 'alarmas':`, data);
+        try {
+            const [rows, columns] = await  connection.execute(`update alarmas
+                        set 
+                            canal_id = ?,
+                            tabla = ?,
+                            columna= ?,
+                            nombre = ?,
+                            descripcion = ?,
+                            max = ?,
+                            min = ?,
+                            periodo_tiempo = ?,
+                            estado= ?
+                        where id = ?`, [data.channelId, data.table, data.column, data.name, data.description, data.max, data.min, data.timePeriod, data.state, id]);
+            
+
+            if (rows.affectedRows > 0){
+                return {message: 'Alarm update ok', insertId: rows.insertId}
+            }else{
+                return {message: 'Alarm update Fails', insertId: -1};
+            }        
+        } catch (error) {
+            console.log(error);
+            return {message: 'Alarm update ERROR', insertId: -1, error: error}                        
+        }finally{
+            connection.release(); 
+            console.log("cerrada la conexion con el pool de datos");
+        }
+    },
+
+
+
+    delete: async (id) => {
+        const connection = await pool.getConnection();
+        console.log("abierta la conexion con el pool de datos - Alarmas.delete");
+        try {            
+            const [rows, fields] = await connection.execute(`delete from alarmas where id = ${id}`);  
+            return rows;
+        } catch (error){
+            //console.error(error);
+            throw error;
+        } finally {
+            connection.release(); // Liberar la conexión de vuelta al pool cuando hayas terminado
+            console.log("cerrada la conexion con el pool de datos");
+        }
+
+    },
     addUserOnAlarm: async (userId, alarmId) => {        
         const connection = await pool.getConnection();
         console.log(`abierta la conexion con el pool de datos - add - alarma_x_usuario ` );
@@ -59,11 +129,17 @@ module.exports = {
             (alarma_id, usuario_id, fecha_creacion)
             values
             ('${alarmId}', '${userId}', CURRENT_TIMESTAMP());`);
-        return {value: rows, message: 'Alarm asigned to the user'};
+
+            if (rows.affectedRows > 0){
+                return {value: rows, message: 'Alarm asigned to the user'};
+            }else{
+                return {value: null, message: 'Alarm NOT asigned to the user'};
+            }
+        
         } catch (error) {
             console.log(error.code);
             //throw error;            
-            return {value: null, errorCode: error.code, message: error.code == 'ER_NO_REFERENCED_ROW_2' ? 'Alarm id doesnt exists' : error.sqlMessage};
+            return {value: null, errorCode: error.code, message: error.code == 'ER_NO_REFERENCED_ROW_2' ? 'Alarm or User id doesnt exists' : error.sqlMessage};
         }finally{
             connection.release(); 
             console.log("cerrada la conexion con el pool de datos");
@@ -88,7 +164,7 @@ module.exports = {
         const connection = await pool.getConnection();
         console.log("abierta la conexion con el pool de datos - AlarmModel.getEmailsByAlarmId");
         try {            
-            const [rows, fields] = await connection.execute(`select usuarios.id, usuarios.email
+            const [rows, fields] = await connection.execute(`select usuarios.id, usuarios.email, usuarios.nombre_1, usuarios.apellido_1, usuarios.email, usuarios.telefono
                 from alarmas_x_usuarios 
                 inner join usuarios on usuarios.id = alarmas_x_usuarios.usuario_id
                 where alarma_id = ${alarmId}`);  

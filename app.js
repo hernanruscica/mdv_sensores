@@ -36,6 +36,7 @@ const UsersRouter = require('./app/routes/UserRoutes.js');
 const LocationsRouter = require('./app/routes/LocationRoutes.js');
 const DataloggersRouter = require('./app/routes/DataloggerRoutes.js');
 const UploadRouter = require('./app/routes/UploadRoutes.js');
+const AlarmRouter = require('./app/routes/AlarmRoutes.js')
 
 
 
@@ -47,6 +48,7 @@ app.use('/users', UsersRouter);
 app.use('/locations', LocationsRouter);
 app.use('/dataloggers', DataloggersRouter);
 app.use('/uploads', UploadRouter);
+app.use('/alarms', AlarmRouter);
 app.use(express.static(path.join(__dirname, 'views')));
 app.use(express.static('./public'));
 app.use(methodOverride('_method'));
