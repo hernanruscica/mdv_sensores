@@ -145,3 +145,24 @@ VALUES
 (5, 3, NOW()), -- Datalogger 3 en Centro de Arte Contemporáneo
 (5, 1, NOW()); -- Datalogger 1 en Centro de Arte Contemporáneo
 
+
+
+insert into `mdvsrl`.`alarmas`
+	(canal_id, tabla, columna, nombre, descripcion, max, min, periodo_tiempo, estado, fecha_creacion)
+values
+	(11, 'guemes', 'd6', 'Guemes Bomba 1 - Encendidos - Ult. Hora - Max = 45%', 'Se activa al sobrepasar 45% del tiempo de encendido', 45, 0, '1 HOUR', true, CURRENT_TIMESTAMP());
+
+insert into `mdvsrl`.`alarmas_x_usuarios`
+	(alarma_id, usuario_id, fecha_creacion)
+values
+	-- (1, 32, current_timestamp()),
+    -- (1, 84, current_timestamp()),
+    (2, 85, current_timestamp());
+    
+insert into `mdvsrl`.`alarmas_logs`
+	(alarma_id, usuario_id, canal_id, fecha_disparo)
+values
+	(1, 32, 10, current_timestamp());
+
+
+

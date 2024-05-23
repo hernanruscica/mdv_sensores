@@ -1,4 +1,7 @@
 
+show tables;
+
+select * from iriarte order by fecha desc;
 select * from guemes order by fecha desc;
 
 /*Para un canal digital del 15 al 16 de marzo - reemplazar la fecha hardcodeada por CURDATE()*/

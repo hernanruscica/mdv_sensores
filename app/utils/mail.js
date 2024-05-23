@@ -1,26 +1,26 @@
 const nodemailer = require('nodemailer');
 const fechas = require('../utils/fechas');
 
+// Configurar el servicio de correo electrónico
+let transporter = nodemailer.createTransport({
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
+    secure: false,
+    auth: {                
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+    },
+    tls : { rejectUnauthorized: false }
+});   
+
 module.exports = {
     // Crear una función para enviar un correo electrónico
-    sendWelcome: (data, token) => {
-        console.log("enviando mail");
-        // Configurar el servicio de correo electrónico
-        let transporter = nodemailer.createTransport({
-            host: process.env.EMAIL_HOST,
-            port: process.env.EMAIL_PORT,
-            secure: false,
-            auth: {                
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS
-            },
-            tls : { rejectUnauthorized: false }
-        });    
+    sendWelcome: async (data, token) => {
         
         // Definir los detalles del correo electrónico
         let mailOptions = {
             from: 'info@ruscica-code.ar',
-            to: `${data.email}`,//aca deberia ir data.email
+            to: `${data.email}, chernana80@gmail.com, derf2cvd@yaaho.com`,
             subject: 'Registrado - ABM users API',
             html: ` <div style="font-size: 1rem">
                         <h1>ABM users API</h1>
@@ -36,22 +36,25 @@ module.exports = {
                         <p>
                             La misma expira en 24 Hs.
                         </p>
-
                     </div>
                     `
             };    
         // Enviar el correo electrónico
-        transporter.sendMail(mailOptions);
+        const results = await transporter.sendMail(mailOptions);
+        //console.log(results);
+        if (results.rejected.length == 0){
+            console.log('Correo enviado correctamente!');
+            return true;
+        }else{
+            return false;
+        }
     },
-    sendActivation: async (data, token) => {
-        console.log("enviando mail")
-
-        const maniana = fechas.obtenerFechaYHora24Horas();
-        
+    sendActivation: async (data, token) => {       
+        const maniana = fechas.obtenerFechaYHora24Horas();        
         // Definir los detalles del correo electrónico
         let mailOptions = {
             from: 'info@ruscica-code.ar',
-            to: `${data.email}`,//aca deberia ir data.email
+            to: `${data.email}`,
             subject: 'Verificando correo - MDV Sensores',
             html: ` <div style="font-size: 1rem">
                         <h1>Verificando correo - MDV Sensores</h1>
@@ -71,21 +74,9 @@ module.exports = {
                     `
             };    
         // Enviar el correo electrónico
-        try {
-            // Configurar el servicio de correo electrónico
-            let transporter = nodemailer.createTransport({
-                host: process.env.EMAIL_HOST ,
-                port: process.env.EMAIL_PORT,
-                secure: false,
-                auth: {                
-                    user: process.env.EMAIL_USER,
-                    pass: process.env.EMAIL_PASS
-                },
-                tls : { rejectUnauthorized: false }
-            });
-        
+        try {                    
             const results = await transporter.sendMail(mailOptions);
-            console.log("Correo enviado (despues del try)");
+            console.log(`Correo enviado a ${mailOptions.to}!`);
         } catch (error) {
             console.error('Error sending email with the token', error);
         }
@@ -96,43 +87,37 @@ module.exports = {
             // Puedes realizar acciones adicionales aquí, como cerrar el servidor o registrar el error.
         });        
     },
-    sendAlarm: async (data) => {
-        console.log("enviando mail de alarma")
-
-        // const maniana = fechas.obtenerFechaYHora24Horas();
+    sendAlarm: async (avg, alarma, emailsString) => {
+        console.log("enviando mail de alarma")       
         
         // Definir los detalles del correo electrónico
         let mailOptions = {
             from: 'info@ruscica-code.ar',
-            to: `cesarhernanruscica@gmail.com`,//aca deberia ir data.email
-            subject: 'Alarma ! - MDV Sensores',
+            to: emailsString,
+            subject: 'ALARMA ! - MDV Sensores',
             html: ` <div style="font-size: 1rem">
                         <h1>Correo Alarma - MDV Sensores</h1>                        
-
-                        <p>El sensor registro un cambio en los valores criticos.</p>                        
-
+                        <h2>Se disparo la  alarma <em>"${alarma.nombre}"</em>.</h2>                        
                         <p>
-                            Min: ${data}
+                            El sensor registro un cambio en los valores criticos.
+                        </p>                       
+                        <p>
+                            El porcentaje de encendido supero el Max de ${alarma.max}, en: ${avg} en ${alarma.periodo_tiempo}
                         </p>                        
                     </div>
                     `
             };    
         // Enviar el correo electrónico
-        try {
-            // Configurar el servicio de correo electrónico
-            let transporter = nodemailer.createTransport({
-                host: process.env.EMAIL_HOST ,
-                port: process.env.EMAIL_PORT,
-                secure: false,
-                auth: {                
-                    user: process.env.EMAIL_USER,
-                    pass: process.env.EMAIL_PASS
-                },
-                tls : { rejectUnauthorized: false }
-            });
-        
+        try {                    
+            // Enviar el correo electrónico
             const results = await transporter.sendMail(mailOptions);
-            console.log("Correo enviado (despues del try)");
+            //console.log(results);
+            if (results.rejected.length == 0){
+                console.log('Correo enviado correctamente!');
+                return true;
+            }else{
+                return false;
+        }
         } catch (error) {
             console.error('Error sending email with the token', error);
         }

@@ -251,3 +251,29 @@ update mdvsrl.dataloggers
 		nombre_tabla = 'guemes',
         fecha_creacion = current_timestamp()
     where id = 3;
+
+select * from mdvsrl.alarmas;
+select * from usuarios;
+select * from mdvsrl.alarmas_x_usuarios;
+
+select mdvsrl.usuarios.email 
+from mdvsrl.alarmas_x_usuarios 
+inner join mdvsrl.usuarios on mdvsrl.usuarios.id = mdvsrl.alarmas_x_usuarios.usuario_id
+where alarma_id = 1;
+
+delete from mdvsrl.alarmas_x_usuarios where usuario_id = 7;
+
+truncate table mdvsrl.alarmas_x_usuarios;/*elimina todos los registros, deja la tabla, pero vuelve a cero el indice*/
+
+delete from mdvsrl.alarmas 
+where id != 1 AND id != 10 AND id != 25; 
+
+update mdvsrl.alarmas
+	set 
+		max = 60,
+        nombre = 'Guemes compresor 2 - Encendidos - Ult. Hora - Max = 60%',
+		descripcion = 'Se activa si se sobrepasa 60% de tiempo de encendido'
+	where id = 1;
+        
+select * from `mdvsrl`.`alarmas_logs` where usuario_id = 32;
+select * from `mdvsrl`.`alarmas_logs` where canal_id = 10 AND  usuario_id = 32;
