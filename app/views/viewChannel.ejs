@@ -28,7 +28,7 @@
     <div class="d-flex flex-column flex-lg-row ">
 
       <!-- Inicio  de la Card de info general-->
-      <div class="card m-3 col-12 col-lg-6">
+      <div class="card m-3 w-100">
           <div class="card-body">            
               <h5 class="card-title">
                 Información general
@@ -40,33 +40,21 @@
               <!-- Foto -->
               <img src="" class="card-img-top" alt="Foto del Canal ">            
               <!-- Fecha de creacion -->
-              <p class="card-text">Fecha de creacion: <%= currentChannel.fecha_creacion %></p>
+              <p class="card-text">Creado el <%= formatearFecha(currentChannel.fecha_creacion) %></p>
+              <div class="container row justify-content-start">
+                <a href="/dataloggers/editform/1" class="btn btn-secondary col-5 col-lg-6">Editar Canal</a>
+              </div>
           </div>        
       </div>
       <!-- Fin de la Card de info general-->
 
-      <!-- Principio de la Card de opciones del canal-->
-      <div class="card m-3 col-12 col-lg-6">
-        <div class="card-body">
-          <h5 class="card-title">
-            Opciones del canal
-          </h5>
-          <!-- userLocationRoles -->
-          <p class="card-text">
-            Listado de opciones para este canal, como las alarmas.
-          </p>
-          <div class="container row justify-content-start">
-            <a href="/dataloggers/editform/1" class="btn btn-secondary col-5 col-lg-6">Editar Canal</a>
-          </div>
-        </div>
-      </div>
-      <!-- Fin  de la Card de dataloggers-->
+      
     </div>    
     <% if (currentChannel.isAnalog == false){ %>
     <div class="d-flex flex-column flex-lg-row ">
-
-      <!-- Inicio  de la Card de vision general de datos-->
-      <div class="card m-3 col-12 col-lg-6">
+      <!-- Inicio  de la Card de vision general de datos 
+       col-12 col-lg-6 -->
+      <div class="card m-3">
         <div class="card-body d-flex flex-wrap justify-content-between align-items-start">
           <div>
               <h5 class="card-title">Vision general de Datos</h5>
@@ -87,21 +75,31 @@
 
       <!-- Inicio  de la Card de vision general de datos 2-->
       <div class="card m-3 col-12 col-lg-6">
-        <div class="card-body d-flex flex-wrap justify-content-between align-items-start">
-          <div>
-              <h5 class="card-title">Alarmas</h5>
+        <div class="card-header">
+          <h5 class="card-title">Alarmas vigentes para el canal <em>"<%= currentChannel.nombre %>"</em></h5> 
+         </div>
+         <!-- d-flex flex-wrap justify-content-between align-items-start -->
+        <div class="card-body ">         
+                       
               <!-- Promedios relacion de uso -->
-              <p class="card-text">Relación de uso. Promedio última hora: 40% - Ultimas 24 Hs.: 46,1%</p>
-
+              <!-- <p class="card-text"></p> -->
+              <ul class="list-group list-group-flush ">
               <% if (channelAlarms.length> 0) { 
                 channelAlarms.forEach((alarm, index)=> { %>
-                  <h6 class="card-title">Alarma #<%= index + 1 %> :  <%= alarm.nombre %></h6>             
-                  <!-- Fecha de creada-->
-                  <p class="card-text">Creada el <%= alarm.fecha_creacion %></p>
-                  <!-- Descripcion-->
-                  <p class="card-text"><%= alarm.descripcion %></p>
-                  <!-- alarma minimo y maximo-->
-                  <p class="card-text">Mínimo: <%= alarm.min %> - Máximo: <%= alarm.max %> - Periodo de tiempo: <%= alarm.periodo_tiempo %></p>
+                  <li class="list-group-item my-2 ">
+                    <h6 class="card-title">Alarma #<%= index + 1 %> :  <%= alarm.nombre %></h6>     
+                    <p class="card-text"> <span class="fst-italic"> Creada el <%= formatearFecha(alarm.fecha_creacion) %></span><br>
+                     <span class="fs-5"><%= alarm.descripcion %></span> <br>              
+                    <span class="text-success ">Mínimo: <%= alarm.min %></span> - <span class="text-danger">Máximo: <%= alarm.max %></span> - Periodo de tiempo: <%= alarm.periodo_tiempo %></p>
+                    <div>
+                      <a href="/dataloggers/view/<%= datalogger.id %>" class="btn btn-primary  mb-2">Ver</a>
+                      <a href="/dataloggers/editform/<%= datalogger.id %>" class="btn btn-secondary  mb-2">Editar</a>
+                      <button type="button" class="btn btn-danger  mb-2 eliminarDatalogger" id="eliminarDatalogger"
+                        data-id="<%= datalogger.id %>" 
+                        data-nombre="<%= datalogger.nombre %>" 
+                        data-ubicacion="<%= datalogger.ubicacion_nombre %>">Eliminar</button>
+                    </div>
+                  </li>
                 <%})
               }else{
                 %> 
@@ -109,7 +107,7 @@
                   <%
                 }
                 %>
-          </div>          
+              </ul>
         </div> 
       </div>
       <!-- Fin de la Card de vison general de datos 2-->
@@ -268,6 +266,8 @@ const currentChannel= <%- JSON.stringify(currentChannel || []) %>;
     window.history.back();
   }
 </script>
+
+
 </body>
 </html>
 

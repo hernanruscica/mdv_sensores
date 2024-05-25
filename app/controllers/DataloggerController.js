@@ -6,6 +6,9 @@ const UserModel = require('../models/UserModel');
 const dataBuild = require('../utils/dataBuild');
 const AlarmModel = require('../models/AlarmModel');
 const mail = require('../utils/mail');
+const fechas = require('../utils/fechas');
+
+
 
 module.exports = {
     getAll: async (req, res) => {
@@ -111,6 +114,7 @@ module.exports = {
                                    datalogger: dataloggerData,
                                    id: id, 
                                    channelAlarms: channelAlarms,
+                                   formatearFecha: fechas.formatearFecha,
                                    currentChannel: currentChannel, 
                                    dataChannel: currentData || []});
         
