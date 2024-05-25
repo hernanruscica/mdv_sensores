@@ -280,6 +280,8 @@ update mdvsrl.alarmas
         periodo_tiempo = '1 HOUR',
         estado= false
 	where id = 6;
-        
+    
+select * from `mdvsrl`.`alarmas_logs`;
 select * from `mdvsrl`.`alarmas_logs` where usuario_id = 32;
-select * from `mdvsrl`.`alarmas_logs` where canal_id = 10 AND  usuario_id = 32;
+select * from `mdvsrl`.`alarmas_logs` where canal_id = 11;
+select * from alarmas where canal_id = 10;

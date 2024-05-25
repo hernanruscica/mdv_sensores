@@ -90,20 +90,10 @@ module.exports = {
         const results03 = await LocationModel.getById(dataloggerData.ubicacion_id);
         const location = (results03.length > 0) ? results03[0] : [];
 
-        let currentData = null;   
-
-       
-        //console.log(currentChannel)
-        // AlarmModel.add({dataloggerID: 1, channelId: 10, table: "guemes", column: "d2",
-        //                 name: "Guemes encendido por hora", 
-        //                 description: "Avisa si se sobrepasa el porcentaje max de tiempo encendido en la ultima hora.", 
-        //                 max: 45, min: 0, 
-        //                 timePeriod: "1 HOUR"});
-        // const alarmaAgregada = await AlarmModel.addUserOnAlarm(84, 45);
-        // console.log(alarmaAgregada.value != null ? 'alarma asignada al usuario' : alarmaAgregada.message);
-
-        
-        
+        const results04 = await AlarmModel.getAll();
+        const channelAlarms = (results04.length > 0) ? results04.filter(alarm => alarm.canal_id == idchannel) : []; 
+        console.log(channelAlarms);
+        let currentData = null;                  
         //Si es analogico
         if (currentChannel.nombre_columna.startsWith('a')){            
             currentChannel.isAnalog = true;
@@ -120,6 +110,7 @@ module.exports = {
                                    location: location, 
                                    datalogger: dataloggerData,
                                    id: id, 
+                                   channelAlarms: channelAlarms,
                                    currentChannel: currentChannel, 
                                    dataChannel: currentData || []});
         

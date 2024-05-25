@@ -1,6 +1,7 @@
 const express = require('express');
 const AlarmController = require('../controllers/AlarmController');
 
+
 var router = express.Router();
 
 router.get('/all', AlarmController.all);
@@ -14,5 +15,8 @@ router.get('/users/all', AlarmController.getAllUsersOnAlarms);
 router.get('/:id/users/all', AlarmController.getUsersByAlarmId);
 
 
+router.get('/logs/all', AlarmController.getAllAlarmLogs);
+router.get('/logs/users/:id', AlarmController.getAllAlarmLogsByUser);
+router.get('/logs/channels/:id', AlarmController.getAllAlarmLogsByChannel);
 
 module.exports = router;

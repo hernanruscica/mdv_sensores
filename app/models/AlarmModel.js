@@ -177,6 +177,7 @@ module.exports = {
             console.log("cerrada la conexion con el pool de datos");
         }
     },
+    //No necesitaria un controller, porque uso la funcion directamente en cronjobs, no se dispara desde el front, por eso no necesitaria una ruta y un controller.
     addAlarmLog: async (alarma_id, usuario_id, canal_id, valor) => {        
         const connection = await pool.getConnection();
         console.log(`abierta la conexion con el pool de datos - add - alarm ` );
@@ -194,5 +195,48 @@ module.exports = {
             connection.release(); 
             console.log("cerrada la conexion con el pool de datos");
         }
+    },
+    getAllAlarmLogs: async () => {
+        const connection = await pool.getConnection();
+        console.log(`abierta la conexion con el pool de datos - get - Alarm Logs ` ); 
+        try {            
+            const [rows, columns] = await connection.execute('select * from alarmas_logs;');
+            return rows;
+        } catch (error) {
+            console.log(error);
+            throw error;   
+        }finally{
+            connection.release(); 
+            console.log("cerrada la conexion con el pool de datos");
+        }
+    },
+    getAllAlarmLogsByUser: async (id) => {
+        const connection = await pool.getConnection();
+        console.log(`abierta la conexion con el pool de datos - get - Alarm Logs ` ); 
+        try {            
+            const [rows, columns] = await connection.execute('select * from alarmas_logs where usuario_id = ?;', [id]);
+            return rows;
+        } catch (error) {
+            console.log(error);
+            throw error;   
+        }finally{
+            connection.release(); 
+            console.log("cerrada la conexion con el pool de datos");
+        }
+    },
+    getAllAlarmLogsByChannel: async (id) => {
+        const connection = await pool.getConnection();
+        console.log(`abierta la conexion con el pool de datos - get - Alarm Logs ` ); 
+        try {            
+            const [rows, columns] = await connection.execute('select * from alarmas_logs where canal_id = ?;', [id]);
+            return rows;
+        } catch (error) {
+            console.log(error);
+            throw error;   
+        }finally{
+            connection.release(); 
+            console.log("cerrada la conexion con el pool de datos");
+        }
     }
+
 }

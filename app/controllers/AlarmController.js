@@ -76,6 +76,31 @@ module.exports = {
         }else{
             return res.status(400).json({message: 'not found'});
         }
-
+    },
+    getAllAlarmLogs: async (req, res) => {
+        const allAlarmLogs = await AlarmModel.getAllAlarmLogs();
+        if (allAlarmLogs.length > 0){
+            return res.status(200).json({message: 'OK', data: allAlarmLogs});
+        }else{
+            return res.status(400).json({message: 'not found'});
+        }        
+    },
+    getAllAlarmLogsByUser: async (req, res) => {
+        const {id} = req.params;
+        const allAlarmLogsByUser = await AlarmModel.getAllAlarmLogsByUser(id);
+        if (allAlarmLogsByUser.length > 0){
+            return res.status(200).json({message: 'OK', data: allAlarmLogsByUser});
+        }else{
+            return res.status(400).json({message: 'not found'});
+        }        
+    },
+    getAllAlarmLogsByChannel: async (req, res) => {
+        const {id} = req.params;
+        const allAlarmLogsByChannelId = await AlarmModel.getAllAlarmLogsByChannel(id);
+        if (allAlarmLogsByChannelId.length > 0){
+            return res.status(200).json({message: 'OK', data: allAlarmLogsByChannelId});
+        }else{
+            return res.status(400).json({message: 'not found'});
+        }        
     }
 }
