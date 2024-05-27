@@ -1,0 +1,70 @@
+<!--Empieza modal de EDITAR Alarma-->
+<div class="container">
+    <div class="modal fade" id="modal_editar_alarmas" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form method="POST" action=""  id="modal_editar_alarmas_form"  name="modal_editar_alarmas_form">          
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Editar Alarma</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">                    
+            <div class="card mb-3">
+              <div class="card-body">
+                <div class="mb-3 row ">
+                  <label for="ubicaciones_id_edit" class="col-sm-2 col-md-3 col-form-label">Nombre:</label>
+                  <div class="col-sm-10 col-md-9 my-2">                                                                                 
+                    <input type="hidden" value="" id="dataloggerid" name="dataloggerid">  
+                    <input type="hidden" value="" id="channelid" name="channelid">  
+                    <input type="hidden" value="" id="table" name="table">  
+                    <input type="hidden" value="" id="column" name="column">  
+                    <input type="hidden" value="" id="state" name="state">  
+                    
+                    <textarea value="" id="name" name="name" class="form-control">     
+                    </textarea>                
+                    
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label for="roles_id_edit" class="col-sm-2 col-md-3 col-form-label">Descripción:</label>
+                  <div class="col-sm-10 col-md-9 my-2">
+                    <textarea id="description" name="description" class="form-control w-100"></textarea>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label for="roles_id_edit" class="col-sm-2 col-md-3 col-form-label">Valores Max:</label>
+                  <div class="col-sm-10 col-md-9 my-2">
+                    <input type="number"  step="0.1" min="0"  value="" id="max" name="max" class="form-control">
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label for="roles_id_edit" class="col-sm-2 col-md-3 col-form-label">Valores Min:</label>
+                  <div class="col-sm-10 col-md-9 my-2">
+                    <input type="number"  step="0.1" min="0" value="" id="min" name="min" class="form-control">
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <label for="roles_id_edit" class="col-sm-2 col-md-3 col-form-label">Periodo de tiempo:</label>
+                  <div class="col-sm-10 col-md-9 my-2">
+                    <!-- <input type="text" value="" id="timeperiod" name="timeperiod" class="form-control"> -->
+                    <select name="timeperiod" id="timeperiod" class="form-control">
+                      <option value="15 MINUTE">15 Minutos</option>
+                      <option value="1 HOUR" selected>Una Hora</option>
+                      <option value="12 HOUR">12 Horas</option>
+                      <option value="24 HOUR">24 Horas</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary" id="">Guardar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    </div>
+    </div>
+    <!--Termina modal de editar rol-->

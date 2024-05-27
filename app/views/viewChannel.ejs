@@ -93,11 +93,28 @@
                     <span class="text-success ">Mínimo: <%= alarm.min %></span> - <span class="text-danger">Máximo: <%= alarm.max %></span> - Periodo de tiempo: <%= alarm.periodo_tiempo %></p>
                     <div>
                       <a href="/dataloggers/view/<%= datalogger.id %>" class="btn btn-primary  mb-2">Ver</a>
-                      <a href="/dataloggers/editform/<%= datalogger.id %>" class="btn btn-secondary  mb-2">Editar</a>
-                      <button type="button" class="btn btn-danger  mb-2 eliminarDatalogger" id="eliminarDatalogger"
-                        data-id="<%= datalogger.id %>" 
-                        data-nombre="<%= datalogger.nombre %>" 
-                        data-ubicacion="<%= datalogger.ubicacion_nombre %>">Eliminar</button>
+                      <button type="button" class="btn btn-secondary  mb-2"
+                        data-id="<%= alarm.id %>" 
+                        data-dataloggerid="<%= datalogger.id %>" 
+                        data-channelid="<%= alarm.canal_id %>" 
+                        data-table="<%= alarm.tabla %>" 
+                        data-column="<%= alarm.columna %>" 
+                        data-state="<%= alarm.estado %>" 
+                        data-name="<%= alarm.nombre %>"
+                        data-description="<%= alarm.descripcion %>"
+                        data-max="<%= alarm.max %>"
+                        data-min="<%= alarm.min %>"
+                        data-timeperiod="<%= alarm.periodo_tiempo %>"
+                        onclick="editarAlarma(event)"
+                      >Editar</button>
+
+                      <button type="button" class="btn btn-danger  mb-2 " id="eliminarAlarma"
+                        data-alarm_id="<%= alarm.id %>" 
+                        data-nombre="<%= alarm.nombre %>" 
+                        data-datalogger_id="<%= datalogger.id %>"                        
+                        data-channel_id="<%= currentChannel.id %>"
+                        onclick="eliminarAlarma(event)"                        
+                        >Eliminar</button>
                     </div>
                   </li>
                 <%})
@@ -107,7 +124,18 @@
                   <%
                 }
                 %>
+                <li class="list-group-item my-2 ">
+                  <button type="button" class="btn btn-success  mb-2" id="agregarAlarma"
+                    data-dataloggerid="<%= datalogger.id %>" 
+                    data-channelid="<%= currentChannel.id %>" 
+                    data-table="<%= datalogger.nombre_tabla %>" 
+                    data-column="<%= currentChannel.nombre_columna %>" 
+                    onclick="agregarAlarma(event)"
+                  >Agregar alarma</a>
+                </li>
               </ul>
+              
+              
         </div> 
       </div>
       <!-- Fin de la Card de vison general de datos 2-->
@@ -126,6 +154,8 @@
  
     
 <%- include('partials/piedepagina') %>   
+<%- include('partials/modal_editar_alarma') %>   
+<%- include('partials/modal_agregar_alarma') %>   
 
 
 <!-- Incluye ApexCharts.js -->
@@ -266,7 +296,8 @@ const currentChannel= <%- JSON.stringify(currentChannel || []) %>;
     window.history.back();
   }
 </script>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/scripts/usersFunctionsBtns.js"></script>
 
 </body>
 </html>

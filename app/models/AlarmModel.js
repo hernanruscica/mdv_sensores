@@ -21,8 +21,8 @@ module.exports = {
             const [rows, columns] = await  connection.execute(`insert into alarmas
             (canal_id, tabla, columna, nombre, descripcion, max, min, periodo_tiempo, estado, fecha_creacion)
             values
-            ('${data.channelId}', '${data.table}', '${data.column}', 
-             '${data.name}', '${data.description}', '${data.max}', '${data.min}', '${data.timePeriod}', true, CURRENT_TIMESTAMP());`);            
+            ('${data.channelid}', '${data.table}', '${data.column}', 
+             '${data.name}', '${data.description}', '${data.max}', '${data.min}', '${data.timeperiod}', true, CURRENT_TIMESTAMP());`);            
             if (rows.affectedRows > 0){
                 return {message: 'Alarm added ok', insertId: rows.insertId}
             }else{
@@ -82,7 +82,7 @@ module.exports = {
                             min = ?,
                             periodo_tiempo = ?,
                             estado= ?
-                        where id = ?`, [data.channelId, data.table, data.column, data.name, data.description, data.max, data.min, data.timePeriod, data.state, id]);
+                        where id = ?`, [data.channelid, data.table, data.column, data.name, data.description, data.max, data.min, data.timeperiod, data.state, id]);
             
 
             if (rows.affectedRows > 0){

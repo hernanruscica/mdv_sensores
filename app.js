@@ -40,7 +40,7 @@ const AlarmRouter = require('./app/routes/AlarmRoutes.js')
 
 
 
-
+app.use(methodOverride('_method'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use('/', IndexRouter);
@@ -51,7 +51,7 @@ app.use('/uploads', UploadRouter);
 app.use('/alarms', AlarmRouter);
 app.use(express.static(path.join(__dirname, 'views')));
 app.use(express.static('./public'));
-app.use(methodOverride('_method'));
+
 
 
 cronjobs.taskAlarm.start();

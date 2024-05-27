@@ -159,6 +159,74 @@ const desasociarDatalogger = (idDataloggerUbicacion, nombredatalogger, nombreUbi
   });
 };
 
+const eliminarAlarma = (e) => {
+  console.log(`Confirma la eliminacion de la alarma "${e.target.dataset.nombre}" con id: "${e.target.dataset.alarm_id}"`);
+  Swal.fire({
+    title: 'Eliminar Alarma.',
+    text: `Confirma la eliminación de la alarma ${e.target.dataset.nombre} ? Esta acción no se puede deshacer`,
+    icon: 'warning',                   
+    showDenyButton: true,                               
+    confirmButtonText: 'Eliminar',
+    confirmButtonColor: '#FF0000',
+    denyButtonText: 'Conservar',
+    denyButtonColor: '#28DC25'
+
+}).then((result) => {
+     if (result.value) {            
+         fetch(`/alarms/delete/${e.target.dataset.alarm_id}`, { method: 'DELETE' })
+         .then(response => {
+             // manejar respuesta exitosa    
+             Swal.fire({
+                 title: 'Alarma eliminada !',
+                 text: `Se eliminó la alarma ${e.target.dataset.nombre} con exito.`,
+                 icon: 'info',
+                 confirmButtonText: 'Entendido'
+             }).then((result) => { 
+                 if (result.value){
+    //                 //location.reload();    
+                     window.location.href = `/dataloggers/view/${e.target.dataset.datalogger_id}/channels/${e.target.dataset.channel_id}` ;    
+                 }
+             }); 
+         })
+         .catch(error => {
+             // manejar error
+     console.log("error al borrar el elemento", error);
+ });
+}
+    //window.location.href = '/dataloggers/view/1/channels/11' ;
+})  
+}
+
+const editarAlarma = (e) =>{
+  //console.log(`Dispara modal para editar la alarma con id: ${e.target.dataset.name}`);
+  var myModal = new bootstrap.Modal(document.getElementById('modal_editar_alarmas'));
+  myModal.show();  
+  document.getElementById("dataloggerid").value = e.target.dataset.dataloggerid;
+  document.getElementById("channelid").value = e.target.dataset.channelid;
+  document.getElementById("table").value = e.target.dataset.table;
+  document.getElementById("column").value = e.target.dataset.column;
+  document.getElementById("state").value = e.target.dataset.state;
+  document.getElementById("name").value = e.target.dataset.name;
+  document.getElementById("description").value = e.target.dataset.description;  
+  document.getElementById("max").value = e.target.dataset.max;
+  document.getElementById("min").value = e.target.dataset.min;
+  document.getElementById("timeperiod").value = e.target.dataset.timeperiod;  
+  
+  document.getElementById("modal_editar_alarmas_form").setAttribute("action", `/alarms/update/${e.target.dataset.id}`) ;
+}
+
+const agregarAlarma = (e) => {
+  //console.log(`Click en el boton de ${e.target.id} y muestro modal para agregar una nueva alarma`);
+  var myModal02 = new bootstrap.Modal(document.getElementById('modal_agregar_alarmas'));
+  myModal02.show();  
+  document.getElementById("dataloggerid02").value = e.target.dataset.dataloggerid;
+  document.getElementById("channelid02").value = e.target.dataset.channelid;
+  document.getElementById("table02").value = e.target.dataset.table;
+  document.getElementById("column02").value = e.target.dataset.column;
+  document.getElementById("state02").value = true;
+  
+}
+
 //acciones de los botones en cada tarjeta individual
 $d.addEventListener('click', (e) => {    
     let accion = null;

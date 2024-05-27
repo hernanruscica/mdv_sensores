@@ -16,27 +16,30 @@ module.exports = {
         }
     },
     add: async (req, res) => {
-        const {channelId, table, column, name, description, max, min, timePeriod} = req.body
-        const data = {channelId, table, column, name, description, max, min, timePeriod};
+        const {dataloggerid, channelid, table, column, name, description, max, min, timeperiod} = req.body
+        const data = {channelid, table, column, name, description, max, min, timeperiod};
+        //console.log(data);
         const addedAlarm = await AlarmModel.add(data);
 
         //segun resultados, redirije a sweetalert con el mensaje correspondiente
         if (addedAlarm.insertId == -1){
             return res.status(400).json({message: addedAlarm.message, data: data, error: addedAlarm.error ? addedAlarm.error : null});
+            
         }else{
-            return res.status(200).json({message: addedAlarm.message, data: data, addedAlarmId: addedAlarm.insertId}); 
+            //return res.status(200).json({message: addedAlarm.message, data: data, addedAlarmId: addedAlarm.insertId}); 
+            return res.render('messages', {results: 'alarmaagregada', message: `Alarma ${name} agregada!`, dataloggerid: dataloggerid, channelid: channelid });
         }
                
     },
     update: async (req, res) => {
         const alarmId = req.params.id;
-        const {channelId, table, column, name, description, max, min, state, timePeriod} = req.body
-        const data = {channelId, table, column, name, description, max, min, state, timePeriod};
-
+        const {dataloggerid, channelid, table, column, name, description, max, min, state, timeperiod} = req.body
+        const data = {channelid, table, column, name, description, max, min, state, timeperiod};        
         const updatedAlarm = await AlarmModel.update(data, alarmId);
-        console.log(updatedAlarm);
+        //console.log(req.body);
         if (updatedAlarm.insertId !== -1 ) {
-            return res.status(200).json({message: "update - data received and updated the registry", data: data, alarmId: alarmId});
+            //return res.status(200).json({message: "update - data received and updated the registry", data: data, alarmId: alarmId});
+            return res.render('messages', {results: 'alarmaeditada', message: `Alarma ${name} editada!`, dataloggerid: dataloggerid, channelid: channelid });
         }else{
             return res.status(200).json({message: "update - data received but NOT updated", data: data, alarmId: alarmId, updatedAlarm: updatedAlarm});
         }

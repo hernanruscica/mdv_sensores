@@ -296,6 +296,41 @@
    }  
 %>
 
+<%  if (typeof results !== 'undefined' && results === 'alarmaeditada'){ %>
+  <script>    
+      Swal.fire({
+              title: 'Alarma editada !',
+              text: '<%= message %>',
+              icon: 'success',
+              confirmButtonText: 'Entendido'})
+              .then((result) => {
+                if (result.isConfirmed){
+                  location.href=`/dataloggers/view/<%= dataloggerid %>/channels/<%= channelid %>`;                  
+                }
+              })              
+  </script>
+  <%
+   }  
+%>
+
+
+<%  if (typeof results !== 'undefined' && results === 'alarmaagregada'){ %>
+  <script>    
+      Swal.fire({
+              title: 'Alarma Agregada !',
+              text: '<%= message %>',
+              icon: 'success',
+              confirmButtonText: 'Entendido'})
+              .then((result) => {
+                if (result.isConfirmed){
+                  location.href=`/dataloggers/view/<%= dataloggerid %>/channels/<%= channelid %>`;                  
+                }
+              })              
+  </script>
+  <%
+   }  
+%>
+
 </body>
 </html>
 
