@@ -20,14 +20,16 @@ module.exports = {
         const data = {channelid, table, column, name, description, max, min, timeperiod};
         //console.log(data);
         const addedAlarm = await AlarmModel.add(data);
-
+        
         //segun resultados, redirije a sweetalert con el mensaje correspondiente
-        if (addedAlarm.insertId == -1){
-            return res.status(400).json({message: addedAlarm.message, data: data, error: addedAlarm.error ? addedAlarm.error : null});
+        if (addedAlarm.insertId != -1){
+            console.log('envio message de alarma agregada');    
+             //return res.status(200).json({message: `Alarma ${data.name} agregada!`, data: data, addedAlarmId: addedAlarm.insertId, dataloggerid: dataloggerid, channelid: channelid}); 
+             res.render('messages', {results: 'alarmaagregada', message: `Alarma ${data.name} agregada!`, dataloggerid: dataloggerid, channelid: channelid });
+             
             
         }else{
-            //return res.status(200).json({message: addedAlarm.message, data: data, addedAlarmId: addedAlarm.insertId}); 
-            return res.render('messages', {results: 'alarmaagregada', message: `Alarma ${name} agregada!`, dataloggerid: dataloggerid, channelid: channelid });
+            res.status(400).json({message: addedAlarm.message, data: data, error: addedAlarm.error ? addedAlarm.error : null});
         }
                
     },

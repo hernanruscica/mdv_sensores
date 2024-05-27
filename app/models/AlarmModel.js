@@ -23,11 +23,12 @@ module.exports = {
             values
             ('${data.channelid}', '${data.table}', '${data.column}', 
              '${data.name}', '${data.description}', '${data.max}', '${data.min}', '${data.timeperiod}', true, CURRENT_TIMESTAMP());`);            
-            if (rows.affectedRows > 0){
-                return {message: 'Alarm added ok', insertId: rows.insertId}
+             //console.log(rows.affectedRows);
+             if (rows.affectedRows > 0){
+                return {message: 'Alarm add ok', insertId: rows.insertId}
             }else{
-                return {message: 'Alarm added Fails', insertId: -1};
-            }        
+                return {message: 'Alarm add Fails', insertId: -1};
+            }         
         } catch (error) {
             console.log(error);
             return {message: 'Alarm added ERROR', insertId: -1, error: error}                        

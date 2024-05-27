@@ -26,7 +26,6 @@
     <p class="fs-5 mt-5">En esta sección usted puede ver la información de este canal.</p>        
 
     <div class="d-flex flex-column flex-lg-row ">
-
       <!-- Inicio  de la Card de info general-->
       <div class="card m-3 w-100">
           <div class="card-body">            
@@ -46,11 +45,9 @@
               </div>
           </div>        
       </div>
-      <!-- Fin de la Card de info general-->
-
-      
+      <!-- Fin de la Card de info general-->      
     </div>    
-    <% if (currentChannel.isAnalog == false){ %>
+    
     <div class="d-flex flex-column flex-lg-row ">
       <!-- Inicio  de la Card de vision general de datos 
        col-12 col-lg-6 -->
@@ -138,14 +135,31 @@
               
         </div> 
       </div>
-      <!-- Fin de la Card de vison general de datos 2-->
+      <!-- Fin de la Card de vison general de datos 2-->    
 
     </div>
-    <% } %>
-
-    <!-- Aquí es donde se mostrará el gráfico -->
-    <div id="chart"></div>    
-    <div id="chart2"></div>
+    
+   
+      <!-- Principio de la Card de 1 canal analogico o digital-->
+      <div class="card m-3 w-100">
+        <div class="card-body">
+          <h5 class="card-title">
+            Canal <%= (currentChannel.nombre_columna.startsWith('a')) ? 'analogico' : 'digital' %> #<%= currentChannel.nombre_columna %> "<em><%= currentChannel.nombre %></em>"
+          </h5>    
+          <p class="card-text">
+            <%= currentChannel.descripcion %>
+          </p>
+          <!-- Ejemplo de id para los graficos 'chart_a1 o chart_d1' -->
+          <div id="chart_<%= currentChannel.nombre_columna %>"></div>  
+          <p class="card-text">            
+            <button id="<%= currentChannel.nombre_columna %>_cambiarSerieBtn"  value="24">Cambiar serie</button>
+            <label for="<%= currentChannel.nombre_columna %>_cambiarSerieBtn" id="<%= currentChannel.nombre_columna %>_cambiarSerieLabel">Ultimas 24 Hs.</label> - 
+            Valor MAX: <strong><span id="<%= currentChannel.nombre_columna %>_max_value"></span></strong> -  Valor MIN: <strong><span id="<%= currentChannel.nombre_columna %>_min_value">></span></strong> <br>                                                    
+          </p>
+        </div>
+      </div>
+      <!-- Fin  de la Card de 1 canal analogico o digital-->   
+    
 
   <% } else { %>
     <h1>Error: Usuario no encontrado</h1>
@@ -153,9 +167,7 @@
 </div>
  
     
-<%- include('partials/piedepagina') %>   
-<%- include('partials/modal_editar_alarma') %>   
-<%- include('partials/modal_agregar_alarma') %>   
+
 
 
 <!-- Incluye ApexCharts.js -->
@@ -166,138 +178,302 @@
 
 
 //El script accede a los datos enviados desde el controlador - Esto se podria hacer consultando a una API que consulte a un endpoint en el servidor node.js
-const dataChannel= <%- JSON.stringify(dataChannel || []) %>;  
+const dataChannels= <%- JSON.stringify(dataChannels || []) %>;  
 const currentChannel= <%- JSON.stringify(currentChannel || []) %>;    
-  // Ahora puedes usar el arrayDeDatos en tu código JavaScript
-  //console.log(dataChannel, currentChannel);  
-
-  //Si el canal es analogico
-  if (currentChannel.isAnalog == true ){
-      /* Preparacion de datos   para mostrar datos analogicos  */
-      const myFactor = parseFloat(currentChannel.multiplicador);
-      const myTimeStamps = dataChannel.map(data => data.fecha);
-      const tensionesInstaneas = dataChannel.map(data => (data.inst * myFactor).toFixed(2));
-      console.log("es analogico");
-      // Datos del gráfico
-      var options = { 
-          title: {
-          text : currentChannel.nombre
-          },
-        chart: {
-          type: 'line',
-          height: 400,
-          width: 1200,
-          background: '#f4f4f4'
-        },
-        series: [{       
-          name: currentChannel.nombre,
-          data: tensionesInstaneas
-        }],
-        xaxis: {
-          categories: myTimeStamps,
-          type: 'datetime'
-        }
-      }  
-      // Inicializar el gráfico
-      var chart = new ApexCharts(document.querySelector("#chart"), options);  
-      // Renderizar el gráfico
-      chart.render();
-  }else{
-    //Si el canal es digital
-    // document.querySelector("#chart").innerHTML =  
-    // `Canal Digital\nDatos: ${dataChannel[0].fecha} - ${dataChannel[0].estado} - ${dataChannel[0].cantidad} - ${dataChannel[0].tiempo} - ${dataChannel[0].tiempo_total}`;
-    const myTimeStamps = dataChannel.map(data => data.fecha);
-    
-    const ultimosEstados = dataChannel.map(data => data.estado);
-    const cantidadEncendidos = dataChannel.map(data => data.cantidad);
-    const tiempoEncendidos = dataChannel.map(data => data.tiempo);
-    const porcentajeEncendido = dataChannel.map(data => ((data.tiempo / data.tiempo_total) * 100).toFixed(0));
-    console.log(porcentajeEncendido)
-    
-    // Datos del gráfico de estados
+  
+  //console.log(dataChannels, currentChannel);  
+  
+  const showAnalogCard = (currentChannel, dataChannels) => {  
+    /* Preparacion de datos   para mostrar datos analogicos  */
+    const myFactor = parseFloat(currentChannel.multiplicador);
+    const myTimeStamps = dataChannels.map(data => data.fecha_local);
+    const valuesInst = dataChannels.map(data => (data.inst * myFactor).toFixed(2));      
+    const valuesMax = dataChannels.map(data => (data.max * myFactor).toFixed(2));
+    const valuesMin = dataChannels.map(data => (data.min * myFactor).toFixed(2));         
+    const $maxValue = document.getElementById(`${currentChannel.nombre_columna}_max_value`); 
+    const $minValue = document.getElementById(`${currentChannel.nombre_columna}_min_value`);
+    const $alarmMax = document.getElementById(`${currentChannel.nombre_columna}_alarm_max`);
+    const $alarmMin = document.getElementById(`${currentChannel.nombre_columna}_alarm_min`);
+    $maxValue.innerHTML = Math.max(...valuesMax);
+    $minValue.innerHTML = Math.min(...valuesMin);
+       
+      
+    // Datos del gráfico
     var options = { 
-          title: {
-          text : currentChannel.nombre + ' - Últimos estados'
-          },
-        chart: {
-          type: 'line',
-          height: 200,
-          width: 1200,
-          background: '#f4f4f4',
-          offsetX: 20, // Margen interior a la derecha
-          offsetY: 20
-        },          
-        series: [
-        {       
-          name: 'Estados',
-          data: ultimosEstados
-        }        
-        ],
-        xaxis: {
-          categories: myTimeStamps,
-          type: 'datetime'
+        title: {
+        text : currentChannel.canal_nombre
         },
-        stroke: {
-              show: true,
-              curve: 'straight',
-              lineCap: 'butt',
-              colors: undefined,
-              width: 1,
-              dashArray: 0, 
-          }
-      }  
-    
-    var chart = new ApexCharts(document.querySelector("#chart"), options);      
+      chart: {
+        type: 'line',
+        height: 300,
+        width: "100%",
+        background: '#f4f4f4',          
+      },
+      
+      series: [        
+      {       
+        name: "Maxima",
+        data: valuesMax,
+        color: '#e29578'
+      },
+      {       
+        name: "Promedio",
+        data: valuesInst,
+        color: '#83c5be'
+      },        
+      {       
+        name: "Minima",
+        data: valuesMin,
+        color: '#006d77'
+      }
+      ],
+      xaxis: {
+        categories: myTimeStamps,
+        type: 'datetime'
+      },
+      stroke: {
+      show: true,
+      curve: 'straight',
+      lineCap: 'butt',
+      colors: undefined,
+      width: 1,
+      dashArray: 0, 
+    },
+    tooltip: {
+      x: {
+        show: true,
+        format: 'dd/MMM - HH:mm ',
+        formatter: undefined,
+    }
+    }
+    }  
+    // Inicializar el gráfico chart_a1
+    const idNameChart = `chart_${currentChannel.nombre_columna}`;
+    var chart = new ApexCharts(document.getElementById(idNameChart), options);  
+
+    // Renderizar el gráfico      
     chart.render();
 
-    //Datos del grafico de tiempos
-    var options = { 
-          title: {
-          text : currentChannel.nombre + ' - Tiempos de encendido - 24Hs cada 5 mins.'
-          },
-        chart: {
-          type: 'line',
-          height: 300,
-          width: 1200,
-          background: '#f4f4f4',
-          offsetX: 20, // Margen interior a la derecha
-          offsetY: 20          
-        },          
-        series: [
-        {       
-          name: 'Tiempo encendedido',
-          data: tiempoEncendidos          
-        }        
-        ],
-        xaxis: {
-          categories: myTimeStamps,
-          type: 'datetime'
-        },
-        stroke: {
-              show: true,
-              curve: 'straight',
-              lineCap: 'butt',
-              colors: undefined,
-              width: 1,
-              dashArray: 0, 
-          }
-      }  
-    // Inicializar el gráfico
-    var chart2 = new ApexCharts(document.querySelector("#chart2"), options);  
-    // Renderizar el gráfico
-    chart2.render();
-  }
-  
-</script>
     
-<script>
-  // Función para ir a la página anterior
-  function goBack() {
-    window.history.back();
   }
-</script>
+
+
+  const showDigitalCard = (currentChannel, dataChannels) => {  
+    //console.log(dataChannels.filter(data => data.channel == currentChannel.nombre_columna));  
+    const dataChannel = [...dataChannels.filter(data => data.channel == currentChannel.nombre_columna)[0].data];
+    console.log(dataChannel);
+
+    const $maxValue = document.getElementById(`${currentChannel.nombre_columna}_max_value`); 
+    const $minValue = document.getElementById(`${currentChannel.nombre_columna}_min_value`);
+    const $alarmMax = document.getElementById(`${currentChannel.nombre_columna}_alarm_max`);
+    const $alarmMin = document.getElementById(`${currentChannel.nombre_columna}_alarm_min`);
+
+    const $cambiarSerieBtn = document.getElementById(`${currentChannel.nombre_columna}_cambiarSerieBtn`);
+    const $cambiarSerieLabel = document.getElementById(`${currentChannel.nombre_columna}_cambiarSerieLabel`);
+    $cambiarSerieBtn.addEventListener('click', (e) => {   
+      $cambiarSerieLabel.innerHTML = $cambiarSerieBtn.value == '24' ? 'Ultima hora' : 'Ultimas 24 Hs.';
+      $cambiarSerieBtn.value = $cambiarSerieBtn.value == '24' ? '1' : '24';
+      $maxValue.innerHTML = $cambiarSerieBtn.value == '24' ? maxPorcEncendido : maxPorcEncendidoOneHour;
+      $minValue.innerHTML = $cambiarSerieBtn.value == '24' ? minPorcEncendido : minPorcEncendidoOneHour;
+          
+      chart.updateOptions({
+        title: {
+        text : `Porcentaje de encendido - ${$cambiarSerieLabel.innerHTML}`
+        },
+        series: [        
+            {       
+              name: "MAX % Enc. / Apag.",
+              data: $cambiarSerieBtn.value == '1' ?  maxArrayOneHour : maxArray,
+              color: 'red'             
+            },
+            {       
+              name: "Porcentaje de encendido",
+              data: $cambiarSerieBtn.value == '1' ?  dataGroupByThreeOneHour.porc_encendido : dataGroupByThree.porc_encendido,
+              color: '#e29578'             
+            },
+            {       
+              name: "MIN % Enc. / Apag.",
+              data: $cambiarSerieBtn.value == '1' ?  minArrayOneHour : minArray,
+              color: 'green'             
+            },                 
+            ],
+              xaxis: {
+              categories: $cambiarSerieBtn.value == '1' ?  dataGroupByThreeOneHour.fecha_local : dataGroupByThree.fecha_local,
+              type: 'datetime'      
+          }
+      })
+    });
+
+    /* Preparacion de datos   para mostrar datos analogicos  */
+    const dataAll = {
+        fecha_local: [],
+        tiempo: [],
+        porc_encendido: []
+      };
+        
+    dataAll.fecha_local = dataChannel.map(data => data.fecha_local);            
+    dataAll.tiempo = dataChannel.map(data => data.tiempo);
+    dataAll.porc_encendido = dataChannel.map(data => data.porc_encendido);
+
+    //console.log(dataAll);
+    
+    const groupByThree = (data) => {
+      const result = {
+        fecha_local: [],
+        tiempo: [],
+        porc_encendido: []
+      };
+      for (let i = 0; i < data.length; i += 3) {
+        const group = data.slice(i, i + 3);
+
+        if (group.length === 3) {
+          const fechaTercero = group[2].fecha_local;
+          const promedioTiemposEncendidos = group.reduce((sum, item) => sum + item.tiempo, 0) / 3;
+          const porcentajeEncendidoApagado = group.reduce((sum, item) => sum + item.porc_encendido, 0) / 3;
+          result.fecha_local.push(fechaTercero);
+          result.tiempo.push(promedioTiemposEncendidos.toFixed(0));
+          result.porc_encendido.push(porcentajeEncendidoApagado.toFixed(2));
+        }
+      }      
+      return result;
+    }
+    const dataGroupByThree = groupByThree(dataChannel);
+    
+    
+
+    const groupByLastHour = (data) => {      
+      
+      const now = new Date() ;
+      const timeZone = 3;
+
+      let {fecha_local, tiempo, porc_encendido} = data;
+      
+      const currentTime = new Date(now.getTime() - (60 * 60 * 1000 * timeZone));      
+      const oneHourAgo = new Date(now.getTime() - (60 * 60 * 1000 * (timeZone + 1)));   
+      // Convertir las fechas a formato ISO 8601
+      const nowISOString = currentTime.toISOString();
+      const oneHourAgoISOString = oneHourAgo.toISOString();
+      // Encontrar el índice de la última marca de tiempo menor o igual a la hora actual
+      const lastIndexBeforeNow = fecha_local.findLastIndex(timestamp => timestamp <= nowISOString);
+      // Encontrar el índice de la primera marca de tiempo mayor que la hora una hora atrás
+      const firstIndexAfterOneHourAgo = fecha_local.findIndex(timestamp => timestamp > oneHourAgoISOString);      
+      
+      return {
+        fecha_local:  fecha_local.slice(firstIndexAfterOneHourAgo, lastIndexBeforeNow + 1),
+        tiempo: tiempo.slice(firstIndexAfterOneHourAgo, lastIndexBeforeNow + 1),
+        porc_encendido: porc_encendido.slice(firstIndexAfterOneHourAgo, lastIndexBeforeNow + 1),
+      }         
+    }
+
+    
+    const dataGroupByThreeOneHour = groupByLastHour(dataGroupByThree);
+
+    const myTimeStamps = dataGroupByThree.fecha_local;
+    const maxPorcEncendido = Math.max(...dataGroupByThree.porc_encendido);
+    const minPorcEncendido = Math.min(...dataGroupByThree.porc_encendido);
+    const maxPorcEncendidoOneHour = Math.max(...dataGroupByThreeOneHour.porc_encendido);
+    const minPorcEncendidoOneHour = Math.min(...dataGroupByThreeOneHour.porc_encendido);
+
+
+    const maxArray = new Array(dataGroupByThree.fecha_local.length), minArray = new Array(dataGroupByThree.fecha_local.length); 
+    const maxArrayOneHour = new Array(dataGroupByThreeOneHour.fecha_local.length), minArrayOneHour = new Array(dataGroupByThreeOneHour.fecha_local.length); 
+    maxArray.fill(maxPorcEncendido);
+    minArray.fill(minPorcEncendido);
+    maxArrayOneHour.fill(maxPorcEncendidoOneHour);
+    minArrayOneHour.fill(minPorcEncendidoOneHour);
+    
+
+    $maxValue.innerHTML = $cambiarSerieBtn.value == '24' ? maxPorcEncendido : maxPorcEncendidoOneHour;
+    $minValue.innerHTML = $cambiarSerieBtn.value == '24' ? minPorcEncendido : minPorcEncendidoOneHour;
+    
+
+       
+    var options = { 
+        title: {
+        text : `Porcentaje de encendido - ${$cambiarSerieLabel.innerHTML}`
+        },
+      chart: {
+        type: 'line',
+        height: 300,
+        width: "100%",
+        background: '#f4f4f4',        
+        toolbar: {
+          show: true,
+          tools: {
+            download: true,
+            selection: true,
+            zoom: false,
+            zoomin: true,
+            zoomout: true,
+            pan: true,
+            reset: true | '<img src="/static/icons/reset.png" width="20">',
+            customIcons: []
+          } 
+        }                 
+      },    
+      series: [        
+            {       
+              name: "MAX % Enc. / Apag.",
+              data: maxArray,
+              color: 'red'             
+            },
+            {       
+              name: "Porcentaje de encendido",
+              data: dataGroupByThree.porc_encendido,
+              color: '#e29578'             
+            },                               
+            {       
+              name: "MIN % Enc. / Apag.",
+              data: minArray,
+              color: 'green'             
+            }
+            ],
+              xaxis: {
+              categories: dataGroupByThree.fecha_local,
+              type: 'datetime'      
+          },
+      stroke: {
+      show: true,
+      curve: 'straight',
+      lineCap: 'butt',
+      colors: undefined,
+      width: 1,
+      dashArray: 0, 
+    },
+    tooltip: {
+      x: {
+        show: true,
+        format: 'dd/MMM - HH:mm ',
+        formatter: undefined,
+    }
+    }
+    }  
+    // Inicializar el gráfico chart_a1
+    const idNameChart = `chart_${currentChannel.nombre_columna}`;
+    var chart = new ApexCharts(document.getElementById(idNameChart), options);  
+
+    // Renderizar el gráfico      
+    chart.render();
+  }
+
+
+
+  if (currentChannel.nombre_columna.startsWith('a')){      
+        console.log(`Canal analogico: ${currentChannel.nombre_columna}`);   
+        showAnalogCard(currentChannel, dataChannels);
+      }else {
+        console.log(`Canal digital: ${currentChannel.nombre_columna}`); 
+        showDigitalCard(currentChannel, dataChannels);             
+      }
+
+ </script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/scripts/usersFunctionsBtns.js"></script>
+
+
+<%- include('partials/piedepagina') %>   
+<%- include('partials/modal_editar_alarma') %>   
+<%- include('partials/modal_agregar_alarma') %>   
 
 </body>
 </html>

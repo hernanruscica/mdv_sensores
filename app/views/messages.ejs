@@ -316,8 +316,9 @@
 
 <%  if (typeof results !== 'undefined' && results === 'alarmaagregada'){ %>
   <script>    
+   console.log('en sweet alert de alarma agregada')
       Swal.fire({
-              title: 'Alarma Agregada !',
+              title: 'Alarma agregada !',
               text: '<%= message %>',
               icon: 'success',
               confirmButtonText: 'Entendido'})

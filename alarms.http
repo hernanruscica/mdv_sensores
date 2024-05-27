@@ -10,14 +10,14 @@ POST http://localhost:3002/alarms/add
 Content-Type: application/json
 
 { 
-  "channelId": 11,
+  "channelid": 11,
   "table": "guemes",
   "column": "d6",
   "name": "Bomba 1 - Tiempo de funcionamiento",
   "description": "Mide el tiempo de funcionamiento de la bomba 1 del guemes",
   "max": 50,
   "min": 0,
-  "timePeriod": "1 HOUR"
+  "timeperiod": "1 HOUR"
 }
 
 ###

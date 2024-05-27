@@ -95,20 +95,14 @@ module.exports = {
 
         const results04 = await AlarmModel.getAll();
         const channelAlarms = (results04.length > 0) ? results04.filter(alarm => alarm.canal_id == idchannel) : []; 
-        console.log(channelAlarms);
-        let currentData = null;                  
-        //Si es analogico
-        if (currentChannel.nombre_columna.startsWith('a')){            
-            currentChannel.isAnalog = true;
-            //currentData = await DataModel.getDataByChannelOneDay(req.session.datalogger.nombre_tabla, currentChannel.nombre_columna);
-            currentData = await DataModel.getAnalog(dataloggerData.nombre_tabla, currentChannel.nombre_columna, '1 DAY');
 
-        //si es Digital 
-        }else{            
-            currentChannel.isAnalog = false;     
-            currentData = await DataModel.getDataByChannelDigitalOneDay(dataloggerData.nombre_tabla, currentChannel.nombre_columna);       
-        } 
+        const results05 = await DataloggerModel.getChannelsById(id);
+        const activeChannels = (results05.length > 0) ? results05 : [];
         
+        let currentData = null;                  
+        
+        currentData = await dataBuild.getAllDataChannels('guemes', activeChannels, '1 DAY');     
+        //console.log(currentData);
         res.render('viewChannel', {user: req.session.user, 
                                    location: location, 
                                    datalogger: dataloggerData,
@@ -116,8 +110,7 @@ module.exports = {
                                    channelAlarms: channelAlarms,
                                    formatearFecha: fechas.formatearFecha,
                                    currentChannel: currentChannel, 
-                                   dataChannel: currentData || []});
-        
+                                   dataChannels: currentData || []});        
     },
     deleteById: async (req, res) => {
         const id = parseInt(req.params.id);
