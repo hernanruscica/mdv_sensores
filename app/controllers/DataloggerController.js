@@ -70,14 +70,15 @@ module.exports = {
         const results03 = await LocationModel.getById(ubicacion_id);
         const locationData = (results03.length > 0) ? results03[0] : [];
         
-        const data = await dataBuild.getAllDataChannels('guemes', activeChannels, '1 DAY');       
+        const data = await dataBuild.getAllDataChannels(dataloggerData.nombre_tabla, activeChannels, '1 DAY');       
         
-        //console.log(activeChannels);
+        console.log(dataloggerData);
 
         res.render('viewDatalogger', {user: req.session.user, 
             location: locationData, 
             datalogger: dataloggerData, 
             channels: activeChannels,
+            formatearFecha: fechas.formatearFecha,
             channelsData: data});        
     },
     viewChannel: async (req, res) => {
@@ -101,7 +102,7 @@ module.exports = {
         
         let currentData = null;                  
         
-        currentData = await dataBuild.getAllDataChannels('guemes', activeChannels, '1 DAY');     
+        currentData = await dataBuild.getAllDataChannels(dataloggerData.nombre_tabla, activeChannels, '1 DAY');     
         //console.log(currentData);
         res.render('viewChannel', {user: req.session.user, 
                                    location: location, 

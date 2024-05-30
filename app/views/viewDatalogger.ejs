@@ -4,7 +4,7 @@
 
 <div class="container my-5 py-3 " >
 <% if (typeof user !== 'undefined' && user !== null && user.nombre_1 && user.apellido_1) { %>
-    <h1>Perfil del datalogger X</h1>
+    <h1>Datalogger: <%= datalogger.nombre %></h1>
 
     <!--Breadcrumb-->
     <nav aria-label="breadcrumb">
@@ -32,14 +32,18 @@
         <div class="col-sm-6 col-12  ">
           <!-- Nombre  -->
           <h5 class="card-title">
-            <%= datalogger.nombre %>
+            Caracteristicas de "<%= datalogger.nombre %>"
           </h5>
           <!-- Descripcion -->
           <p class="card-text">
             <%= datalogger.descripcion %>
           </p>        
           <!-- Fecha de creacion -->
-          <p class="card-text">Fecha de creacion: <%= datalogger.fecha_creacion %>
+          <p class="card-text"> <strong>Fecha de creacion:</strong> <%= formatearFecha(datalogger.fecha_creacion) %>
+          </p>  
+          <!-- Numero de canales asociados -->
+          <p class="card-text">
+            <strong>Canales conectados:</strong> <span id="numero_canales_digitales">digitales</span> - <span id="numero_canales_analogicos">analogicos</span>
           </p>          
           <a href="/dataloggers/editform/<%= datalogger.id %>" class="btn btn-secondary col-6 col-lg-6">Editar Datalogger</a>               
         </div>
@@ -372,15 +376,23 @@
   const channelsQty = channels.length;
 
   if (channels.length > 0){
+    let digitalChannelsQty = 0, analogChannelsQty = 0;
     for (let i = 0; i < channelsQty; i++){      
       if (channels[i].nombre_columna.startsWith('a')){      
-        console.log(`Canal analogico: ${channels[i].nombre_columna}`);   
+        //console.log(`Canal analogico: ${channels[i].nombre_columna}`);   
         showAnalogCard(channels[i], channelsData[i].data);
+        analogChannelsQty++;
       }else {
-        console.log(`Canal digital: ${channels[i].nombre_columna}`); 
-        showDigitalCard(channels[i], channelsData[i].data);             
-      }
+        //console.log(`Canal digital: ${channels[i].nombre_columna}`); 
+        showDigitalCard(channels[i], channelsData[i].data);    
+        digitalChannelsQty++;         
+      }      
     }
+    console.log(`Canales digitales: ${digitalChannelsQty}\nCanales analogicos: ${analogChannelsQty}}`); 
+    document.getElementById('numero_canales_digitales').innerHTML = 
+      digitalChannelsQty > 0 ? `${digitalChannelsQty} digitales ` : 'sin canales digitales';
+    document.getElementById('numero_canales_analogicos').innerHTML = 
+      analogChannelsQty > 0 ? `${analogChannelsQty} analogicos ` : 'sin canales analogicos';
   }else{
     console.log("No tiene canales asociados al datalogger");
   }
