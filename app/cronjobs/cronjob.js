@@ -44,6 +44,7 @@ const alarmDigPorEnc = async () => {
         console.log((resultsLog.affectedRows > 0) ? 'Log insertado' : 'Log NO insertado');
       })
     }  
+      
       console.log(`${alarma.nombre}: Porc de encendido mayor a ${alarma.max}`);
     }
   });  

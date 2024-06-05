@@ -56,8 +56,12 @@ module.exports = {
         const connection = await pool.getConnection();
         console.log("abierta la conexion con el pool de datos - Alarmas.getById");
         try {            
-            const [rows, fields] = await connection.execute(`select *
-                from alarmas where id = ?`, [id]);  
+            const [rows, fields] = await connection.execute(`select alarmas.*, canales.datalogger_id, canales.nombre as canal_nombre, canales.descripcion as canal_descripcion 
+                from alarmas 
+                INNER JOIN canales
+                ON alarmas.canal_id = canales.id
+                where alarmas.id = ?
+                ORDER BY fecha_creacion DESC;`, [id]);  
             return rows;
         } catch (error){
             //console.error(error);
@@ -99,7 +103,30 @@ module.exports = {
             console.log("cerrada la conexion con el pool de datos");
         }
     },
+    updateState: async (state, id) => {
+        const connection = await pool.getConnection();
+        console.log(`abierta la conexion con el pool de datos - UpdateState - alarm ` );
+        //console.log(`inserto en la tabla 'alarmas':`, data);
+        try {
+            const [rows, columns] = await  connection.execute(`update alarmas
+                        set                             
+                            estado= ?
+                        where id = ?`, [state, id]);
+            
 
+            if (rows.affectedRows > 0){
+                return {message: 'Alarm state update ok', insertId: rows.insertId}
+            }else{
+                return {message: 'Alarm state update Fails', insertId: -1};
+            }        
+        } catch (error) {
+            console.log(error);
+            return {message: 'Alarm state update ERROR', insertId: -1, error: error}                        
+        }finally{
+            connection.release(); 
+            console.log("cerrada la conexion con el pool de datos");
+        }
+    },
 
 
     delete: async (id) => {
@@ -227,9 +254,9 @@ module.exports = {
     },
     getAllAlarmLogsByChannel: async (id) => {
         const connection = await pool.getConnection();
-        console.log(`abierta la conexion con el pool de datos - get - Alarm Logs ` ); 
+        console.log(`abierta la conexion con el pool de datos - get - Alarm Logs - channelId: ${id}` ); 
         try {            
-            const [rows, columns] = await connection.execute('select * from alarmas_logs where canal_id = ?;', [id]);
+            const [rows, columns] = await connection.execute('select alarmas_logs.*, usuarios.nombre_1, usuarios.apellido_1, usuarios.email from alarmas_logs INNER JOIN usuarios ON alarmas_logs.usuario_id = usuarios.id  where canal_id = ?  ORDER BY fecha_disparo desc;', [id]);
             return rows;
         } catch (error) {
             console.log(error);

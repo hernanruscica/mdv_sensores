@@ -5,9 +5,10 @@ const AlarmController = require('../controllers/AlarmController');
 var router = express.Router();
 
 router.get('/all', AlarmController.all);
-router.get('/:id', AlarmController.getById);
+router.get('/view/:id', AlarmController.getById);
 router.post('/add', AlarmController.add);
 router.post('/update/:id', AlarmController.update);
+router.post('/updatestate/:id', AlarmController.updateState);
 router.delete('/delete/:id', AlarmController.delete);
 
 router.post('/:id/users/:iduser/add', AlarmController.addUserOnAlarm);

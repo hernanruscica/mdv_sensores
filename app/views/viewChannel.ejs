@@ -81,40 +81,41 @@
               <!-- Promedios relacion de uso -->
               <!-- <p class="card-text"></p> -->
               <ul class="list-group list-group-flush ">
-              <% if (channelAlarms.length> 0) { 
-                channelAlarms.forEach((alarm, index)=> { %>
-                  <li class="list-group-item my-2 ">
-                    <h6 class="card-title">Alarma #<%= index + 1 %> :  <%= alarm.nombre %></h6>     
-                    <p class="card-text"> <span class="fst-italic"> Creada el <%= formatearFecha(alarm.fecha_creacion) %></span><br>
-                     <span class="fs-5"><%= alarm.descripcion %></span> <br>              
-                    <span class="text-success ">Mínimo: <%= alarm.min %></span> - <span class="text-danger">Máximo: <%= alarm.max %></span> - Periodo de tiempo: <%= alarm.periodo_tiempo %></p>
-                    <div>
-                      <a href="/dataloggers/view/<%= datalogger.id %>" class="btn btn-primary  mb-2">Ver</a>
-                      <button type="button" class="btn btn-secondary  mb-2"
-                        data-id="<%= alarm.id %>" 
-                        data-dataloggerid="<%= datalogger.id %>" 
-                        data-channelid="<%= alarm.canal_id %>" 
-                        data-table="<%= alarm.tabla %>" 
-                        data-column="<%= alarm.columna %>" 
-                        data-state="<%= alarm.estado %>" 
-                        data-name="<%= alarm.nombre %>"
-                        data-description="<%= alarm.descripcion %>"
-                        data-max="<%= alarm.max %>"
-                        data-min="<%= alarm.min %>"
-                        data-timeperiod="<%= alarm.periodo_tiempo %>"
-                        onclick="editarAlarma(event)"
-                      >Editar</button>
+              <% if (channelAlarms.length> 0 && channelAlarms.some(alarm => alarm.estado == 1)) { 
+                channelAlarms.forEach((alarm, index)=> { 
+                  if (alarm.estado == 1){%>
+                    <li class="list-group-item my-2 ">
+                      <h6 class="card-title">Alarma #<%= index + 1 %> :  <%= alarm.nombre %></h6>     
+                      <p class="card-text"> <span class="fst-italic"> Creada el <%= formatearFecha(alarm.fecha_creacion) %></span><br>
+                      <span class="fs-5"><%= alarm.descripcion %></span> <br>              
+                      <span class="text-success ">Mínimo: <%= alarm.min %></span> - <span class="text-danger">Máximo: <%= alarm.max %></span> - Periodo de tiempo: <%= alarm.periodo_tiempo %></p>
+                      <div>
+                        <a href="/alarms/view/<%= alarm.id %>" class="btn btn-primary  mb-2">Ver</a>
+                        <button type="button" class="btn btn-secondary  mb-2"
+                          data-id="<%= alarm.id %>" 
+                          data-dataloggerid="<%= datalogger.id %>" 
+                          data-channelid="<%= alarm.canal_id %>" 
+                          data-table="<%= alarm.tabla %>" 
+                          data-column="<%= alarm.columna %>" 
+                          data-state="<%= alarm.estado %>" 
+                          data-name="<%= alarm.nombre %>"
+                          data-description="<%= alarm.descripcion %>"
+                          data-max="<%= alarm.max %>"
+                          data-min="<%= alarm.min %>"
+                          data-timeperiod="<%= alarm.periodo_tiempo %>"
+                          onclick="editarAlarma(event)"
+                        >Editar</button>
 
-                      <button type="button" class="btn btn-danger  mb-2 " id="eliminarAlarma"
-                        data-alarm_id="<%= alarm.id %>" 
-                        data-nombre="<%= alarm.nombre %>" 
-                        data-datalogger_id="<%= datalogger.id %>"                        
-                        data-channel_id="<%= currentChannel.id %>"
-                        onclick="eliminarAlarma(event)"                        
-                        >Eliminar</button>
-                    </div>
-                  </li>
-                <%})
+                        <button type="button" class="btn btn-danger  mb-2 " id="eliminarAlarma"
+                          data-alarm_id="<%= alarm.id %>" 
+                          data-nombre="<%= alarm.nombre %>" 
+                          data-datalogger_id="<%= datalogger.id %>"                        
+                          data-channel_id="<%= currentChannel.id %>"
+                          onclick="eliminarAlarma(event)"                        
+                          >Eliminar</button>
+                      </div>
+                    </li>
+                <%}})
               }else{
                 %> 
                   <p class="card-text">No existen alarmas para este canal!</p>
@@ -127,6 +128,7 @@
                     data-channelid="<%= currentChannel.id %>" 
                     data-table="<%= datalogger.nombre_tabla %>" 
                     data-column="<%= currentChannel.nombre_columna %>" 
+                    data-userid="<%= user.id %>"
                     onclick="agregarAlarma(event)"
                   >Agregar alarma</a>
                 </li>

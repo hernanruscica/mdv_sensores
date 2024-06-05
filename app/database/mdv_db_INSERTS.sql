@@ -157,12 +157,12 @@ insert into `mdvsrl`.`alarmas_x_usuarios`
 values
 	-- (1, 32, current_timestamp()),
     -- (1, 84, current_timestamp()),
-    (2, 85, current_timestamp());
+    (47, -1, current_timestamp());
     
 insert into `mdvsrl`.`alarmas_logs`
 	(alarma_id, usuario_id, canal_id, fecha_disparo)
 values
-	(1, 32, 10, current_timestamp());
+	(47, -1, 10, current_timestamp());
 
 
 

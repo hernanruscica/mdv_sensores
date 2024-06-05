@@ -1,0 +1,169 @@
+<%- include('partials/cabecera', {titulo: "MDV Sensores - Historial de alarma", nombre: user.nombre_1, apellido: user.apellido_1}) %>
+
+<div class="container my-5 py-3">
+  <% if (typeof user !== 'undefined' && user !== null && user.nombre_1 && user.apellido_1) { %>
+  <h1>Historial de disparos </h1>
+  <h2>Alarma: <em><%= alarmData.nombre %></em></h2>
+    <p><%= alarmData.descripcion %></p>
+  <!--Breadcrumb-->
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="#" onclick="goBack()" >
+          <i class="fas fa-arrow-left"></i> Volver
+        </a>
+      </li>   
+      <li class="breadcrumb-item"><a href="/">Inicio</a></li>        
+      <li class="breadcrumb-item"><a href="/users/dashboard">Panel de control</a></li> 
+      <li class="breadcrumb-item"><a href="/locations/all">Ubicaciones</a></li>   
+      <li class="breadcrumb-item"><a href="/dataloggers/all">Dataloggers</a></li>  
+      <li class="breadcrumb-item"><a href="/dataloggers/view/<%= alarmData.datalogger_id %>">Ver Datalogger</a></li>  
+      <li class="breadcrumb-item"><a href="/dataloggers/view/<%= alarmData.datalogger_id %>/channels/<%= alarmData.canal_id %>">canal "<%= alarmData.canal_nombre %>"</a></li>  
+      <!-- http://localhost:3002/dataloggers/view/1/channels/10 -->
+      <li class="breadcrumb-item active" aria-current="page">Ver alarma</li>
+    </ol>
+  </nav>
+  <!--Breadcrumb fin-->
+
+ 
+
+  <div class="table-responsive">
+    <table class="table  table-striped">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Disparo</th>
+          <th scope="col">Valor</th>
+          <th scope="col">Vista</th>
+          <th scope="col">Usuario</th>
+        </tr>
+      </thead>
+      <tbody id="userTableBody">
+        <!--alarmsLogs-->
+        <% alarmLogs.forEach(function(alarmLog, index) { %>
+        <tr>
+          <th scope="row"><%= index + 1 %></th>
+          <td><%= formatearFecha(alarmLog.fecha_disparo) %></td>
+          <td><%= Number.parseFloat(alarmLog.valor).toFixed(2) %></td>
+          <td><%= (alarmLog.fecha_vista != null) ? formatearFecha(alarmLog.fecha_vista) : 'Nunca' %></td>
+          <td><%= alarmLog.nombre_1 %> <%= alarmLog.apellido_1 %></td>
+        </tr>
+        <% }); %>
+
+
+      </tbody>
+    </table>
+  </div>
+  <!--Paginacion-->
+  <nav aria-label="Tabla de usuarios a mostrar">
+    <h5 class="text-center display-6 fs-5 my-3">Páginas de resultados</h5>
+    <ul class="pagination justify-content-center" id="pagination" data-userlist="<%= JSON.stringify(alarmLogs) %>">
+      <!-- Aquí se generará la paginación con JavaScript -->
+    </ul>
+  </nav>
+
+  <% } else { %>
+  <h1>Error: Usuario no encontrado</h1>
+  <% } %>
+</div>
+
+<%- include('partials/piedepagina') %>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+<script src="/scripts/usersFunctionsBtns.js"></script>
+
+<script>
+  // Función para generar la paginación
+  function generatePagination(totalPages) {
+    var paginationContainer = document.getElementById('pagination');
+    paginationContainer.innerHTML = ''; // Limpiar el contenido existente
+    for (var i = 1; i <= totalPages; i++) {
+      var li = document.createElement('li');
+      li.classList.add('page-item');
+      var a = document.createElement('a');
+      a.classList.add('page-link');
+      a.setAttribute('href', '#');
+      a.textContent = i;
+      li.appendChild(a);
+      paginationContainer.appendChild(li);
+    }
+  }
+
+  // Calcula el número total de páginas basado en la cantidad de usuarios
+  var userListData = JSON.parse(document.getElementById('pagination').dataset.userlist);
+  var totalPages = Math.ceil(userListData.length / 10);
+
+  // Genera la paginación
+  //generatePagination(totalPages);
+
+  // Muestra los usuarios de la página seleccionada
+  var currentPage = 1;
+  var userTableBody = document.getElementById('userTableBody');
+
+  function showUsers(page) {
+    userTableBody.innerHTML = '';
+    var start = (page - 1) * 10;
+    var end = page * 10;
+    var usersToShow = userListData.slice(start, end);
+    usersToShow.forEach(function(user, index) {
+      var tr = document.createElement('tr');
+      var th = document.createElement('th');
+      th.setAttribute('scope', 'row');
+      th.textContent = start + index + 1;
+      tr.appendChild(th);
+      var tdIdentificacion = document.createElement('td');
+      tdIdentificacion.textContent = user.dni;
+      tr.appendChild(tdIdentificacion);
+      var tdNombre = document.createElement('td');
+      tdNombre.textContent = user.nombre_1;
+      tr.appendChild(tdNombre);
+      var tdApellido = document.createElement('td');
+      tdApellido.textContent = user.apellido_1;
+      tr.appendChild(tdApellido);
+      var tdAcciones = document.createElement('td');
+      var verBtn = document.createElement('a');
+      verBtn.setAttribute('href', '/users/view/' + user.dni);
+      verBtn.classList.add('btn', 'btn-primary', 'btn-sm', 'mb-1');
+      verBtn.textContent = 'Ver';
+      tdAcciones.appendChild(verBtn);
+      var editarBtn = document.createElement('a');
+      editarBtn.setAttribute('href', '/users/editform/' + user.dni);
+      editarBtn.classList.add('btn', 'btn-secondary', 'btn-sm', 'mb-1');
+      editarBtn.textContent = 'Editar';
+      tdAcciones.appendChild(editarBtn);
+      var eliminarBtn = document.createElement('button');
+      eliminarBtn.setAttribute('type', 'button');
+      eliminarBtn.classList.add('btn', 'btn-danger', 'btn-sm', 'mb-1', 'eliminarUsuario');
+      eliminarBtn.setAttribute("id", "eliminarUsuario");
+      eliminarBtn.setAttribute('data-dni', user.dni);
+      eliminarBtn.setAttribute('data-nombre_1', user.nombre_1);
+      eliminarBtn.setAttribute('data-apellido_1', user.apellido_1);
+      eliminarBtn.textContent = 'Eliminar';
+      tdAcciones.appendChild(eliminarBtn);
+      tr.appendChild(tdAcciones);
+      userTableBody.appendChild(tr);
+    });
+  }
+
+  //showUsers(currentPage);
+
+  // Maneja la navegación entre páginas
+  var paginationLinks = document.querySelectorAll('#pagination a');
+  paginationLinks.forEach(function(link) {
+    link.addEventListener('click', function(event) {
+      event.preventDefault();
+      currentPage = parseInt(event.target.textContent);
+      //showUsers(currentPage);
+    });
+  });
+</script>
+<script>
+  // Función para ir a la página anterior
+  function goBack() {
+    window.history.back();
+  }
+</script>
+
+</body>
+</html>

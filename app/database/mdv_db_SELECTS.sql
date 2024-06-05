@@ -229,7 +229,7 @@ select *  from mdvsrl.canales where id = 1;
 insert into mdvsrl.canales
     (datalogger_id, nombre, descripcion, nombre_columna, multiplicador, fecha_creacion)
 values
-	(1, 'temperatura', 'Mide la temperatura del gabinete', 'a1', 1.2, current_date());
+	(3, 'Termistor 2', 'Mide la temperatura en la ultima hora y ultimas 24 Hs.', 'a2', 0.04968, current_date());
 	
 delete from mdvsrl.canales where datalogger_id = 2;
 
@@ -237,10 +237,11 @@ delete from mdvsrl.canales where id = 2;
 
 update mdvsrl.canales 
 	set 
-		nombre = 'Compresor 1 - Tiempos de servicio',
-		descripcion = 'Mide el tiempo de funcionamiento, cantidad de encendidos y entradas a la sala.',		
-		nombre_columna = 'd2'
-    where id = 9;
+		/*nombre = 'Cafetera',*/
+		descripcion = 'Mide la temperatura en la ultima hora y ultimas 24 Hs. Con multiplicador = 0.054',		
+		nombre_columna = 'a2',
+        multiplicador = 0.054
+    where id = 15;
     
 update mdvsrl.dataloggers 
 	set 
@@ -270,18 +271,38 @@ where id != 1 AND id != 10 AND id != 25;
 
 update mdvsrl.alarmas
 	set 
-		canal_id = 11,
+		canal_id = 10,
         tabla = 'guemes',
-        columna= 'd6',
-        nombre = 'bomba 1 - tiempos de funcionamiento - max = 60',
-		descripcion = 'Se activa si se sobrepasa 60% de tiempo de encendido',
-		max = 60,
+        columna= 'd2',
+        nombre = 'Guemes compresor 2 - Encendidos - Ult. Hora - Max = 50%',
+		descripcion = 'Se activa si se sobrepasa 50% de tiempo de encendido',
+		max = 50,
         min = 0,
         periodo_tiempo = '1 HOUR',
-        estado= false
-	where id = 6;
+        estado= true
+	where id = 1;
+
+update mdvsrl.alarmas
+	set 		
+        estado= true
+	where id = 47;
     
 select * from `mdvsrl`.`alarmas_logs`;
 select * from `mdvsrl`.`alarmas_logs` where usuario_id = 32;
-select * from `mdvsrl`.`alarmas_logs` where canal_id = 11;
+select * from `mdvsrl`.`alarmas_logs` where canal_id = 10 ORDER BY fecha_disparo desc;
 select * from alarmas where canal_id = 10;
+
+select `alarmas_logs`.*, `usuarios`.nombre_1, `usuarios`.apellido_1, `usuarios`.email  
+from `alarmas_logs` 
+INNER JOIN `usuarios` 
+ON `alarmas_logs`.usuario_id = `usuarios`.id 
+where canal_id = 10 
+ORDER BY fecha_disparo desc;
+
+select alarmas.*, canales.datalogger_id, canales.nombre as canal_nombre, canales.descripcion as canal_descripcion 
+from alarmas
+INNER JOIN canales
+ON alarmas.canal_id = canales.id
+where alarmas.id = 1
+ORDER BY fecha_creacion DESC;
+

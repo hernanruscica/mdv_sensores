@@ -103,7 +103,7 @@ module.exports = {
         let currentData = null;                  
         
         currentData = await dataBuild.getAllDataChannels(dataloggerData.nombre_tabla, activeChannels, '1 DAY');     
-        //console.log(currentData);
+        console.log(channelAlarms);
         res.render('viewChannel', {user: req.session.user, 
                                    location: location, 
                                    datalogger: dataloggerData,

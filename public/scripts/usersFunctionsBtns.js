@@ -163,7 +163,7 @@ const eliminarAlarma = (e) => {
   console.log(`Confirma la eliminacion de la alarma "${e.target.dataset.nombre}" con id: "${e.target.dataset.alarm_id}"`);
   Swal.fire({
     title: 'Eliminar Alarma.',
-    text: `Confirma la eliminación de la alarma ${e.target.dataset.nombre} ? Esta acción no se puede deshacer`,
+    text: `Confirma la eliminación de la alarma ${e.target.dataset.nombre} ? Puede volverla a activar en la pagina de alarmas para este canal.`,
     icon: 'warning',                   
     showDenyButton: true,                               
     confirmButtonText: 'Eliminar',
@@ -172,9 +172,20 @@ const eliminarAlarma = (e) => {
     denyButtonColor: '#28DC25'
 
 }).then((result) => {
-     if (result.value) {            
-         fetch(`/alarms/delete/${e.target.dataset.alarm_id}`, { method: 'DELETE' })
-         .then(response => {
+     if (result.value) {     
+      const data = {
+        estado: false,
+        nombre: e.target.dataset.nombre,
+        datalogger_id: e.target.dataset.datalogger_id,
+        channel_id: e.target.dataset.channel_id
+      };      
+      fetch(`/alarms/updatestate/${e.target.dataset.alarm_id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      }).then(response => {
              // manejar respuesta exitosa    
              Swal.fire({
                  title: 'Alarma eliminada !',
@@ -220,7 +231,8 @@ const agregarAlarma = (e) => {
   var myModal02 = new bootstrap.Modal(document.getElementById('modal_agregar_alarmas'));
   myModal02.show();  
   document.getElementById("dataloggerid02").value = e.target.dataset.dataloggerid;
-  document.getElementById("channelid02").value = e.target.dataset.channelid;
+  document.getElementById("channelid02").value = e.target.dataset.channelid;  
+  document.getElementById("userid02").value = e.target.dataset.userid;
   document.getElementById("table02").value = e.target.dataset.table;
   document.getElementById("column02").value = e.target.dataset.column;
   document.getElementById("state02").value = true;

@@ -40,6 +40,18 @@ Content-Type: application/json
 
 ###
 
+POST http://localhost:3002/alarms/updatestate/1
+Content-Type: application/json
+
+{  
+  "estado": true,
+  "nombre": "guemes - compresor 1",
+  "datalogger_id": 1,
+  "channel_id": 10 
+}
+
+###
+
 DELETE  http://localhost:3002/alarms/delete/52
 Content-Type: application/json
 
