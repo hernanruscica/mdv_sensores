@@ -65,41 +65,52 @@ module.exports = {
         }
     },
     //Data example: timePeriod = '1 DAY' '1 HOUR'
-    getDigital: async (table, channel, timePeriod) => {
-        //console.log("getDigital on dataModel");
-        const connection = await pool.getConnection();//SELECT CONVERT_TZ('2004-01-01 12:00:00','+00:00','+10:00');
-        //  render: UTC_LOCAL='+00:00' localhost UTC_LOCAL='-03:00'
-        //CONVERT_TZ(fecha, '+00:00', '${process.env.UTC_LOCAL}')
-        //console.log(process.env.UTC_LOCAL)
-        const query =  `
-                        SELECT 
-                            CONVERT_TZ(fecha, '+00:00', '${process.env.UTC_LOCAL}') as fecha_local,
-                            ${channel}_estado AS estado,
-                            ${channel}_cantidad AS cantidad,
-                            ${channel}_tiempo AS tiempo,
-                            round(${channel}_tiempo / tiempo_total * 100, 2)  as porc_encendido,
-                            tiempo_total,
-                            servicio,
-                            energia,
-                            texto
-                        FROM 
-                            ${table}
-                        WHERE 
-                            fecha >= DATE_SUB(NOW(), INTERVAL ${timePeriod}) AND fecha <= NOW()
-                        ORDER BY 
-                            fecha ASC
-                        LIMIT 288
-                    `   
+    getDigital: async (table, channel, timePeriod, timeAvgValue) => {
+        const connection = await pool.getConnection();
+        //1 HOUR
+        const query = `
+            SELECT 
+                CONVERT_TZ(fecha, '+00:00', '${process.env.UTC_LOCAL}') AS fecha_local,
+                ${channel}_estado AS estado,
+                ${channel}_cantidad AS cantidad,
+                ${channel}_tiempo AS tiempo,
+                ROUND(
+                    (
+                        SELECT SUM(${channel}_tiempo) 
+                        FROM ${table} AS sub
+                        WHERE sub.fecha >= DATE_SUB(main.fecha, INTERVAL ${timeAvgValue} HOUR)
+                          AND sub.fecha <= main.fecha
+                    ) / 
+                    (
+                        SELECT SUM(tiempo_total) 
+                        FROM ${table} AS sub
+                        WHERE sub.fecha >= DATE_SUB(main.fecha, INTERVAL ${timeAvgValue} HOUR)
+                          AND sub.fecha <= main.fecha
+                    )  * 100 , 2
+                ) AS porc_encendido,
+                tiempo_total,
+                servicio,
+                energia,
+                texto
+            FROM 
+                ${table} AS main
+            WHERE 
+                fecha >= DATE_SUB(NOW(), INTERVAL ${timePeriod}) AND fecha <= NOW()
+            ORDER BY 
+                fecha ASC
+            LIMIT 288
+        `;
         try {
             const [rows, fields] = await connection.execute(query);   
-            
             return rows;
         } catch (error) {
             throw error;            
-        }finally {
+        } finally {
             connection.release();            
         }
-    },
+    }
+       
+    ,
     //Data example: timePeriod = '1 DAY' '1 HOUR'
     getAnalog: async (table, channel, timePeriod) => {
         //console.log("getAnalog on dataModel");

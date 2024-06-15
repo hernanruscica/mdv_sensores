@@ -50,13 +50,14 @@ module.exports = {
     },
     getChannelsById: async (id) => {        
         const connection = await pool.getConnection();
-        console.log("abierta la conexion con el pool de datos - Datalogger.getChannelsById");
+        console.log("abierta la conexion con el pool de datos - get Channels By Datalogger Id");
         try {            
             const [rows, fields] = await connection.execute(`select canales.id as canal_id, 
             canales.nombre_columna, 
             canales.nombre as canal_nombre, 
             canales.descripcion as canal_descripcion,
-            canales.multiplicador
+            canales.multiplicador,
+            canales.tiempo_a_promediar
                 from canales
                 where datalogger_id = '${id}'`);                  
             return rows;
@@ -70,7 +71,7 @@ module.exports = {
     },
     getAll: async () => {        
         const connection = await pool.getConnection();
-        console.log("abierta la conexion con el pool de datos - Datalogger.getChannelsById");
+        console.log("abierta la conexion con el pool de datos - Datalogger.getAll");
         try {            
             const [rows, fields] = await connection.execute(`select id, direccion_mac, nombre, descripcion, foto, nombre_tabla, fecha_creacion
                 from dataloggers`);  
@@ -151,6 +152,23 @@ module.exports = {
             return rows;
         } catch (error){
             //console.error(error);
+            throw error;
+        } finally {
+            connection.release(); // Liberar la conexión de vuelta al pool cuando hayas terminado
+            console.log("cerrada la conexion con el pool de datos");
+        }
+    },
+    addChannel: async (data) => {        
+        const connection = await pool.getConnection();
+        console.log("abierta la conexion con el pool de datos - add - datalogger");
+        try {
+            const [rows, fields] = await connection.execute(`insert into canales
+                                    (datalogger_id, nombre, descripcion, nombre_columna, tiempo_a_promediar, multiplicador, fecha_creacion, foto)
+                                    values
+                                    (${data.datalogger_id}, '${data.nombre}', '${data.descripcion}', '${data.nombre_columna}', ${data.tiempo_a_promediar}, ${data.multiplicador}, CURRENT_TIMESTAMP(), '${data.foto}');`);                                    
+            return rows;
+        } catch (error){
+            console.error(error);
             throw error;
         } finally {
             connection.release(); // Liberar la conexión de vuelta al pool cuando hayas terminado

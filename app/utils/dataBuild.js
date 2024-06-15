@@ -26,8 +26,9 @@ module.exports = {
     getAllDataChannels : async (table, channels, timePeriod) => {
         let allData = [];
         const columnNames = channels.map(channel => channel.nombre_columna);
+        const timeAvgValues = channels.map(channel => channel.tiempo_a_promediar);
         const channelsQty = columnNames.length;
-        
+                
         for (let i=0; i < channelsQty;i++){            
             if (columnNames[i].startsWith('a')){
                 const data = await DataModel.getAnalog(table, columnNames[i], timePeriod);   
@@ -36,7 +37,7 @@ module.exports = {
                     data: [...data]
                 });              
             }else{
-                const data = await DataModel.getDigital(table, columnNames[i], timePeriod);     
+                const data = await DataModel.getDigital(table, columnNames[i], timePeriod, timeAvgValues[i]);    
                          
                 allData.push({
                     channel: columnNames[i],

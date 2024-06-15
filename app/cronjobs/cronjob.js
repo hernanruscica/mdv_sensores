@@ -1,23 +1,32 @@
 const cron = require('node-cron');
 const DataModel = require('../models/DataModel');
 const AlarmModel = require('../models/AlarmModel');
+const DatalogerModel = require('../models/DatalogerModel');
 const mail = require('../utils/mail');
 
 
 const alarmDigPorEnc = async () => {
   
   const alarmas = await AlarmModel.getAll();
+  const canales = await DatalogerModel.getChannelsById()
+  
   console.log(alarmas.length > 0 ? '**************************************************\n' : 'no hay alarmas vigentes');
   alarmas.forEach(async alarma =>  {
     //console.log(alarma);
-    const dataDigital = await DataModel.getDigital(alarma.tabla, alarma.columna, alarma.periodo_tiempo);    
+    const dataDigital = await DataModel.getDigital(alarma.tabla, alarma.columna, "1 DAY", `1 HOUR`);    
     const porcOnLastHour = [...dataDigital.map(data => data.porc_encendido)];
     const sum = porcOnLastHour.reduce((a,c) => a + c, 0);
-    const avg =  (sum / porcOnLastHour.length).toFixed(2);
+    //const avg =  (sum / porcOnLastHour.length).toFixed(2);    
+    const avg = porcOnLastHour[porcOnLastHour.length - 1];
+   
+    //console.log("********************************************************************************************")
+    //console.log("*************************" + alarma.columna + ' --- ' + porcOnLastHour + "*************************")
+
 
 
     console.log('Fecha y hora',new Date().toString());
     console.log(`${alarma.nombre}: Porcentaje de encendido (${alarma.periodo_tiempo}): ${avg}`);       
+
 
     if (avg > alarma.max) {
       

@@ -45,7 +45,11 @@
           <p class="card-text">
             <strong>Canales conectados:</strong> <span id="numero_canales_digitales">digitales</span> - <span id="numero_canales_analogicos">analogicos</span>
           </p>          
-          <a href="/dataloggers/editform/<%= datalogger.id %>" class="btn btn-secondary col-6 col-lg-6">Editar Datalogger</a>               
+          <div class="row">             
+            <a href="/dataloggers/editform/<%= datalogger.id %>" class="btn btn-secondary col-6 col-sm-5 mx-sm-1">Editar Datalogger</a>               
+            <!-- '/view/:id/channels/add' -->
+            <a href="/dataloggers/<%= datalogger.id %>/channels/add" class="btn btn-success col-6 col-sm-5 mx-sm-1">Agregar Canal</a>
+          </div>
         </div>
         
       </div>
@@ -101,7 +105,7 @@
   const channels = <%- JSON.stringify(channels || []) %>;
   const channelsData= <%- JSON.stringify(channelsData || []) %>; 
   
-  //console.log(channelsData[1]);
+  console.log(channelsData[1]);
 
   const showAnalogCard = (currentChannel, dataChannel) => {  
     /* Preparacion de datos   para mostrar datos analogicos  */
@@ -192,7 +196,7 @@
       $cambiarSerieLabel.innerHTML = $cambiarSerieBtn.value == '24' ? 'Ultima hora' : 'Ultimas 24 Hs.';
       $cambiarSerieBtn.value = $cambiarSerieBtn.value == '24' ? '1' : '24';
       // window.location.reload();
-      console.log($cambiarSerieBtn.value);      
+      //console.log($cambiarSerieBtn.value);      
       chart.updateOptions({
         title: {
         text : `Porcentaje de encendido - ${$cambiarSerieLabel.innerHTML}`
@@ -302,7 +306,7 @@
     //maxArrayOneHour
 
     //console.log(dataChannel, dataGroupByThree, dataGroupByThreeOneHour);
-    console.log(maxArray, dataGroupByThree, maxArrayOneHour, dataGroupByThreeOneHour);
+    //console.log(maxArray, dataGroupByThree, maxArrayOneHour, dataGroupByThreeOneHour);
 
        
     var options = { 
@@ -388,7 +392,7 @@
         digitalChannelsQty++;         
       }      
     }
-    console.log(`Canales digitales: ${digitalChannelsQty}\nCanales analogicos: ${analogChannelsQty}}`); 
+    //console.log(`Canales digitales: ${digitalChannelsQty}\nCanales analogicos: ${analogChannelsQty}`); 
     document.getElementById('numero_canales_digitales').innerHTML = 
       digitalChannelsQty > 0 ? `${digitalChannelsQty} digitales ` : 'sin canales digitales';
     document.getElementById('numero_canales_analogicos').innerHTML = 

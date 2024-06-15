@@ -163,6 +163,11 @@ insert into `mdvsrl`.`alarmas_logs`
 	(alarma_id, usuario_id, canal_id, fecha_disparo)
 values
 	(47, -1, 10, current_timestamp());
+    
+insert into canales
+	(datalogger_id, nombre, descripcion, nombre_columna, tiempo_a_promediar, multiplicador, fecha_creacion, foto)
+values
+	(3, 'nuevo canal', 'nueva descripcion', 'd7', 1, 1, CURRENT_TIMESTAMP(), 'foto_canal.jpg');
 
 
 

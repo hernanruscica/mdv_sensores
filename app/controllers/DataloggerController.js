@@ -72,7 +72,7 @@ module.exports = {
         
         const data = await dataBuild.getAllDataChannels(dataloggerData.nombre_tabla, activeChannels, '1 DAY');       
         
-        console.log(dataloggerData);
+        
 
         res.render('viewDatalogger', {user: req.session.user, 
             location: locationData, 
@@ -112,6 +112,30 @@ module.exports = {
                                    formatearFecha: fechas.formatearFecha,
                                    currentChannel: currentChannel, 
                                    dataChannels: currentData || []});        
+    },
+    registerChannelForm: async (req, res) => {        
+        const dataloggerId = req.params.id;
+        const results = await DataloggerModel.getById(dataloggerId);
+        const dataloggerData = (results.length > 0 ) ? results[0] : [];
+        console.log(dataloggerData);
+
+        console.log(`register channel on datalogger ${dataloggerId}`);
+        res.render('registerChannelForm', {user: req.session.user, dataloggerData: dataloggerData});
+    },
+    addChannel: async (req, res) => {
+        console.log(`agregando canal al datalogger`);
+        const dataloggerId = req.params.id;
+        const imageName = (req.file != undefined) ? req.file.filename : req.body.foto;
+        req.body.foto = imageName;
+        req.body.datalogger_id = dataloggerId;
+        const data = req.body;        
+        const results = await DataloggerModel.addChannel(data);
+        if (results.affectedRows > 0){
+            res.status(200).json({message: 'OK', channelAdded: data, insertedId: results.insertId});
+        }else{
+            res.status(500).json({message: 'ERROR', results: results});
+        }
+        
     },
     deleteById: async (req, res) => {
         const id = parseInt(req.params.id);

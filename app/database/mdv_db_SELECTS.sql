@@ -253,7 +253,7 @@ update mdvsrl.dataloggers
         fecha_creacion = current_timestamp()
     where id = 3;
 
-select * from mdvsrl.alarmas;
+select * from mdvsrl.alarmas where estado = 1;
 select * from usuarios;
 select * from mdvsrl.alarmas_x_usuarios;
 
@@ -306,3 +306,9 @@ ON alarmas.canal_id = canales.id
 where alarmas.id = 1
 ORDER BY fecha_creacion DESC;
 
+select * from canales;
+
+
+update canales
+set tiempo_a_promediar = '12 HOUR'
+where id = 13;

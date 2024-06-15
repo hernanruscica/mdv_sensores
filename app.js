@@ -54,7 +54,7 @@ app.use(express.static('./public'));
 
 
 
-cronjobs.taskAlarm.start();
+cronjobs.taskAlarm.stop();
 
 
 

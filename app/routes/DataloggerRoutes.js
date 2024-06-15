@@ -23,6 +23,10 @@ router.post('/update/', upload.single("image"), DataloggerController.update);
 router.delete('/delete/:id', DataloggerController.deleteById);
 router.get('/view/:id', DataloggerController.viewDatalogger);
 router.get('/view/:id/channels/:idchannel', DataloggerController.viewChannel);
+
+router.get('/:id/channels/add', DataloggerController.registerChannelForm);
+router.post('/:id/channels/add', upload.single("image"), DataloggerController.addChannel);
+
 router.post('/location/add', LocationController.addDataloggerLocation);
 router.delete('/location/delete/:id', LocationController.deleteDataloggerById);
 
