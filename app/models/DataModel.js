@@ -74,20 +74,7 @@ module.exports = {
                 ${channel}_estado AS estado,
                 ${channel}_cantidad AS cantidad,
                 ${channel}_tiempo AS tiempo,
-                ROUND(
-                    (
-                        SELECT SUM(${channel}_tiempo) 
-                        FROM ${table} AS sub
-                        WHERE sub.fecha >= DATE_SUB(main.fecha, INTERVAL ${timeAvgValue} HOUR)
-                          AND sub.fecha <= main.fecha
-                    ) / 
-                    (
-                        SELECT SUM(tiempo_total) 
-                        FROM ${table} AS sub
-                        WHERE sub.fecha >= DATE_SUB(main.fecha, INTERVAL ${timeAvgValue} HOUR)
-                          AND sub.fecha <= main.fecha
-                    )  * 100 , 2
-                ) AS porc_encendido,
+                ${channel}_porc_encendido AS porc_encendido,                
                 tiempo_total,
                 servicio,
                 energia,
@@ -102,6 +89,7 @@ module.exports = {
         `;
         try {
             const [rows, fields] = await connection.execute(query);   
+            
             return rows;
         } catch (error) {
             throw error;            

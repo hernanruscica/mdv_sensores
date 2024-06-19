@@ -5,7 +5,7 @@
 <div class="container my-5 py-3 " >
 <% if (typeof user !== 'undefined' && user !== null && user.nombre_1 && user.apellido_1) { %>
     <h1>Canal "<%= currentChannel.nombre %>"</h1>   
-
+    
     <!--Breadcrumb-->
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
@@ -56,19 +56,21 @@
           <div>
               <h5 class="card-title">Vision general de Datos</h5>
               <!-- Promedios relacion de uso -->
-              <p class="card-text">Relación de uso. Promedio última hora: 40% - Ultimas 24 Hs.: 46,1%</p>
+              <p class="card-text">Relación de uso. Promedio última hora: x % - Ultimas 24 Hs.: x % </p>
               <!-- Horas de uso desde -->
-              <p class="card-text">Horas de uso desde 10/05/2021: 128 Hs.</p>
+              <p class="card-text">Horas de uso desde dd/mm/aaaa: x Hs.</p>
               <!-- alarma fecha mantenimiento preventivo -->
-              <p class="card-text">Próximo mantenimiento preventivo: 29/03/2024</p>
+              <p class="card-text">Próximo mantenimiento preventivo: dd/mm/aaaa</p>
               <!-- Usuario afectado -->
-              <p class="card-text">Operario a cargo: Juan Perez</p>              
+              <p class="card-text">Operario a cargo: xxxxxx</p>              
           </div>
           <!-- Foto -->
-          <img src="/images/relojPromFunc.png" class="card-img-top order-first order-md-last" style="height: auto; width: 200px;" alt="Foto del reloj de promedio de funcionamiento">
+          <!-- <img src="/images/relojPromFunc.png" class="card-img-top order-first order-md-last" style="height: auto; width: 200px;" alt="Foto del reloj de promedio de funcionamiento"> -->
+          
         </div> 
       </div>
       <!-- Fin de la Card de vison general de datos-->
+      
 
       <!-- Inicio  de la Card de vision general de datos 2-->
       <div class="card m-3 col-12 col-lg-6">
@@ -89,6 +91,7 @@
                       <p class="card-text"> <span class="fst-italic"> Creada el <%= formatearFecha(alarm.fecha_creacion) %></span><br>
                       <span class="fs-5"><%= alarm.descripcion %></span> <br>              
                       <span class="text-success ">Mínimo: <%= alarm.min %></span> - <span class="text-danger">Máximo: <%= alarm.max %></span> - Periodo de tiempo: <%= alarm.periodo_tiempo %></p>
+                      <div id="gauge"></div>
                       <div>
                         <a href="/alarms/view/<%= alarm.id %>" class="btn btn-primary  mb-2">Ver</a>
                         <button type="button" class="btn btn-secondary  mb-2"
@@ -263,15 +266,15 @@ const currentChannel= <%- JSON.stringify(currentChannel || []) %>;
   const showDigitalCard = (currentChannel, dataChannels) => {  
     //console.log(dataChannels.filter(data => data.channel == currentChannel.nombre_columna));  
     const dataChannel = [...dataChannels.filter(data => data.channel == currentChannel.nombre_columna)[0].data];
-    console.log(dataChannel);
+    //console.log(dataChannel);
 
     const $maxValue = document.getElementById(`${currentChannel.nombre_columna}_max_value`); 
     const $minValue = document.getElementById(`${currentChannel.nombre_columna}_min_value`);
     const $alarmMax = document.getElementById(`${currentChannel.nombre_columna}_alarm_max`);
     const $alarmMin = document.getElementById(`${currentChannel.nombre_columna}_alarm_min`);
-
     const $cambiarSerieBtn = document.getElementById(`${currentChannel.nombre_columna}_cambiarSerieBtn`);
     const $cambiarSerieLabel = document.getElementById(`${currentChannel.nombre_columna}_cambiarSerieLabel`);
+
     $cambiarSerieBtn.addEventListener('click', (e) => {   
       $cambiarSerieLabel.innerHTML = $cambiarSerieBtn.value == '24' ? 'Ultima hora' : 'Ultimas 24 Hs.';
       $cambiarSerieBtn.value = $cambiarSerieBtn.value == '24' ? '1' : '24';
@@ -339,7 +342,7 @@ const currentChannel= <%- JSON.stringify(currentChannel || []) %>;
       }      
       return result;
     }
-    const dataGroupByThree = groupByThree(dataChannel);
+    //const dataGroupByThree = groupByThree(dataChannel);
     
     
 
@@ -368,17 +371,17 @@ const currentChannel= <%- JSON.stringify(currentChannel || []) %>;
     }
 
     
-    const dataGroupByThreeOneHour = groupByLastHour(dataGroupByThree);
+    const dataAllOneHour = groupByLastHour(dataAll);
 
-    const myTimeStamps = dataGroupByThree.fecha_local;
-    const maxPorcEncendido = Math.max(...dataGroupByThree.porc_encendido);
-    const minPorcEncendido = Math.min(...dataGroupByThree.porc_encendido);
-    const maxPorcEncendidoOneHour = Math.max(...dataGroupByThreeOneHour.porc_encendido);
-    const minPorcEncendidoOneHour = Math.min(...dataGroupByThreeOneHour.porc_encendido);
+    //const myTimeStamps = dataGroupByThree.fecha_local;
+    const maxPorcEncendido = Math.max(...dataAll.porc_encendido);
+    const minPorcEncendido = Math.min(...dataAll.porc_encendido);
+    const maxPorcEncendidoOneHour = Math.max(...dataAllOneHour.porc_encendido);
+    const minPorcEncendidoOneHour = Math.min(...dataAllOneHour.porc_encendido);
 
 
-    const maxArray = new Array(dataGroupByThree.fecha_local.length), minArray = new Array(dataGroupByThree.fecha_local.length); 
-    const maxArrayOneHour = new Array(dataGroupByThreeOneHour.fecha_local.length), minArrayOneHour = new Array(dataGroupByThreeOneHour.fecha_local.length); 
+    const maxArray = new Array(dataAll.fecha_local.length), minArray = new Array(dataAll.fecha_local.length); 
+    const maxArrayOneHour = new Array(dataAllOneHour.fecha_local.length), minArrayOneHour = new Array(dataAllOneHour.fecha_local.length); 
     maxArray.fill(maxPorcEncendido);
     minArray.fill(minPorcEncendido);
     maxArrayOneHour.fill(maxPorcEncendidoOneHour);
@@ -421,7 +424,7 @@ const currentChannel= <%- JSON.stringify(currentChannel || []) %>;
             },
             {       
               name: "Porcentaje de encendido",
-              data: dataGroupByThree.porc_encendido,
+              data: dataAll.porc_encendido,
               color: '#e29578'             
             },                               
             {       
@@ -431,7 +434,7 @@ const currentChannel= <%- JSON.stringify(currentChannel || []) %>;
             }
             ],
               xaxis: {
-              categories: dataGroupByThree.fecha_local,
+              categories: dataAll.fecha_local,
               type: 'datetime'      
           },
       stroke: {
@@ -470,7 +473,9 @@ const currentChannel= <%- JSON.stringify(currentChannel || []) %>;
 
  </script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://d3js.org/d3.v6.min.js"></script>
 <script src="/scripts/usersFunctionsBtns.js"></script>
+<script src="/scripts/myGauge.js"></script>
 
 
 <%- include('partials/piedepagina') %>   

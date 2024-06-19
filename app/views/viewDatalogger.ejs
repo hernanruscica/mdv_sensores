@@ -105,7 +105,7 @@
   const channels = <%- JSON.stringify(channels || []) %>;
   const channelsData= <%- JSON.stringify(channelsData || []) %>; 
   
-  console.log(channelsData[1]);
+//console.log(channelsData);
 
   const showAnalogCard = (currentChannel, dataChannel) => {  
     /* Preparacion de datos   para mostrar datos analogicos  */
@@ -189,14 +189,15 @@
     const $minValue = document.getElementById(`${currentChannel.nombre_columna}_min_value`);
     const $alarmMax = document.getElementById(`${currentChannel.nombre_columna}_alarm_max`);
     const $alarmMin = document.getElementById(`${currentChannel.nombre_columna}_alarm_min`);
-
     const $cambiarSerieBtn = document.getElementById(`${currentChannel.nombre_columna}_cambiarSerieBtn`);
     const $cambiarSerieLabel = document.getElementById(`${currentChannel.nombre_columna}_cambiarSerieLabel`);
+
     $cambiarSerieBtn.addEventListener('click', (e) => {   
       $cambiarSerieLabel.innerHTML = $cambiarSerieBtn.value == '24' ? 'Ultima hora' : 'Ultimas 24 Hs.';
       $cambiarSerieBtn.value = $cambiarSerieBtn.value == '24' ? '1' : '24';
-      // window.location.reload();
-      //console.log($cambiarSerieBtn.value);      
+      $maxValue.innerHTML = $cambiarSerieBtn.value == '1' ? maxPorcEncendidoOneHour : maxPorcEncendido;
+      $minValue.innerHTML =  $cambiarSerieBtn.value == '1' ? minPorcEncendidoOneHour : minPorcEncendido;
+            
       chart.updateOptions({
         title: {
         text : `Porcentaje de encendido - ${$cambiarSerieLabel.innerHTML}`
@@ -209,7 +210,7 @@
             },
             {       
               name: "Porcentaje de encendido",
-              data: $cambiarSerieBtn.value == '1' ?  dataGroupByThreeOneHour.porc_encendido : dataGroupByThree.porc_encendido,
+              data: $cambiarSerieBtn.value == '1' ?  dataAllOneHour.porc_encendido : dataAll.porc_encendido,
               color: '#e29578'             
             },
             {       
@@ -219,22 +220,25 @@
             },                 
             ],
               xaxis: {
-              categories: $cambiarSerieBtn.value == '1' ?  dataGroupByThreeOneHour.fecha_local : dataGroupByThree.fecha_local,
+              categories: $cambiarSerieBtn.value == '1' ?  dataAllOneHour.fecha_local : dataAll.fecha_local,
               type: 'datetime'      
           }
       })
     });
 
-    /* Preparacion de datos   para mostrar datos analogicos  */
+    /* Preparacion de datos   para mostrar datos   */
     const dataAll = {
         fecha_local: [],
         tiempo: [],
         porc_encendido: []
       };
         
-    dataAll.fecha_local = dataChannel.map(data => data.fecha_local);            
+    dataAll.fecha_local = dataChannel.map(data => data.fecha_local);     //Necesary       
     dataAll.tiempo = dataChannel.map(data => data.tiempo);
-    dataAll.porc_encendido = dataChannel.map(data => data.porc_encendido);
+    dataAll.porc_encendido = dataChannel.map(data => data.porc_encendido);//Necesary    
+    const maxPorcEncendido = Math.max(...dataAll.porc_encendido);//Necesary
+    const minPorcEncendido = Math.min(...dataAll.porc_encendido);//Necesary
+   
     
     const groupByThree = (data) => {
       const result = {
@@ -256,12 +260,8 @@
       }      
       return result;
     }
-    const dataGroupByThree = groupByThree(dataChannel);
     
-    const myTimeStamps = dataGroupByThree.fecha_local;
-    const maxPorcEncendido = Math.max(...dataGroupByThree.porc_encendido);
-    const minPorcEncendido = Math.min(...dataGroupByThree.porc_encendido);
-
+    
     const groupByLastHour = (data) => {      
       
       const now = new Date() ;
@@ -286,27 +286,25 @@
       }         
     }
 
+    const dataAllOneHour = groupByLastHour(dataAll); 
+    const maxPorcEncendidoOneHour = Math.max(...dataAllOneHour.porc_encendido);//Necesary
+    const minPorcEncendidoOneHour = Math.min(...dataAllOneHour.porc_encendido);//Necesary
     
-    $maxValue.innerHTML = maxPorcEncendido;
-    $minValue.innerHTML = minPorcEncendido;
+    $maxValue.innerHTML = $cambiarSerieBtn.value == '1' ? maxPorcEncendidoOneHour : maxPorcEncendido;
+    $minValue.innerHTML =  $cambiarSerieBtn.value == '1' ? minPorcEncendidoOneHour : minPorcEncendido;
     $alarmMax.innerHTML = 'null';
     $alarmMin.innerHTML = 'null';
     
       
 
-    const dataGroupByThreeOneHour = groupByLastHour(dataGroupByThree);
 
-
-    const maxArray = new Array(dataGroupByThree.fecha_local.length), minArray = new Array(dataGroupByThree.fecha_local.length); 
-    const maxArrayOneHour = new Array(dataGroupByThreeOneHour.fecha_local.length), minArrayOneHour = new Array(dataGroupByThreeOneHour.fecha_local.length); 
+    const maxArray = new Array(dataAll.fecha_local.length), minArray = new Array(dataAll.fecha_local.length); 
+    const maxArrayOneHour = new Array(dataAllOneHour.fecha_local.length), minArrayOneHour = new Array(dataAllOneHour.fecha_local.length); 
     maxArray.fill(maxPorcEncendido);
     minArray.fill(minPorcEncendido);
-    maxArrayOneHour.fill(maxPorcEncendido);
-    minArrayOneHour.fill(minPorcEncendido);
-    //maxArrayOneHour
-
-    //console.log(dataChannel, dataGroupByThree, dataGroupByThreeOneHour);
-    //console.log(maxArray, dataGroupByThree, maxArrayOneHour, dataGroupByThreeOneHour);
+    maxArrayOneHour.fill(maxPorcEncendidoOneHour);
+    minArrayOneHour.fill(minPorcEncendidoOneHour);
+    
 
        
     var options = { 
@@ -340,7 +338,7 @@
             },
             {       
               name: "Porcentaje de encendido",
-              data: dataGroupByThree.porc_encendido,
+              data: dataAll.porc_encendido,
               color: '#e29578'             
             },                               
             {       
@@ -350,7 +348,7 @@
             }
             ],
               xaxis: {
-              categories: dataGroupByThree.fecha_local,
+              categories: dataAll.fecha_local,
               type: 'datetime'      
           },
       stroke: {

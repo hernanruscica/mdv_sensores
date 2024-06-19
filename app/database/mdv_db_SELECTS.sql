@@ -306,7 +306,7 @@ ON alarmas.canal_id = canales.id
 where alarmas.id = 1
 ORDER BY fecha_creacion DESC;
 
-select * from canales;
+select * from canales where datalogger_id = 3;
 
 
 update canales

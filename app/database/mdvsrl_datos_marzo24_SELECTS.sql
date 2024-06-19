@@ -1,9 +1,18 @@
 
+use mdvsrl_datos;
 show tables;
 
-select * from iriarte order by fecha desc;
+select * from quilmes order by fecha desc;
 select * from guemes order by fecha desc;
 select * from cocina order by fecha desc;
+
+update cocina
+	set d3_porc_encendido = 35
+where indice = 5032;
+		
+
+
+select indice, fecha, d3_porc_encendido from cocina order by fecha desc;
 
 /*Para un canal digital del 15 al 16 de marzo - reemplazar la fecha hardcodeada por CURDATE()*/
 SELECT fecha, d2_cantidad, d2_tiempo, d2_estado, tiempo_total, servicio, energia, texto

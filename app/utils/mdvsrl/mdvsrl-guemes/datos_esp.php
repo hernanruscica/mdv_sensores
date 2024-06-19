@@ -208,12 +208,12 @@ function calcularPorcEncendido($conexion, $tabla, $fecha, $channel, $timeAvgValu
 // A partir del nombre de la tabla, busco los canales 
 $timeAvgValue = 1;  // Horas para el promedio
 
-$d1_porc_encendido = calcularPorcEncendido($conexion_ruscica, $tabla, $d_date, 'd1', 1); //cafetera
-$d2_porc_encendido = calcularPorcEncendido($conexion_ruscica, $tabla, $d_date, 'd2', 12); //dispenser
-$d3_porc_encendido = calcularPorcEncendido($conexion_ruscica, $tabla, $d_date, 'd3', 12); //heladera
+$d1_porc_encendido = calcularPorcEncendido($conexion_ruscica, $tabla, $d_date, 'd1', 12); //Compresor01
+$d2_porc_encendido = calcularPorcEncendido($conexion_ruscica, $tabla, $d_date, 'd2', 12); //Compresor02
+$d3_porc_encendido = calcularPorcEncendido($conexion_ruscica, $tabla, $d_date, 'd3', $timeAvgValue); 
 $d4_porc_encendido = calcularPorcEncendido($conexion_ruscica, $tabla, $d_date, 'd4', $timeAvgValue);
 $d5_porc_encendido = calcularPorcEncendido($conexion_ruscica, $tabla, $d_date, 'd5', $timeAvgValue);
-$d6_porc_encendido = calcularPorcEncendido($conexion_ruscica, $tabla, $d_date, 'd6', $timeAvgValue);
+$d6_porc_encendido = calcularPorcEncendido($conexion_ruscica, $tabla, $d_date, 'd6', 12); //Bomba
 $d7_porc_encendido = calcularPorcEncendido($conexion_ruscica, $tabla, $d_date, 'd7', $timeAvgValue);
 $d8_porc_encendido = calcularPorcEncendido($conexion_ruscica, $tabla, $d_date, 'd8', $timeAvgValue);
 $a1_porc_encendido = calcularPorcEncendido($conexion_ruscica, $tabla, $d_date, 'a1', $timeAvgValue);
