@@ -221,7 +221,7 @@ const editarAlarma = (e) =>{
   document.getElementById("description").value = e.target.dataset.description;  
   document.getElementById("max").value = e.target.dataset.max;
   document.getElementById("min").value = e.target.dataset.min;
-  document.getElementById("timeperiod").value = e.target.dataset.timeperiod;  
+  //document.getElementById("timeperiod").value = e.target.dataset.timeperiod;  
   
   document.getElementById("modal_editar_alarmas_form").setAttribute("action", `/alarms/update/${e.target.dataset.id}`) ;
 }

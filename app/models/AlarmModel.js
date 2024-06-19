@@ -84,10 +84,9 @@ module.exports = {
                             nombre = ?,
                             descripcion = ?,
                             max = ?,
-                            min = ?,
-                            periodo_tiempo = ?,
+                            min = ?,                            
                             estado= ?
-                        where id = ?`, [data.channelid, data.table, data.column, data.name, data.description, data.max, data.min, data.timeperiod, data.state, id]);
+                        where id = ?`, [data.channelid, data.table, data.column, data.name, data.description, data.max, data.min, data.state, id]);
             
 
             if (rows.affectedRows > 0){

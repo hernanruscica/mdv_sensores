@@ -1,4 +1,7 @@
-console.log("desde myGauge.js");
+//console.log("desde myGauge.js");
+
+
+function drawGauge(currentValue, alarmMax, alarmMin){
  // Set up the dimensions and margins of the graph
  var width = 320;
  var height = 240;
@@ -12,14 +15,14 @@ console.log("desde myGauge.js");
      .append("g")
      .attr("transform", "translate(" + width / 2 + "," + height / 1.5 + ")");
 
- var gaugeValue = 70;  // Value for the gauge
+ var gaugeValue = currentValue;  // valor de la aguja
 
   // Add min, max, and alarm lines and labels
  var alarm1Value = 25;
  var alarm2Value = 50;
  var alarm3Value = 75;
- var alarmMaxValue = 90;
- var alarmMinValue = 5;
+ var alarmMaxValue = alarmMax;
+ var alarmMinValue = alarmMin;
  var minValue = 0;
  var maxValue = 100;
 
@@ -42,9 +45,9 @@ console.log("desde myGauge.js");
  // Add background arcs// Rojo #FF6666 // Amarillo #FFFF00 naranja #FFCC66 // Verde #66CC66
  var arcData = [
      { startAngle: -Math.PI / 2, endAngle: x(alarmMinValue), color: "#FF6666" }, 
-     { startAngle: x(alarmMinValue), endAngle: x(alarmMinValue + 10), color: "#FFCC66" }, 
-     { startAngle: x(alarmMinValue + 10), endAngle: x(alarmMaxValue - 10), color: "#66CC66" }, 
-     { startAngle: x(alarmMaxValue - 10), endAngle: x(alarmMaxValue), color: "#FFCC66" }, 
+     { startAngle: x(alarmMinValue ), endAngle: x(alarmMinValue ), color: "#FFCC66" }, 
+     { startAngle: x(alarmMinValue ), endAngle: x(alarmMaxValue ), color: "#66CC66" }, 
+     { startAngle: x(alarmMaxValue ), endAngle: x(alarmMaxValue), color: "#FFCC66" }, 
      { startAngle: x(alarmMaxValue), endAngle: Math.PI / 2, color: "#FF6666" } 
  ];
 
@@ -110,18 +113,18 @@ console.log("desde myGauge.js");
          .attr("class", className);
      svg.append("text")
          .attr("x", (outerRadius + 20) * Math.cos(x(value) - Math.PI / 2))
-         .attr("y", (outerRadius + 35) * Math.sin(x(value) - Math.PI / 2))
+         .attr("y", (outerRadius + 25) * Math.sin(x(value) - Math.PI / 2))
          .attr("class", `label ${className.includes('-alarm-line') ? 'min-max-label' : ''}`)
          .attr("dy", ".35em")
          .text(label);
  }
 
  addLineAndLabel(minValue, "0%", "alarm-line");
- addLineAndLabel(alarmMinValue, "Min 15%", "min-alarm-line");
+ addLineAndLabel(alarmMinValue, `MIN`, "min-alarm-line");
  addLineAndLabel(alarm1Value, "25%", "alarm-line");
  addLineAndLabel(alarm2Value, "50%", "alarm-line");
  addLineAndLabel(alarm3Value, "75%", "alarm-line");
- addLineAndLabel(alarmMaxValue, "Max 80%", "max-alarm-line");
+ addLineAndLabel(alarmMaxValue, `MAX`, "max-alarm-line");
  addLineAndLabel(maxValue, "100%", "alarm-line");
 
  // Add the current value label below the needle
@@ -130,3 +133,4 @@ console.log("desde myGauge.js");
      .attr("y", 20)  // Adjust this value to position the label correctly
      .attr("class", "label value-label")
      .text(gaugeValue + "%");
+}

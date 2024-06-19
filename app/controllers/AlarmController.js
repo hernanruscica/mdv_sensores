@@ -44,8 +44,8 @@ module.exports = {
     },
     update: async (req, res) => {
         const alarmId = req.params.id;
-        const {dataloggerid, channelid, table, column, name, description, max, min, state, timeperiod} = req.body
-        const data = {channelid, table, column, name, description, max, min, state, timeperiod};        
+        const {dataloggerid, channelid, table, column, name, description, max, min, state} = req.body
+        const data = {channelid, table, column, name, description, max, min, state};        
         const updatedAlarm = await AlarmModel.update(data, alarmId);
         //console.log(req.body);
         if (updatedAlarm.insertId !== -1 ) {

@@ -147,7 +147,7 @@ module.exports = {
         const connection = await pool.getConnection();
         console.log("abierta la conexion con el pool de datos - Datalogger.getChannelById");
         try {            
-            const [rows, fields] = await connection.execute(`select id, datalogger_id, nombre, descripcion, nombre_columna, multiplicador, fecha_creacion
+            const [rows, fields] = await connection.execute(`select id, datalogger_id, nombre, descripcion, nombre_columna, tiempo_a_promediar, multiplicador, fecha_creacion
                                                               from mdvsrl.canales where id = ${id};`);  
             return rows;
         } catch (error){

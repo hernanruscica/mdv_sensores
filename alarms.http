@@ -34,8 +34,7 @@ Content-Type: application/json
   "description": "Se activa si sobrepasa el limite de 60% de funcionamiento en la ultima hora.",
   "max": 60,
   "min": 0,
-  "state": true,
-  "timePeriod": "1 HOUR"
+  "state": true
 }
 
 ###
