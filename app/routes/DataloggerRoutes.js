@@ -26,6 +26,8 @@ router.get('/view/:id/channels/:idchannel', DataloggerController.viewChannel);
 
 router.get('/:id/channels/add', DataloggerController.registerChannelForm);
 router.post('/:id/channels/add', upload.single("image"), DataloggerController.addChannel);
+router.get('/:id/channels/:channelid/update', DataloggerController.updateChannelForm);
+router.post('/:id/channels/:channelid/update', upload.single("image"), DataloggerController.updateChannel);
 
 router.post('/location/add', LocationController.addDataloggerLocation);
 router.delete('/location/delete/:id', LocationController.deleteDataloggerById);

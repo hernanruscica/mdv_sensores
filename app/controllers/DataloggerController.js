@@ -117,7 +117,7 @@ module.exports = {
         const dataloggerId = req.params.id;
         const results = await DataloggerModel.getById(dataloggerId);
         const dataloggerData = (results.length > 0 ) ? results[0] : [];
-        console.log(dataloggerData);
+        //console.log(dataloggerData);
 
         console.log(`register channel on datalogger ${dataloggerId}`);
         res.render('registerChannelForm', {user: req.session.user, dataloggerData: dataloggerData});
@@ -136,6 +136,32 @@ module.exports = {
             res.status(500).json({message: 'ERROR', results: results});
         }
         
+    },
+    updateChannelForm: async (req, res) => {
+        const {id, channelid} = req.params;
+        const results = await DataloggerModel.getById(id);
+        const dataloggerData = (results.length > 0 ) ? results[0] : [];
+        const results2 = await DataloggerModel.getChannellbyId(channelid);       
+        const channelData = (results2.length > 0 ) ? results2[0] : [];
+        console.log(channelData) 
+        //res.status(200).send(`<h1>editando el canal con id: ${channelid} del datalogger con id: ${id}</h1>`);
+        res.render('editChannelForm', {user: req.session.user, 
+                                        dataloggerData: dataloggerData, 
+                                        channelData: channelData})
+    },
+    updateChannel: async (req, res) => {
+        const imageName = (req.file != undefined) ? req.file.filename : req.body.foto; 
+        req.body.foto = imageName;
+        const data = req.body;
+        const {id, channelid} = req.params;
+        const results = await DataloggerModel.updateChannel(data, channelid);
+        if (results.affectedRows > 0){
+            res.render('messages', {results: 'canaleditado', message: 'Canal editado correctamente', dataloggerid: id, channelid: channelid })
+        }else{
+            res.render('messages', {results: 'editChannelFails', message: 'No se pudo editar el canal', dataloggerid: id, channelid: channelid })
+        }
+        //console.log(results);
+        //res.status(200).json(data);
     },
     deleteById: async (req, res) => {
         const id = parseInt(req.params.id);

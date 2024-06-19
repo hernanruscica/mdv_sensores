@@ -37,11 +37,14 @@
               <!-- Descripcion -->
               <p class="card-text">Descripcion : <%= currentChannel.descripcion %></p>
               <!-- Foto -->
-              <img src="" class="card-img-top" alt="Foto del Canal ">            
+              <img src="/images/<%= currentChannel.foto %>" 
+                style="width: auto; height: 300px;"
+                class="card-img-top" alt="Foto del Canal ">            
               <!-- Fecha de creacion -->
               <p class="card-text">Creado el <%= formatearFecha(currentChannel.fecha_creacion) %></p>
               <div class="container row justify-content-start">
-                <a href="/dataloggers/editform/1" class="btn btn-secondary col-5 col-lg-6">Editar Canal</a>
+                <!-- /:id/channels/update -->
+                <a href="/dataloggers/<%= datalogger.id %>/channels/<%= currentChannel.id %>/update" class="btn btn-secondary col-5 col-lg-6">Editar Canal</a>
               </div>
           </div>        
       </div>

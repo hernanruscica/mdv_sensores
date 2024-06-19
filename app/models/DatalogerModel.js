@@ -147,7 +147,7 @@ module.exports = {
         const connection = await pool.getConnection();
         console.log("abierta la conexion con el pool de datos - Datalogger.getChannelById");
         try {            
-            const [rows, fields] = await connection.execute(`select id, datalogger_id, nombre, descripcion, nombre_columna, tiempo_a_promediar, multiplicador, fecha_creacion
+            const [rows, fields] = await connection.execute(`select id, datalogger_id, nombre, descripcion, nombre_columna, tiempo_a_promediar, multiplicador, fecha_creacion, foto
                                                               from mdvsrl.canales where id = ${id};`);  
             return rows;
         } catch (error){
@@ -175,5 +175,25 @@ module.exports = {
             console.log("cerrada la conexion con el pool de datos");
         }
     },
-
+    updateChannel: async (data, id) => {
+        const connection = await pool.getConnection();
+        console.log("abierta la conexion con el pool de datos - update - channel");
+        try {
+            const [rows, fields] = await connection.execute(`update canales
+                                    set 
+                                        nombre = '${data.nombre}', 
+                                        descripcion = '${data.descripcion}', 
+                                        nombre_columna = '${data.nombre_columna}', 
+                                        multiplicador = ${data.multiplicador},
+                                        foto = '${data.foto}'
+                                    where id = '${id}';`);                                    
+            return rows;
+        } catch (error){
+            console.error(error);
+            throw error;
+        } finally {
+            connection.release(); // Liberar la conexión de vuelta al pool cuando hayas terminado
+            console.log("cerrada la conexion con el pool de datos");
+        }
+    }
 }

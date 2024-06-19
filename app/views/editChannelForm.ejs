@@ -1,7 +1,7 @@
-<%- include('partials/cabecera', {titulo: "MDV Sensores - Registro de un nuevo canal al datalogger"}) %>   
+<%- include('partials/cabecera', {titulo: "MDV Sensores - Edicion de un canal del datalogger"}) %>   
 
 <div class="container-md my-5 py-3">
-  <h1>Agregando un nuevo canal a <em>"<%= dataloggerData.nombre %>"</em></h1> 
+  <h1>Editor de canal</h1> 
   
   <!-- Breadcrumb -->
   <nav aria-label="breadcrumb">
@@ -19,22 +19,25 @@
     </ol>
   </nav>  
 
-  <!-- <p>
-    En esta página puede <b>registrar</b> un nuevo datalogger.
-  </p> -->
+  <p>
+    En esta página puede <b>editar</b> el canal <strong><%= channelData.nombre %></strong> del datalogger <strong><%= dataloggerData.nombre %></strong></em>.
+  </p> 
 
   <div class="row">
     <!-- Columna de Nombre de la datalogger -->
     <div class="col-lg-8 col-md-12 mb-6">
       <div class="card">
-        <div class="card-body">                   
-          <form action='/dataloggers/<%= dataloggerData.id %>/channels/add' method="post"   enctype="multipart/form-data">       
+        <div class="card-body">           
+          <!-- /:id/channels/update-->        
+          <form action='/dataloggers/<%= dataloggerData.id %>/channels/<%= channelData.id %>/update' method="post"   enctype="multipart/form-data">       
             <div class="mb-3 row">
 
               <!-- Vista previa de la Foto -->
-              <img src="/images/default_datalogger.webp" class="card-img-top" style="width: 200px; height:auto; margin-top: 10px;" 
+              <img src="/images/<%= channelData.foto %>" class="card-img-top" style="width: 200px; height:auto; margin-top: 10px;" 
                 alt="Foto del datalogger" id="imagePreview">
-              <input type="hidden" name="foto" id="foto" value="default_datalogger.webp">
+
+              <input type="hidden" name="foto" id="foto" value="<%= channelData.foto %>">
+
               <label for="image" class="col-sm-2 col-md-3 col-form-label">Cambiar imagen</label>
               <div class="col-sm-10 col-md-9">                         
                 <input type="file" class="form-control" id="image" name="image" accept="image/*">         
@@ -44,36 +47,43 @@
             <div class="mb-3">      
               <label for="nombre" class="form-label">Nombre</label>
               <input type="text" class="form-control" id="nombre" name="nombre" aria-describedby="nombreHelp" 
-                  pattern=".*{1,100}" title="Debe contener solo letras y tener como máximo 100 caracteres" maxlength="100" required>   
+                  pattern=".*{1,100}" title="Debe contener solo letras y tener como máximo 100 caracteres" maxlength="100" 
+                  value = '<%= channelData.nombre %>'
+                  required>   
               <div id="nombreHelp" class="form-text">[CAMPO OBLIGATORIO]</div>        
             </div>  
             <!-- descripción -->
             <div class="mb-3">      
               <label for="descripcion" class="form-label">Descripción</label>
               <input type="text" class="form-control" id="descripcion" name="descripcion" aria-describedby="descripcionHelp" 
-                  pattern=".*{1,200}" title="Debe contener solo letras y tener como máximo 200 caracteres" maxlength="200" required>  
+                  pattern=".*{1,200}" title="Debe contener solo letras y tener como máximo 200 caracteres" maxlength="200" 
+                  value = '<%= channelData.descripcion %>'
+                  required>  
               <div id="descripcionHelp" class="form-text">[CAMPO OBLIGATORIO]</div>       
             </div>   
             <!-- nombre_columna -->
             <div class="mb-3">      
               <label for="nombre_columna" class="form-label">Nombre columna.</label>
               <input type="text" class="form-control" id="nombre_columna" name="nombre_columna" aria-describedby="nombre_columnaHelp" 
-                  pattern=".*{1,50}" title="Puede contener letras y numeros tener como máximo 50 caracteres" maxlength="50" required>           
+                  pattern=".*{1,50}" title="Puede contener letras y numeros tener como máximo 50 caracteres" maxlength="50" 
+                  value = '<%= channelData.nombre_columna %>'
+                  required>           
               <div id="nombre_columnaHelp" class="form-text">[CAMPO OBLIGATORIO]</div>
             </div>        
-            <!--Tiempo a promediar-->
+            <!--Tiempo a promediar
             <div class="mb-3 row">
               <label for="tiempo_a_promediar" class="form-label">Tiempo a promediar (Horas)</label>              
               <input type="number" class="form-control" id="tiempo_a_promediar" name="tiempo_a_promediar"  aria-describedby="tiempo_a_promediarHelp"
                 title="El tiempo a promediar para atras, medido en horas." 
               required>
               <div id="tiempo_a_promediarHelp" class="form-text">[CAMPO OBLIGATORIO]</div>              
-            </div>
+            </div>-->
             <!--Multiplicador de valor-->
             <div class="mb-3 row">
               <label for="multiplicador" class="form-label">Multiplicador de valor</label>              
               <input type="number" step="0.01" class="form-control" id="multiplicador" name="multiplicador"  aria-describedby="multiplicadorHelp"
                 title="El Multiplicador de valor para atras, medido en horas." 
+                value = '<%= channelData.multiplicador %>'
               required>
               <div id="multiplicadorHelp" class="form-text">[CAMPO OBLIGATORIO]</div>              
             </div>
@@ -81,7 +91,7 @@
         </div>
       </div>
       <div class="col">      
-        <button type="submit" class="btn btn-primary w-100">Registrar canal</button>      
+        <button type="submit" class="btn btn-primary w-100">Guardar cambios</button>      
     </div> 
   </form>
     </div>            
@@ -89,6 +99,31 @@
 </div>
     
 <%- include('partials/piedepagina') %>
+
+<script>
+  document.getElementById('image').addEventListener('change', function(event) {
+        var file = event.target.files[0];
+        var imgPreview = document.getElementById('imagePreview');
+
+        // Verifica si se seleccionó una imagen
+        if (file) {
+            var reader = new FileReader();
+
+            // Cuando se cargue el archivo, muestra la vista previa de la imagen
+            reader.onload = function(e) {
+                imgPreview.src = e.target.result;
+                imgPreview.style.display = 'block';
+            };
+
+            // Lee el archivo como una URL de datos
+            reader.readAsDataURL(file);
+        } else {
+            // Si no se seleccionó ninguna imagen, oculta la vista previa
+            imgPreview.src = '';
+            imgPreview.style.display = 'none';
+        }
+    });
+</script>
 
 <script src="/scripts/loadImagePreview.js"></script>
 

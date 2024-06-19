@@ -332,6 +332,42 @@
    }  
 %>
 
+<%  if (typeof results !== 'undefined' && results === 'canaleditado'){ %>
+  <script>    
+      Swal.fire({
+              title: 'Canal editado !',
+              text: '<%= message %>',
+              icon: 'success',
+              confirmButtonText: 'Entendido'})
+              .then((result) => {
+                if (result.isConfirmed){
+                  location.href=`/dataloggers/view/<%= dataloggerid %>/channels/<%= channelid %>`;                  
+                }
+              })              
+  </script>
+  <%
+   }  
+%>
+
+<!-- editChannelFails -->
+<%  if (typeof results !== 'undefined' && results === 'editChannelFails'){ %>
+  <script>
+      Swal.fire({
+              title: 'Edicion erronea !',
+              text: '<%= message %>',
+              icon: 'error',
+              confirmButtonText: 'Entendido'})
+              .then((result) => {
+              if (result.isConfirmed){
+                location.href='/dataloggers/view/<%= dataloggerid %>/channels/<%= channelid %>';
+              }
+            })
+  </script>
+  <% 
+  }     
+%>
+
+
 </body>
 </html>
 
