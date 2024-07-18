@@ -42,7 +42,7 @@ module.exports = {
         console.log("abierta la conexion con el pool de datos - Alarmas.getAll");
         try {            
             const [rows, fields] = await connection.execute(`select *
-                from alarmas`);  
+                from alarmas where estado = 1`);  
             return rows;
         } catch (error){
             //console.error(error);
