@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cookieSession = require("cookie-session");
 const methodOverride = require('method-override');
-//const cron = require('node-cron');
+const cron = require('node-cron');
 const cronjobs = require('./app/cronjobs/cronjob.js');
 
 const axios = require('axios');
@@ -54,7 +54,7 @@ app.use(express.static('./public'));
 
 
 
-cronjobs.taskAlarm.stop();
+cronjobs.taskAlarm.start();
 
 
 

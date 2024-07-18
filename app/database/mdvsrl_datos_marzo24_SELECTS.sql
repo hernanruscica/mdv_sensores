@@ -3,6 +3,7 @@ use mdvsrl_datos;
 show tables;
 
 select * from quilmes order by fecha desc;
+select * from iriarte order by fecha desc;
 select * from guemes order by fecha desc;
 select * from cocina order by fecha desc;
 
