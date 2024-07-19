@@ -122,6 +122,11 @@ select * from usuarios;
 select * from roles;
 select * from usuarios_x_ubicaciones_x_roles;
 
+
+select * from usuarios_x_ubicaciones_x_roles where usuarios_id = 85;
+select * from dataloggers_x_ubicacion;
+delete from usuarios_x_ubicaciones_x_roles where id = 59;
+
 /*ya tengo los datos principales del usuario, con esta consulta obtengo los permisos que tiene sobre ubicaciones*/
 select  ubicaciones.id as ubicacion_id, ubicaciones.nombre as ubicacion_nombre, usuarios_x_ubicaciones_x_roles.roles_id as rol_id
 FROM usuarios_x_ubicaciones_x_roles 
@@ -171,7 +176,7 @@ where id = 1 ;
 insert into dataloggers_x_ubicacion
 (ubicaciones_id, datalogger_id, fecha_creacion)
 values
-(2, 3, CURRENT_TIMESTAMP());
+(40, 8, CURRENT_TIMESTAMP());
 
 
 SELECT * FROM `usuarios_x_ubicaciones_x_roles`;
@@ -255,6 +260,7 @@ update mdvsrl.dataloggers
 
 select * from mdvsrl.alarmas where estado = 1;
 select * from usuarios;
+select * from alarmas;
 select * from mdvsrl.alarmas_x_usuarios;
 
 select mdvsrl.usuarios.email 

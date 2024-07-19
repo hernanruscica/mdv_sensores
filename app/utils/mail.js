@@ -102,7 +102,7 @@ module.exports = {
                             El sensor registro un cambio en los valores criticos.
                         </p>                       
                         <p>
-                            El porcentaje de encendido supero el Max de ${alarma.max}, en: ${avg} en ${alarma.periodo_tiempo}
+                            El porcentaje de encendido supero el Max de ${alarma.max}, en: ${avg} 
                         </p>                        
                     </div>
                     `
