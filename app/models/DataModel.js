@@ -92,7 +92,8 @@ module.exports = {
             
             return rows;
         } catch (error) {
-            throw error;            
+            console.log(error);            
+            return [];
         } finally {
             connection.release();            
         }

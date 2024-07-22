@@ -14,10 +14,9 @@ const alarmDigPorEnc = async () => {
   console.log('Fecha y hora',new Date().toString());
   alarmas.forEach(async alarma =>  {
     
-    const dataDigital = await DataModel.getDigital(alarma.tabla, alarma.columna, "1 DAY", `1 HOUR`);    
-    const porcOnLastHour = [...dataDigital.map(data => data.porc_encendido)];   
-    
-    const avg = porcOnLastHour[porcOnLastHour.length - 1]; 
+    const dataDigital = await DataModel.getDigital(alarma.tabla, alarma.columna, "5 MINUTE", `1 HOUR`);        
+    const avg = dataDigital.length > 0 ? dataDigital[dataDigital.length - 1].porc_encendido : 0; 
+
     console.log(`ID: ${alarma.id} - ${alarma.nombre}: - MAX: ${alarma.max} -  Ultimo % de encendido: ${avg}`);  
 
     if (avg > alarma.max) {
@@ -51,12 +50,14 @@ const alarmDigPorEnc = async () => {
         console.log('Usuarios asignados NO encontrados!')
       }       
         
+    }else{
+      console.log('Ultimo porcentaje NO sobrepasa el maximo.')
     }
   });  
 }
 
 module.exports = {
-  taskAlarm: cron.schedule('*/5 * * * *', alarmDigPorEnc)  
+  taskAlarm: cron.schedule('*/1 * * * *', alarmDigPorEnc)  
 };
 
 
