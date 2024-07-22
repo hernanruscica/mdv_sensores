@@ -217,7 +217,8 @@ module.exports = {
         return rows;
         } catch (error) {
             console.log(error);
-            throw error;            
+            //throw error;            
+            return {affectedRows: 0};
         }finally{
             connection.release(); 
             console.log("cerrada la conexion con el pool de datos");

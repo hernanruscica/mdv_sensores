@@ -269,6 +269,8 @@ insert into mdvsrl.alarmas_x_usuarios
 values
 	(47, 84, current_timestamp());
 
+delete from mdvsrl.alarmas_x_usuarios where id >= 36;
+
 select mdvsrl.usuarios.email 
 from mdvsrl.alarmas_x_usuarios 
 inner join mdvsrl.usuarios on mdvsrl.usuarios.id = mdvsrl.alarmas_x_usuarios.usuario_id
