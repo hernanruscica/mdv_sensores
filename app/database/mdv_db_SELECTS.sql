@@ -262,6 +262,12 @@ select * from mdvsrl.alarmas where estado = 1;
 select * from usuarios;
 select * from alarmas;
 select * from mdvsrl.alarmas_x_usuarios;
+select * from mdvsrl.alarmas_x_usuarios where alarma_id = 47;
+
+insert into mdvsrl.alarmas_x_usuarios
+	(alarma_id, usuario_id, fecha_creacion)
+values
+	(47, 84, current_timestamp());
 
 select mdvsrl.usuarios.email 
 from mdvsrl.alarmas_x_usuarios 

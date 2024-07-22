@@ -1,60 +1,56 @@
 const cron = require('node-cron');
 const DataModel = require('../models/DataModel');
 const AlarmModel = require('../models/AlarmModel');
-const DatalogerModel = require('../models/DatalogerModel');
+//const DatalogerModel = require('../models/DatalogerModel');
 const mail = require('../utils/mail');
 
 
 const alarmDigPorEnc = async () => {
   
   const alarmas = await AlarmModel.getAll();
-  const canales = await DatalogerModel.getChannelsById()
+  //const canales = await DatalogerModel.getChannelsById()
   
-  console.log(alarmas.length > 0 ? '**************************************************\n' : 'no hay alarmas vigentes');
+  console.log(alarmas.length > 0 ? '\n**************************************************\n' : 'no hay alarmas vigentes');
+  console.log('Fecha y hora',new Date().toString());
   alarmas.forEach(async alarma =>  {
-    //console.log(alarma);
+    
     const dataDigital = await DataModel.getDigital(alarma.tabla, alarma.columna, "1 DAY", `1 HOUR`);    
-    const porcOnLastHour = [...dataDigital.map(data => data.porc_encendido)];
-    const sum = porcOnLastHour.reduce((a,c) => a + c, 0);
-    //const avg =  (sum / porcOnLastHour.length).toFixed(2);    
-    const avg = porcOnLastHour[porcOnLastHour.length - 1];
-   
-    //console.log("********************************************************************************************")
-    //console.log("*************************" + alarma.columna + ' --- ' + porcOnLastHour + "*************************")
-
-
-
-    console.log('Fecha y hora',new Date().toString());
-    console.log(`${alarma.nombre}: Porcentaje de encendido (${alarma.periodo_tiempo}): ${avg}`);       
-
+    const porcOnLastHour = [...dataDigital.map(data => data.porc_encendido)];   
+    
+    const avg = porcOnLastHour[porcOnLastHour.length - 1]; 
+    console.log(`ID: ${alarma.id} - ${alarma.nombre}: - MAX: ${alarma.max} -  Ultimo % de encendido: ${avg}`);  
 
     if (avg > alarma.max) {
+      console.log(`${alarma.nombre}: Porc de encendido mayor a ${alarma.max}`);      
+      //Envia correos si tiene usuarios asignados
+      const results = await AlarmModel.getUsersByAlarmId(alarma.id);
       
-       //Envia correos si tiene usuarios asginados
-    const results = await AlarmModel.getUsersByAlarmId(alarma.id);
-    
-    if (results.length > 0){
-      const emailsCurrentAlarm = [...results.map(result => result.email)];      
-      const userIdsCurrentAlarm = [...results.map(result => result.id)];
+      if (results.length > 0){
+        const emailsCurrentAlarm = [...results.map(result => result.email)];      
+        const userIdsCurrentAlarm = [...results.map(result => result.id)];
 
-      const emailsString = emailsCurrentAlarm.join(', ');    
-      //console.log('emails string : ', emailsString, '\n'); 
+        console.log('usersIdCurrentAlarm: ', userIdsCurrentAlarm)
+        const emailsString = emailsCurrentAlarm.join(', ');    
+        console.log('emails string : ', emailsString, '\n'); 
 
-      const mailsSendedOk = await mail.sendAlarm(avg, alarma, emailsString);  
+        const mailsSendedOk = await mail.sendAlarm(avg, alarma, emailsString);  
 
-      if (!mailsSendedOk) {
-        console.log(`Error enviando los correos a ${emailsString}`);
-        return 
-      }
-     
-      //Inserto el log de alarma - 
-      userIdsCurrentAlarm.forEach(async userId => {
-        const resultsLog = await AlarmModel.addAlarmLog(alarma.id, userId, alarma.canal_id, avg);
-        console.log((resultsLog.affectedRows > 0) ? 'Log insertado' : 'Log NO insertado');
-      })
-    }  
-      
-      console.log(`${alarma.nombre}: Porc de encendido mayor a ${alarma.max}`);
+        
+        if (!mailsSendedOk) {
+          console.log(`Error enviando los correos a ${emailsString}`);
+          return 
+        }
+        console.log(`Correos de alarma enviados a: ${emailsString}`);
+        
+        //Inserto el log de alarma - 
+        userIdsCurrentAlarm.forEach(async userId => {
+          const resultsLog = await AlarmModel.addAlarmLog(alarma.id, userId, alarma.canal_id, avg);
+          console.log((resultsLog.affectedRows > 0) ? 'Log insertado' : 'Log NO insertado');
+        })
+      }else{
+        console.log('Usuarios asignados NO encontrados!')
+      }       
+        
     }
   });  
 }
