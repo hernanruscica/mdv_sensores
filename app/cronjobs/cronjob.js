@@ -87,7 +87,7 @@ const alarmDigPorEnc = async () => {
 }
 
 module.exports = {
-  taskAlarm: cron.schedule('*/1 * * * *', alarmDigPorEnc)  
+  taskAlarm: cron.schedule('*/5 * * * *', alarmDigPorEnc)  
 };
 
 

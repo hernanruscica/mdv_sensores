@@ -29,11 +29,19 @@ SELECT * FROM `direcciones`;
 SELECT * FROM `ubicaciones` WHERE `id` = 8;
 SELECT * FROM `dataloggers`;
 SELECT * FROM `dataloggers_x_ubicacion`;
-SELECT * FROM alarmas;
+SELECT * FROM alarmas  WHERE canal_id=20;
+SELECT * FROM alarmas ;
 SELECT * FROM canales;
+SELECT * FROM alarmas_x_usuarios;
 
-delete from ubicaciones
-where id>=41;
+delete from canales
+where id=20;
+
+delete from alarmas
+where canal_id = 20;
+
+delete from alarmas_x_usuarios
+where alarma_id=58;
 
 ALTER TABLE ubicaciones
 ADD CONSTRAINT unique_direcciones_id UNIQUE (direcciones_id);
