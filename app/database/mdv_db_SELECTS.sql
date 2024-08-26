@@ -25,21 +25,51 @@ SELECT * FROM `mdvsrl`.`usuarios`; /*tengo el id para usarlo en */
 SELECT * FROM `usuarios_x_ubicaciones_x_roles`;
 SELECT * FROM `roles`;
 SELECT * FROM `ubicaciones`;
-SELECT * FROM `direciones`;
+SELECT * FROM `direcciones`;
 SELECT * FROM `ubicaciones` WHERE `id` = 8;
 SELECT * FROM `dataloggers`;
 SELECT * FROM `dataloggers_x_ubicacion`;
+SELECT * FROM alarmas;
+SELECT * FROM canales;
 
+delete from ubicaciones
+where id>=41;
 
+ALTER TABLE ubicaciones
+ADD CONSTRAINT unique_direcciones_id UNIQUE (direcciones_id);
 
+ALTER TABLE dataloggers
+ADD CONSTRAINT unique_direccion_mac UNIQUE (direccion_mac);
 
-SELECT `ubicaciones`.`nombre`, `ubicaciones`.`descripcion`, `ubicaciones`.`foto`, `ubicaciones`.`telefono`,
-		`usuarios_x_ubicaciones_x_roles`.`usuarios_id` AS usuarios_id, `usuarios_x_ubicaciones_x_roles`.`roles_id` AS roles_id,
-        `roles`.`nombre` AS nombre_rol
+SELECT * FROM usuarios WHERE id=28470360;
+
+/*Encuentro todas las ubicaciones con usuarios y roles asignados*/
+SELECT `ubicaciones`.`id` as ubicaciones_id,`ubicaciones`.`nombre` as ubicaciones_nombre, `ubicaciones`.`descripcion` as ubicaciones_descripcion, `ubicaciones`.`foto` as ubicaciones_foto, `ubicaciones`.`telefono` as ubicaciones_tel,
+		`usuarios_x_ubicaciones_x_roles`.`usuarios_id` AS usuarios_id, `usuarios_x_ubicaciones_x_roles`.`roles_id` AS usuarios_roles_id,
+        `roles`.`nombre` AS usuarios_nombre_rol
+FROM `ubicaciones`
+INNER JOIN `usuarios_x_ubicaciones_x_roles` ON `ubicaciones`.`id` = `usuarios_x_ubicaciones_x_roles`.`ubicaciones_id` 
+INNER JOIN `roles` ON roles_id = `roles`.`id`;
+
+/*Encuentro todas las ubicaciones donde el usuario tiene algun rol*/
+SELECT `ubicaciones`.`id` as ubicaciones_id,`ubicaciones`.`nombre` as ubicaciones_nombre, `ubicaciones`.`descripcion` as ubicaciones_descripcion, `ubicaciones`.`foto` as ubicaciones_foto, `ubicaciones`.`telefono` as ubicaciones_tel,
+		`usuarios_x_ubicaciones_x_roles`.`usuarios_id` AS usuarios_id, `usuarios_x_ubicaciones_x_roles`.`roles_id` AS usuarios_roles_id,
+        `roles`.`nombre` AS usuarios_nombre_rol
 FROM `ubicaciones`
 INNER JOIN `usuarios_x_ubicaciones_x_roles` ON `ubicaciones`.`id` = `usuarios_x_ubicaciones_x_roles`.`ubicaciones_id` 
 INNER JOIN `roles` ON roles_id = `roles`.`id`
-WHERE usuarios_id = 3;
+WHERE usuarios_id = 85;
+
+/*Encuentro todas los usuarios que tienen algun rol en la ubicacion*/
+SELECT  `usuarios_x_ubicaciones_x_roles`.`usuarios_id` AS usuarios_id, 
+		`usuarios_x_ubicaciones_x_roles`.`roles_id` AS usuarios_roles_id,
+		`roles`.`nombre` AS usuarios_nombre_rol,
+        `usuarios`.`nombre_1`  as usuario_nom_apell,
+		`usuarios_x_ubicaciones_x_roles`.`ubicaciones_id` as ubicaciones_id
+FROM `usuarios`
+INNER JOIN `usuarios_x_ubicaciones_x_roles` ON `usuarios`.`id` = `usuarios_x_ubicaciones_x_roles`.`usuarios_id` 
+INNER JOIN `roles` ON roles_id = `roles`.`id`
+WHERE ubicaciones_id = 34;
 
 
 ALTER TABLE `mdvsrl`.`direcciones`
@@ -69,11 +99,13 @@ SELECT * FROM `mdvsrl`.`direcciones`;
 SELECT * FROM `mdvsrl`.`dataloggers`;
 SELECT * FROM `mdvsrl`.`ubicaciones`;
 SELECT * FROM `mdvsrl`.`dataloggers_x_ubicacion`;
+SELECT * FROM canales;
 
+/*Recupero los id de dataloggers para una ubicacion*/
 SELECT mdvsrl.dataloggers_x_ubicacion.datalogger_id 
 FROM mdvsrl.dataloggers_x_ubicacion
 INNER JOIN mdvsrl.ubicaciones ON  mdvsrl.dataloggers_x_ubicacion.ubicaciones_id = mdvsrl.ubicaciones.id
-WHERE mdvsrl.ubicaciones.id = 5;
+WHERE mdvsrl.ubicaciones.id = 34;
 
 SELECT direccion_mac, nombre, descripcion, foto
 FROM mdvsrl.dataloggers
@@ -186,7 +218,7 @@ SELECT EXISTS (
     SELECT 1
     FROM usuarios_x_ubicaciones_x_roles
     WHERE usuarios_id = 32
-    AND ubicaciones_id = 2
+    AND ubicaciones_id = 34
 ) AS existe_relacion;
 
 #Agrega un nuevo registro
@@ -267,7 +299,7 @@ select * from mdvsrl.alarmas_x_usuarios where alarma_id = 47;
 insert into mdvsrl.alarmas_x_usuarios
 	(alarma_id, usuario_id, fecha_creacion)
 values
-	(47, 84, current_timestamp());
+	(57, 84, current_timestamp());
 
 delete from mdvsrl.alarmas_x_usuarios where id >= 36;
 
@@ -275,6 +307,21 @@ select mdvsrl.usuarios.email
 from mdvsrl.alarmas_x_usuarios 
 inner join mdvsrl.usuarios on mdvsrl.usuarios.id = mdvsrl.alarmas_x_usuarios.usuario_id
 where alarma_id = 1;
+
+SELECT alarmas_x_usuarios.usuario_id as usuario_id, canales.datalogger_id as datalogger_id, alarmas.*
+FROM alarmas_x_usuarios
+INNER JOIN alarmas on alarmas.id = alarmas_x_usuarios.alarma_id
+INNER JOIN canales on alarmas.canal_id = canales.id
+WHERE alarmas_x_usuarios.usuario_id = 32;
+
+select * from alarmas_x_usuarios;
+show tables;
+select * from canales;
+select * from dataloggers;
+
+select * 
+from dataloggers
+where id in (1, 3) ;
 
 delete from mdvsrl.alarmas_x_usuarios where usuario_id = 7;
 
@@ -326,3 +373,59 @@ select * from canales where datalogger_id = 3;
 update canales
 set tiempo_a_promediar = '12 HOUR'
 where id = 13;
+
+select concat(usuarios.nombre_1, " ", usuarios.apellido_1) as nom_apell
+from usuarios
+where usuarios.id = 32;
+
+SELECT  usuarios_x_ubicaciones_x_roles.id,
+            usuarios_x_ubicaciones_x_roles.usuarios_id AS usuarios_id,
+            usuarios_x_ubicaciones_x_roles.roles_id AS usuarios_roles_id,
+            roles.nombre AS usuarios_nombre_rol,
+            concat(usuarios.nombre_1, " ", usuarios.apellido_1) as usuario_nom_apell,
+            usuarios.email, usuarios.telefono,
+            ubicaciones.nombre as ubicaciones_nombre,
+            usuarios_x_ubicaciones_x_roles.ubicaciones_id as ubicaciones_id
+          FROM usuarios
+          INNER JOIN usuarios_x_ubicaciones_x_roles ON usuarios.id = usuarios_x_ubicaciones_x_roles.usuarios_id 
+          INNER JOIN roles ON roles_id = roles.id
+          INNER JOIN ubicaciones ON ubicaciones.id = ubicaciones_id
+          WHERE ubicaciones_id = 34;
+
+/*1. obtengo dataloggers de una ubicacion*/
+select * 
+from dataloggers_x_ubicacion;
+
+/*2. Obtengo canales de los dataloggers encontrados */ 
+select * 
+from canales
+where datalogger_id in (3, 23);  
+       
+/*3. Obtengo alarmas de los canales encontrados*/       
+select * 
+from alarmas
+where alarmas.canal_id in (7, 12, 13, 14, 15, 20, 25, 26);
+
+/* Hago la fusion de las tres consultas */
+SELECT alarmas.*
+FROM alarmas
+WHERE alarmas.canal_id IN (
+	SELECT canales.id 
+	FROM canales
+	WHERE datalogger_id IN (
+		SELECT dataloggers_x_ubicacion.datalogger_id 
+		FROM dataloggers_x_ubicacion
+		WHERE dataloggers_x_ubicacion.ubicaciones_id = 34
+    )
+);
+
+SELECT alarmas.*, canales.datalogger_id
+FROM alarmas
+JOIN canales ON alarmas.canal_id = canales.id
+WHERE canales.datalogger_id IN (
+    SELECT dataloggers_x_ubicacion.datalogger_id 
+    FROM dataloggers_x_ubicacion
+    WHERE dataloggers_x_ubicacion.ubicaciones_id = 34
+);
+
+

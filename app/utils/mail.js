@@ -127,5 +127,43 @@ module.exports = {
             console.error('Uncaught Exception:', err);
             // Puedes realizar acciones adicionales aquí, como cerrar el servidor o registrar el error.
         });      
+},
+sendAlarmTest: async (alarmaNombre, emailsString, text) => {
+    console.log("enviando mail de alarma")       
+    
+    // Definir los detalles del correo electrónico
+    let mailOptions = {
+        from: 'info@ruscica-code.ar',
+        to: emailsString,
+        subject: 'ALARMA ! - MDV Sensores',
+        html: ` <div style="font-size: 1rem">
+                    <h1>Correo Alarma - MDV Sensores</h1>                        
+                    <h2>Se disparo la  alarma <em>"${alarmaNombre}"</em>.</h2>                                                                  
+                    <p>
+                        ${text}
+                    </p>                        
+                </div>
+                `
+        };    
+    // Enviar el correo electrónico
+    try {                    
+        // Enviar el correo electrónico
+        const results = await transporter.sendMail(mailOptions);
+        //console.log(results);
+        if (results.rejected.length == 0){
+            console.log('Correo enviado correctamente!');
+            return true;
+        }else{
+            return false;
+    }
+    } catch (error) {
+        console.error('Error sending email with the token', error);
+    }
+    
+    // Captura excepciones no manejadas globalmente
+    process.on('uncaughtException', (err) => {
+        console.error('Uncaught Exception:', err);
+        // Puedes realizar acciones adicionales aquí, como cerrar el servidor o registrar el error.
+    });      
 }
 }

@@ -34,4 +34,8 @@ ORDER BY fecha_hora ASC
 LIMIT 9000;
 
 
+select fecha, tiempo_total, d1_porc_encendido, d2_porc_encendido, servicio, energia, texto
+from guemes
+where fecha >= '2024-07-29' AND fecha <= '2024-07-31'
+order by fecha DESC;
 
