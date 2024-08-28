@@ -81,8 +81,8 @@ const alarmDigPorEnc = async () => {
   }
 
 
-  checkAlarmMultipleChannels('guemes', ['d1', 'd2'], 'chernan80@gmail.com, nor2k@yahoo.com, mdvsensores@gmail.com\n', 'Los dos compresores estan encendidos al mismo tiempo.');
-  checkAlarmMultipleChannels('quilmes', ['d1', 'd2'], 'chernan80@gmail.com, nor2k@yahoo.com, mdvsensores@gmail.com\n', 'Los dos compresores estan encendidos al mismo tiempo.');
+  //checkAlarmMultipleChannels('guemes', ['d1', 'd2'], 'chernan80@gmail.com, nor2k@yahoo.com, mdvsensores@gmail.com\n', 'Los dos compresores estan encendidos al mismo tiempo.');
+  //checkAlarmMultipleChannels('quilmes', ['d1', 'd2'], 'chernan80@gmail.com, nor2k@yahoo.com, mdvsensores@gmail.com\n', 'Los dos compresores estan encendidos al mismo tiempo.');
   //checkAlarmService('quilmes', 'chernan80@gmail.com, nor2k@yahoo.com, mdvsensores@gmail.com\n', 'Entrada en el lugar del datalogger');
 }
 

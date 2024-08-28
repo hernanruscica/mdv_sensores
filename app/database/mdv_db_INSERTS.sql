@@ -148,9 +148,9 @@ VALUES
 
 
 insert into `mdvsrl`.`alarmas`
-	(canal_id, tabla, columna, nombre, descripcion, max, min, periodo_tiempo, estado, fecha_creacion)
+	(canal_id, tabla, columna, nombre, descripcion, max, min, periodo_tiempo, nombre_variables, condicion, estado, fecha_creacion )
 values
-	(11, 'guemes', 'd6', 'Guemes Bomba 1 - Encendidos - Ult. Hora - Max = 45%', 'Se activa al sobrepasar 45% del tiempo de encendido', 45, 0, '1 HOUR', true, CURRENT_TIMESTAMP());
+	(9, 'guemes', 'd1', 'Guemes compresor 1 y 2 - Encendidos simultaneos', 'Se activa si se encienden los dos compresores al mismo tiempo', 45, 0, '1 HOUR',"d1_porc_encendido, d2_porc_encendido", 'd1_porc_encendido > 0 AND d2_porc_encendido < 0', true, CURRENT_TIMESTAMP());
 
 insert into `mdvsrl`.`alarmas_x_usuarios`
 	(alarma_id, usuario_id, fecha_creacion)

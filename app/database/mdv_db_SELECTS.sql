@@ -436,4 +436,29 @@ WHERE canales.datalogger_id IN (
     WHERE dataloggers_x_ubicacion.ubicaciones_id = 34
 );
 
+ALTER TABLE alarmas
+ADD COLUMN variables JSON NOT NULL,
+ADD COLUMN condicion TEXT NOT NULL;
 
+update alarmas
+set 
+	nombre_variables = 'd2_porc_encendido,d1_porc_encendido',
+    condicion = '(d1_porc_encendido > 0) and (d2_porc_encendido > 0)'
+where id = 67;
+
+update alarmas
+set 
+	nombre_variables = 'd2_porc_encendido',
+    condicion = 'd2_porc_encendido > 30'
+where id = 66;
+
+select * from alarmas;
+
+ALTER TABLE alarmas
+CHANGE COLUMN nombreVariables nombre_variables TEXT NOT NULL;
+
+DELETE FROM alarmas
+WHERE id=65;
+
+ALTER TABLE alarmas_logs
+ADD COLUMN variables_valores text NOT NULL;
